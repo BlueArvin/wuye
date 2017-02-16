@@ -5,12 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import deer.milu.freejava.basic.MString;
 import wuye.bean.LoginUserBean;
 import wuye.dao.DaoBasic;
 import wuye.dao.UserDao;
@@ -28,13 +26,13 @@ public class UserDaoImpl extends DaoBasic implements UserDao{
 	private DataSource dataSource;
 
 	public int login(LoginUserBean user) {
-		String random = MString.getRandomString(32);
+		String random = getRandomString(32);
 		int id = 0;
 		Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,passwd,token from t_user where cn=? limit 1";
+            String sql = "select id,passwd,token from t_user where cn=? and status=0 limit 1";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setString(1, user.getAccount());
@@ -94,5 +92,16 @@ public class UserDaoImpl extends DaoBasic implements UserDao{
         }
 		
 	}
+	
+	public static String getRandomString(int length) { // length��ʾ�����ַ����ĳ���
+		String base = "abcdefghijklmnopqrstuvwxyz0123456789";
+		Random random = new Random();
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < length; i++) {
+			int number = random.nextInt(base.length());
+			sb.append(base.charAt(number));
+		}
+		return sb.toString();
+	} 
 	
 }

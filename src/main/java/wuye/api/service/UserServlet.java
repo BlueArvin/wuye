@@ -41,9 +41,21 @@ public class UserServlet {
 		return JSON.toJSONString(loginUser.toAPIresult());
     }
 	
+	@RequestMapping("/exist")
+	@ResponseBody
+    public String exist(HttpServletRequest request){  
+		String username = request.getParameter("username");  // �û���
+		String cookie = request.getParameter("cookie");      // ����
+		
+		LoginUserBean loginUser = new LoginUserBean(username, cookie, 1);
+		userLogic.UserLogin(loginUser); // 执行登录
+		
+		return JSON.toJSONString(loginUser.toAPIresult());
+    }
+	
 	@RequestMapping("/passwd")
 	@ResponseBody
-    public RetBean passwd(HttpServletRequest request) {  
+    public RetBean passwd(HttpServletRequest request) {
 		return null;
     }
 }
