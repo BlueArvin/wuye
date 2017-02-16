@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import deer.milu.freejava.basic.MString;
 import wuye.bean.LoginUserBean;
 import wuye.dao.DaoBasic;
@@ -15,6 +17,14 @@ import wuye.dao.UserDao;
 
 public class UserDaoImpl extends DaoBasic implements UserDao{
 	
+	public DataSource getDataSource() {
+		return dataSource;
+	}
+
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+
 	private DataSource dataSource;
 
 	public int login(LoginUserBean user) {
@@ -35,14 +45,14 @@ public class UserDaoImpl extends DaoBasic implements UserDao{
             	String token = rs.getString("token");
             	if(user.getType() == 0) {
             		if(passwd.equals(user.getPwd())) {
-            			user.setRet(LoginUserBean.OK);  // µÇÂ¼³É¹¦ºóÐèÒªÖØÉècookie
+            			user.setRet(LoginUserBean.OK);  // ï¿½ï¿½Â¼ï¿½É¹ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½cookie
             			user.setUpdateCookie(random);
             		}else {
             			user.setRet(LoginUserBean.PWDERROR);
             		}
-            	} else {  // token ÑéÖ¤
+            	} else {  // token ï¿½ï¿½Ö¤
             		if(token.equals(user.getCookie())) {
-            			user.setRet(LoginUserBean.OK);  // µÇÂ¼³É¹¦ºóÐèÒªÖØÉècookie
+            			user.setRet(LoginUserBean.OK);  // ï¿½ï¿½Â¼ï¿½É¹ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½cookie
             			user.setUpdateCookie(random);
             		}else {
             			user.setRet(LoginUserBean.COOKIEFAIL);
@@ -58,7 +68,7 @@ public class UserDaoImpl extends DaoBasic implements UserDao{
         } finally {
             closeConnection(conn, pstmt, rs);
             
-            if(user.getRet() == LoginUserBean.OK) {   // ¸üÐÂcookie
+            if(user.getRet() == LoginUserBean.OK) {   // ï¿½ï¿½ï¿½ï¿½cookie
             	updateUserToken(id, random);
             }
         }

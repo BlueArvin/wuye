@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
+
 import wuye.api.bean.RetBean;
 import wuye.bean.LoginUserBean;
 import wuye.logic.UserLogic;
@@ -17,18 +19,27 @@ import wuye.logic.UserLogic;
 @RequestMapping("/api")
 public class UserServlet {
 	
+	public UserLogic getUserLogic() {
+		return userLogic;
+	}
+
+	public void setUserLogic(UserLogic userLogic) {
+		this.userLogic = userLogic;
+	}
+
 	private UserLogic userLogic;
 
 	@RequestMapping("/login")
 	@ResponseBody
-    public RetBean login(HttpServletRequest request){  
-		String username = request.getParameter("username");  // ÓÃ»§Ãû
-		String passwd = request.getParameter("passwd");      // ÃÜÂë
+    public String login(HttpServletRequest request){  
+		String username = request.getParameter("username");  // ï¿½Ã»ï¿½ï¿½ï¿½
+		String passwd = request.getParameter("passwd");      // ï¿½ï¿½ï¿½ï¿½
 		
 		LoginUserBean loginUser = new LoginUserBean(username, passwd, 0);
+		userLogic.UserLogin(loginUser); // æ‰§è¡Œç™»å½•
 		
-		return loginUser.toAPIresult();
-    }  
+		return JSON.toJSONString(loginUser.toAPIresult());
+    }
 	
 	@RequestMapping("/passwd")
 	@ResponseBody

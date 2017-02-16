@@ -30,8 +30,27 @@
 	    <artifactId>commons-dbcp</artifactId>
 	    <version>1.4</version>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+	<dependency>
+	    <groupId>com.alibaba</groupId>
+	    <artifactId>fastjson</artifactId>
+	    <version>1.2.24</version>
+	</dependency>
+	<dependency>
+		<groupId>deer.milu</groupId>
+		<artifactId>freejava</artifactId>
+	</dependency>
   </dependencies>
   <build>
     <finalName>wuye</finalName>
   </build>
+  <dependencyManagement>
+  	<dependencies>
+  		<dependency>
+  			<groupId>deer.milu</groupId>
+  			<artifactId>freejava</artifactId>
+  			<version>0.0.2</version>
+  		</dependency>
+  	</dependencies>
+  </dependencyManagement>
 </project>

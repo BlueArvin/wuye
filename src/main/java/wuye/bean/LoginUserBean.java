@@ -3,7 +3,7 @@ package wuye.bean;
 import wuye.api.bean.RetBean;
 
 /**
- * ÓÃ»§µÇÂ¼Bean
+ * ç”¨æˆ·ç™»å½• Bean
  * @author lujinfei
  * 2017-02-15
  */
@@ -14,12 +14,12 @@ public class LoginUserBean {
 	public static final int COOKIEFAIL = 3;
 	
 	private String account = "";
-	private String pwd = "";   	// ÕâÀïµÄÃÜÂë´æ´¢µÄÊÇÃÜÂëµÄmd5Öµ
-	private String cookie = "";	// µÇÂ¼ºóµÄcookieÖµ
-	private int type = 0;      	// 0. ÕËºÅÃÜÂëÆÕÍ¨µÇÂ¼    1. Í¨¹ıcookieÖµµÇÂ¼
+	private String pwd = "";   	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ´¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½md5Öµ
+	private String cookie = "";	// ï¿½ï¿½Â¼ï¿½ï¿½ï¿½cookieÖµ
+	private int type = 0;      	// 0. ï¿½Ëºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½Â¼    1. Í¨ï¿½ï¿½cookieÖµï¿½ï¿½Â¼
 	
-	private int ret = 0;            // ´æ·Å½á¹û
-	private String updateCookie = ""; // ĞÂÉú³ÉµÄcookie
+	private int ret = 1;            // ï¿½ï¿½Å½ï¿½ï¿½
+	private String updateCookie = ""; // ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½cookie
 	
 	public String getUpdateCookie() {
 		return updateCookie;
@@ -67,20 +67,20 @@ public class LoginUserBean {
 	
 	public RetBean toAPIresult() {
 		RetBean bean = null;
-		switch(getType()) {
+		switch(ret) {
 		case OK:
-			bean = new RetBean(getType(), "µÇÂ¼³É¹¦");
+			bean = new RetBean(ret, "ç™»å½•æˆåŠŸ");
 			bean.setValue(updateCookie);
 			break;
 		case NOUSER:
 		case PWDERROR:
-			bean = new RetBean(getType(), "ÓÃ»§²»´æÔÚ»òÃÜÂë´íÎó");
+			bean = new RetBean(ret, "ç”¨æˆ·åæˆ–å¯†ç é”™è¯¯");
 			break;
 		case COOKIEFAIL:
-			bean = new RetBean(getType(), "µÇÂ¼Ê§Ğ§");
+			bean = new RetBean(ret, "ç™»å½•å¤±æ•ˆ");
 			break;
 		default:
-			bean = new RetBean(getType(), "ÎŞĞ§");
+			bean = new RetBean(ret, "ç™»å½•é”™è¯¯");
 		}
 		return bean;
 	}
