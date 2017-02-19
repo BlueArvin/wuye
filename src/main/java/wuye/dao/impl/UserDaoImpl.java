@@ -102,6 +102,57 @@ public class UserDaoImpl extends DaoBasic implements UserDao{
 			sb.append(base.charAt(number));
 		}
 		return sb.toString();
+	}
+
+	public int validateUserPWD(LoginUserBean user) {
+		// 
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            String sql = "select id,passwd,token from t_user where cn=? and status=0 limit 1";
+            conn = dataSource.getConnection();
+            pstmt = prepareStatement(conn, sql);
+            pstmt.setString(1, user.getAccount());
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+            	String passwd = rs.getString("passwd");
+            	if(passwd.equals(user.getPwd())) {
+            		user.setRet(LoginUserBean.OK);  //
+            	}else {
+            		user.setRet(LoginUserBean.PWDERROR);
+            	}
+            }else {
+            	user.setRet(LoginUserBean.NOUSER);
+            }
+            return 0;
+        }catch(Exception e){
+       	 	doCatchException("getBlockList" ,e);
+            return -1;
+        } finally {
+            closeConnection(conn, pstmt, rs);
+        }
+	}
+
+	public int changePWD(LoginUserBean user, String newpwd) {
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        boolean rs = false;
+        try {
+            String sql = "update t_user set passwd=? where cn=?";
+            conn = dataSource.getConnection();
+            pstmt = prepareStatement(conn, sql);
+            pstmt.setString(1, newpwd);
+            pstmt.setString(2, user.getAccount());
+            rs = pstmt.execute();
+            
+            return 0;
+        }catch(Exception e){
+       	 	doCatchException("getBlockList" ,e);
+            return -1;
+        } finally {
+            closeConnection(conn, pstmt, null);
+        }
 	} 
 	
 }

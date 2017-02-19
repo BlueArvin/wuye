@@ -16,7 +16,7 @@ import wuye.bean.LoginUserBean;
 import wuye.logic.UserLogic;
 
 @Controller
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 public class UserServlet {
 	
 	public UserLogic getUserLogic() {
@@ -32,8 +32,8 @@ public class UserServlet {
 	@RequestMapping("/login")
 	@ResponseBody
     public String login(HttpServletRequest request){  
-		String username = request.getParameter("username");  // �û���
-		String passwd = request.getParameter("passwd");      // ����
+		String username = request.getParameter("username");  // 用户名
+		String passwd = request.getParameter("passwd");      // 密码
 		
 		LoginUserBean loginUser = new LoginUserBean(username, passwd, 0);
 		userLogic.UserLogin(loginUser); // 执行登录
@@ -44,8 +44,8 @@ public class UserServlet {
 	@RequestMapping("/exist")
 	@ResponseBody
     public String exist(HttpServletRequest request){  
-		String username = request.getParameter("username");  // �û���
-		String cookie = request.getParameter("cookie");      // ����
+		String username = request.getParameter("username");  // 用户名
+		String cookie = request.getParameter("cookie");      // cookie
 		
 		LoginUserBean loginUser = new LoginUserBean(username, cookie, 1);
 		userLogic.UserLogin(loginUser); // 执行登录
@@ -55,7 +55,14 @@ public class UserServlet {
 	
 	@RequestMapping("/passwd")
 	@ResponseBody
-    public RetBean passwd(HttpServletRequest request) {
-		return null;
+    public String passwd(HttpServletRequest request) {
+		String username = request.getParameter("username");
+		String pwd = request.getParameter("passwd");
+		String newpwd  = request.getParameter("newpasswd");
+		
+		LoginUserBean loginUser = new LoginUserBean(username, pwd, 0);
+		userLogic.UserChangepwd(loginUser, newpwd);
+		
+		return JSON.toJSONString(loginUser.toAPIresult());
     }
 }

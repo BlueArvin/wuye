@@ -22,4 +22,17 @@ public class UserLogicImpl implements UserLogic{
 		return userDao.login(bean);
 	}
 
+	// 修改密码
+	public int UserChangepwd(LoginUserBean user, String pwd) {
+		// 验证愿密码是否正确
+		int ret1 = userDao.validateUserPWD(user);
+		// 更换新密码
+		if(user.getRet() == 0) {
+			int ret2 = userDao.changePWD(user, pwd);
+			return ret2;
+		}else {
+			return ret1;
+		}
+	}
+
 }
