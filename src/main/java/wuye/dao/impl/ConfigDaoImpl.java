@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import wuye.bean.CheckConfigBean;
 import wuye.bean.ConfigData;
 import wuye.bean.LoginUserBean;
 import wuye.dao.ConfigDao;
@@ -51,6 +52,32 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
             closeConnection(conn, pstmt, null);
         }
 	}
+	
+	public String getCheckVersion() {
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            String sql = "select checkversion from t_sys";
+            conn = dataSource.getConnection();
+            pstmt = prepareStatement(conn, sql);
+
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+            	return rs.getString("checkversion");
+            } else {
+            	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            	return df.format(new Date());
+            }
+        }catch(Exception e){
+       	 	doCatchException("getBlockList" ,e);
+	       	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+	       	return df.format(new Date());
+        } finally {
+            closeConnection(conn, pstmt, null);
+        }
+	}
+	
 
 	public ConfigData getConfigData() {
 		
@@ -130,6 +157,61 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
             rs = pstmt.executeQuery();
             while (rs.next()) {
             	ret.add(new ConfigData.Pair(rs.getInt("id"),rs.getString("company_name")));
+            }
+            return ret;
+        }catch(Exception e){
+       	 	doCatchException("getBlockList" ,e);
+       	 return ret;
+        } finally {
+            closeConnection(conn, pstmt, null);
+            
+        }
+	}
+
+	public CheckConfigBean getCheckConfigData() {
+		CheckConfigBean data = new CheckConfigBean();
+		data.checktitle = getCheckTitle();
+		data.checksub = getCheckSub();
+		return data;
+	}
+	
+	private List<ConfigData.Pair> getCheckTitle() {
+		List<ConfigData.Pair> ret =new ArrayList<ConfigData.Pair>();
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            String sql = "select score_id,title_name from t_checktitle";
+            conn = dataSource.getConnection();
+            pstmt = prepareStatement(conn, sql);
+
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+            	ret.add(new ConfigData.Pair(rs.getInt("score_id"),rs.getString("title_name")));
+            }
+            return ret;
+        }catch(Exception e){
+       	 	doCatchException("getBlockList" ,e);
+       	 return ret;
+        } finally {
+            closeConnection(conn, pstmt, null);
+            
+        }
+	}
+	
+	private List<ConfigData.Pair> getCheckSub() {
+		List<ConfigData.Pair> ret =new ArrayList<ConfigData.Pair>();
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            String sql = "select subid,sub_name from t_checksub";
+            conn = dataSource.getConnection();
+            pstmt = prepareStatement(conn, sql);
+
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+            	ret.add(new ConfigData.Pair(rs.getInt("subid"),rs.getString("sub_name")));
             }
             return ret;
         }catch(Exception e){

@@ -56,10 +56,20 @@
             <ref bean="dataSource"/>
         </property>
     </bean>
+    <bean id="configDao" class="wuye.dao.impl.ConfigDaoImpl">
+        <property name="dataSource">
+            <ref bean="dataSource"/>
+        </property>
+    </bean>
     
     <bean id="userLogic" class="wuye.logic.impl.UserLogicImpl">
         <property name="userDao">
             <ref bean="userDao"/>
+        </property>
+    </bean>
+    <bean id="activeConfigLogic" class="wuye.logic.impl.ActiveConfigImpl">
+        <property name="configDao">
+            <ref bean="configDao"/>
         </property>
     </bean>
     
@@ -67,6 +77,11 @@
     <bean id="userServlet" class="wuye.api.service.UserServlet">
         <property name="userLogic">
             <ref bean="userLogic"/>
+        </property>
+    </bean>
+    <bean id="activeConfig" class="wuye.api.service.ActiveConfig">
+        <property name="activeConfigLogic">
+            <ref bean="activeConfigLogic"/>
         </property>
     </bean>
 </beans>

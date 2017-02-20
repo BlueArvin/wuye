@@ -3,6 +3,8 @@ package wuye.api.bean;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 
 public class RetBean {
@@ -26,5 +28,13 @@ public class RetBean {
 		this.value = value;
 	}
 	
+	public String toJsonString() {
+		return JSON.toJSONString(this);
+	}
 	
+	public static RetBean ParseRet(Object ob) {
+		RetBean ret = new RetBean(0, "");
+		ret.setValue(ob);
+		return ret;
+	}
 }
