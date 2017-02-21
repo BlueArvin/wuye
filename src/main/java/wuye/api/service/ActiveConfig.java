@@ -11,6 +11,11 @@ import com.alibaba.fastjson.JSON;
 import wuye.api.bean.RetBean;
 import wuye.logic.ActiveConfigLogic;
 
+/**
+ * 客户端动态配置文件相关，为了优化客户端的体验
+ * @author lujinfei
+ *
+ */
 @Controller
 @RequestMapping("/api/config")
 public class ActiveConfig {

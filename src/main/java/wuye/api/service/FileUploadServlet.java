@@ -18,6 +18,11 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import wuye.api.bean.RetBean;
 
+/**
+ * 文件上传的处理
+ * @author lujinfei
+ *
+ */
 @Controller
 @RequestMapping("/api/upload")
 public class FileUploadServlet {

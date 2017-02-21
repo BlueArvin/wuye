@@ -15,6 +15,11 @@ import wuye.api.bean.RetBean;
 import wuye.bean.LoginUserBean;
 import wuye.logic.UserLogic;
 
+/**
+ * 用户操作相关 目前包括登录 修改密码
+ * @author lujinfei
+ *
+ */
 @Controller
 @RequestMapping("/api/user")
 public class UserServlet {
