@@ -1,7 +1,12 @@
 package wuye.api.service;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -42,6 +48,9 @@ public class FileUploadServlet {
 	@ResponseBody
     public String upload(HttpServletRequest request,HttpServletResponse response) {  
   
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");//设置日期格式
+    	String newName = df.format(new Date());
+    	
 		//创建一个通用的多部分解析器  
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession().getServletContext());  
         //判断 request 是否有文件上传,即多部分请求  
@@ -62,9 +71,9 @@ public class FileUploadServlet {
                     if(myFileName.trim() !=""){  
                         System.out.println(myFileName);  
                         //重命名上传后的文件名  
-                        String fileName = "demoUpload" + file.getOriginalFilename();  
+                        String fileName = "file" + newName + ".jpg";  
                         //定义上传路径  
-                        String path = dir + fileName;  
+                        String path = dir + fileName;
                         File localFile = new File(path);  
                         try {
 							file.transferTo(localFile);
@@ -79,8 +88,55 @@ public class FileUploadServlet {
                 int finaltime = (int) System.currentTimeMillis();  
                 System.out.println(finaltime - pre);  
             }  
-            return "2"; 
-//        }  
-//        return "/success";  
-    }  
+         return "2"; 
+    }
+	
+	@RequestMapping(value = "/download/{file}")
+    public String getUrlParam(@PathVariable("file") String fileName,
+    		HttpServletRequest request, HttpServletResponse response) {
+		if (fileName != null) {
+            String realPath = dir;// request.getServletContext().getRealPath("WEB-INF/File/");
+            File file = new File(realPath, fileName);
+            if (file.exists()) {
+                response.setContentType("application/force-download");// 设置强制下载不打开
+                response.addHeader("Content-Disposition",
+                        "attachment;fileName=" + fileName);// 设置文件名
+                byte[] buffer = new byte[1024];
+                FileInputStream fis = null;
+                BufferedInputStream bis = null;
+                try {
+                    fis = new FileInputStream(file);
+                    bis = new BufferedInputStream(fis);
+                    OutputStream os = response.getOutputStream();
+                    int i = bis.read(buffer);
+                    while (i != -1) {
+                        os.write(buffer, 0, i);
+                        i = bis.read(buffer);
+                    }
+                } catch (Exception e) {
+                    // TODO: handle exception
+                    e.printStackTrace();
+                } finally {
+                    if (bis != null) {
+                        try {
+                            bis.close();
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                    if (fis != null) {
+                        try {
+                            fis.close();
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+		
+		return "";
+    }
 }

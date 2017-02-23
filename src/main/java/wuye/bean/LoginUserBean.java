@@ -13,6 +13,7 @@ public class LoginUserBean {
 	public static final int PWDERROR = 2;
 	public static final int COOKIEFAIL = 3;
 	
+	private int userid = 0;
 	private String account = "";
 	private String pwd = "";   	// ���������洢���������md5ֵ
 	private String cookie = "";	// ��¼���cookieֵ
@@ -27,6 +28,14 @@ public class LoginUserBean {
 
 	public void setUpdateCookie(String updateCookie) {
 		this.updateCookie = updateCookie;
+	}
+
+	public void setUserid(int userid) {
+		this.userid = userid;
+	}
+
+	public int getUserid() {
+		return userid;
 	}
 
 	public int getRet() {

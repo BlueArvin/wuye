@@ -43,6 +43,10 @@ public class UserServlet {
 		LoginUserBean loginUser = new LoginUserBean(username, passwd, 0);
 		userLogic.UserLogin(loginUser); // 执行登录
 		
+		if(loginUser.getRet() == 0) {
+			request.getSession().setAttribute("userid", loginUser.getUserid());
+		}
+		
 		return JSON.toJSONString(loginUser.toAPIresult());
     }
 	
@@ -54,6 +58,10 @@ public class UserServlet {
 		
 		LoginUserBean loginUser = new LoginUserBean(username, cookie, 1);
 		userLogic.UserLogin(loginUser); // 执行登录
+		
+		if(loginUser.getRet() == 0) {
+			request.getSession().setAttribute("userid", loginUser.getUserid());
+		}
 		
 		return JSON.toJSONString(loginUser.toAPIresult());
     }

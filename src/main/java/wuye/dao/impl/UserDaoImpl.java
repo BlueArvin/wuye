@@ -41,6 +41,7 @@ public class UserDaoImpl extends DaoBasic implements UserDao{
             	id = rs.getInt("id");
             	String passwd = rs.getString("passwd");
             	String token = rs.getString("token");
+            	user.setUserid(rs.getInt("id"));
             	if(user.getType() == 0) {
             		if(passwd.equals(user.getPwd())) {
             			user.setRet(LoginUserBean.OK);  // ��¼�ɹ�����Ҫ����cookie
