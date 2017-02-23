@@ -70,6 +70,11 @@
             <ref bean="dataSource"/>
         </property>
     </bean>
+    <bean id="assessDao" class="wuye.dao.impl.AssessDaoImpl">
+        <property name="dataSource">
+            <ref bean="dataSource"/>
+        </property>
+    </bean>
     
     <bean id="userLogic" class="wuye.logic.impl.UserLogicImpl">
         <property name="userDao">
@@ -79,6 +84,11 @@
     <bean id="activeConfigLogic" class="wuye.logic.impl.ActiveConfigImpl">
         <property name="configDao">
             <ref bean="configDao"/>
+        </property>
+    </bean>
+    <bean id="assessLogic" class="wuye.logic.impl.AssessLogicImpl">
+        <property name="assessDao">
+            <ref bean="assessDao"/>
         </property>
     </bean>
     
@@ -91,6 +101,15 @@
     <bean id="activeConfig" class="wuye.api.service.ActiveConfig">
         <property name="activeConfigLogic">
             <ref bean="activeConfigLogic"/>
+        </property>
+    </bean>
+    <bean id="fileUploadServlet" class="wuye.api.service.FileUploadServlet">
+        <property name="dir" value="E:/upload/">
+        </property>
+    </bean>
+    <bean id="assessServlet" class="wuye.api.service.AssessServlet">
+        <property name="assessLogic">
+            <ref bean="assessLogic"/>
         </property>
     </bean>
 </beans>

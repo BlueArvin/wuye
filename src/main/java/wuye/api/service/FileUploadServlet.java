@@ -26,6 +26,17 @@ import wuye.api.bean.RetBean;
 @Controller
 @RequestMapping("/api/upload")
 public class FileUploadServlet {
+	
+	
+	public String getDir() {
+		return dir;
+	}
+
+	public void setDir(String dir) {
+		this.dir = dir;
+	}
+
+	private String dir;
 
 	@RequestMapping("uploadpic")
 	@ResponseBody
@@ -53,7 +64,7 @@ public class FileUploadServlet {
                         //重命名上传后的文件名  
                         String fileName = "demoUpload" + file.getOriginalFilename();  
                         //定义上传路径  
-                        String path = "E:/upload/" + fileName;  
+                        String path = dir + fileName;  
                         File localFile = new File(path);  
                         try {
 							file.transferTo(localFile);

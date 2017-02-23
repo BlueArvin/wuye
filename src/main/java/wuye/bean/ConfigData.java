@@ -1,5 +1,7 @@
 package wuye.bean;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 public class ConfigData {
@@ -12,12 +14,28 @@ public class ConfigData {
 	
 	
 	public static class Pair {
-		public int key;
+		public String key;
 		public String displayValue;
+		public String parent;
 		
-		public Pair(int key, String name) {
+		public Pair(String key, String name, String parent) {
 			this.key = key;
-			this.displayValue = name;
+			this.parent = parent;
+			try {
+				this.displayValue = URLEncoder.encode(name, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				this.displayValue = name;
+			}
 		}
+		
+		public Pair(String key, String name) {
+			this.key = key;
+			try {
+				this.displayValue = URLEncoder.encode(name, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				this.displayValue = name;
+			}
+		}
+		
 	}
 }

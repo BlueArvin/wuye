@@ -101,7 +101,7 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
 
             rs = pstmt.executeQuery();
             while (rs.next()) {
-            	ret.add(new ConfigData.Pair(rs.getInt("id"),rs.getString("statename")));
+            	ret.add(new ConfigData.Pair(rs.getInt("id") + "", rs.getString("statename")));
             }
             return ret;
         }catch(Exception e){
@@ -119,13 +119,15 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select street_id,street_name from t_street";
+            String sql = "select id,street_name,area_id from t_street";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
 
             rs = pstmt.executeQuery();
             while (rs.next()) {
-            	ret.add(new ConfigData.Pair(rs.getInt("street_id"),rs.getString("street_name")));
+            	ret.add(new ConfigData.Pair(rs.getInt("id") + "@" +rs.getString("area_id") , 
+            			rs.getString("street_name"),
+            			rs.getString("area_id") + ""));
             }
             return ret;
         }catch(Exception e){
@@ -139,8 +141,8 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
 	
 	private List<ConfigData.Pair> getCheckLevel() {
 		List<ConfigData.Pair> ret =new ArrayList<ConfigData.Pair>();
-		ret.add(new ConfigData.Pair(1,"A"));
-		ret.add(new ConfigData.Pair(2,"B"));
+		ret.add(new ConfigData.Pair("1","A"));
+		ret.add(new ConfigData.Pair("2","B"));
 		return ret;
 	}
 	
@@ -156,7 +158,7 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
 
             rs = pstmt.executeQuery();
             while (rs.next()) {
-            	ret.add(new ConfigData.Pair(rs.getInt("id"),rs.getString("company_name")));
+            	ret.add(new ConfigData.Pair(rs.getInt("id") + "",rs.getString("company_name")));
             }
             return ret;
         }catch(Exception e){
@@ -187,7 +189,7 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
 
             rs = pstmt.executeQuery();
             while (rs.next()) {
-            	ret.add(new ConfigData.Pair(rs.getInt("score_id"),rs.getString("title_name")));
+            	ret.add(new ConfigData.Pair(rs.getInt("score_id") + "",rs.getString("title_name")));
             }
             return ret;
         }catch(Exception e){
@@ -205,13 +207,14 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select subid,sub_name from t_checksub";
+            String sql = "select subid,sub_name,titleid from t_checksub";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
 
             rs = pstmt.executeQuery();
             while (rs.next()) {
-            	ret.add(new ConfigData.Pair(rs.getInt("subid"),rs.getString("sub_name")));
+            	ret.add(new ConfigData.Pair(rs.getInt("subid") + "@" + rs.getInt("titleid"),rs.getString("sub_name"),
+            			rs.getInt("titleid") + ""));
             }
             return ret;
         }catch(Exception e){
