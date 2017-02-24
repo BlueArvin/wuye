@@ -44,7 +44,7 @@ public class UserServlet {
 		userLogic.UserLogin(loginUser); // 执行登录
 		
 		if(loginUser.getRet() == 0) {
-			request.getSession().setAttribute("userid", loginUser.getUserid());
+			request.getSession().setAttribute("userid", loginUser.getUserid() + "");
 		}
 		
 		return JSON.toJSONString(loginUser.toAPIresult());
@@ -60,7 +60,7 @@ public class UserServlet {
 		userLogic.UserLogin(loginUser); // 执行登录
 		
 		if(loginUser.getRet() == 0) {
-			request.getSession().setAttribute("userid", loginUser.getUserid());
+			request.getSession().setAttribute("userid", loginUser.getUserid() + "");
 		}
 		
 		return JSON.toJSONString(loginUser.toAPIresult());

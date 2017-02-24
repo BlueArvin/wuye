@@ -1,19 +1,27 @@
 package wuye.bean;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class AssessDataBean {
 
+	public String id;
 	public int userid;
 	public Date time;
-	public int streetid;
+	public String streetid;    // 街道id，XXX@areaid
 	public int areaid;
 	public int wuyeid;
-	public int assessid;
+	public String assessid;    // 检查id小类 XXX@大类id
+	public int assessidtop;    // 检查大类id
 	public int score;
 	public String img1;
-	public String img2;
-	public String img3;
+	public String img2 = "";
+	public String img3 = "";
+	
+	public AssessDataBean() {
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");//设置日期格式
+    	id = "DF" + df.format(new Date());
+	}
 	
 	public int getUserid() {
 		return userid;
@@ -27,11 +35,13 @@ public class AssessDataBean {
 	public void setTime(Date time) {
 		this.time = time;
 	}
-	public int getStreetid() {
+	public String getStreetid() {
 		return streetid;
 	}
-	public void setStreetid(int streetid) {
+	public void setStreetid(String streetid) {
 		this.streetid = streetid;
+		String[] temp = streetid.split("@");
+		this.areaid = Integer.parseInt(temp[1]);
 	}
 	public int getAreaid() {
 		return areaid;
@@ -45,11 +55,13 @@ public class AssessDataBean {
 	public void setWuyeid(int wuyeid) {
 		this.wuyeid = wuyeid;
 	}
-	public int getAssessid() {
+	public String getAssessid() {
 		return assessid;
 	}
-	public void setAssessid(int assessid) {
+	public void setAssessid(String assessid) {
 		this.assessid = assessid;
+		String[] temp = streetid.split("@");
+		this.assessidtop = Integer.parseInt(temp[1]);
 	}
 	public int getScore() {
 		return score;
@@ -74,6 +86,14 @@ public class AssessDataBean {
 	}
 	public void setImg3(String img3) {
 		this.img3 = img3;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public int getAssessidtop() {
+		return assessidtop;
 	}
 	
 	

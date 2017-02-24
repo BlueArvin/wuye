@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
+
 import wuye.api.bean.RetBean;
 import wuye.bean.AssessDataBean;
 import wuye.logic.AssessLogic;
@@ -37,18 +39,24 @@ public class AssessServlet {
 	@RequestMapping("submit")
 	@ResponseBody
     public String submit(HttpServletRequest request){
-		String sdd = request.getParameter("data");  // 街道id%检查id%物业id%扣分项%扣分情况%时间字符串
+		String sdd = request.getParameter("data");  // 街道id%检查id%物业id%扣分情况%时间字符串
 		String pic1 = request.getParameter("pic1");      // 图片url
 		String pic2 = request.getParameter("pic2");      // 图片url
 		String pic3 = request.getParameter("pic3");      // 图片url
+		
+		String uid = (String)request.getSession().getAttribute("userid");
+		if(uid == null) {   // 没有登录
+			return JSON.toJSONString(new RetBean(2, "未登录"));
+		}
 		
 		SimpleDateFormat time=new SimpleDateFormat("yyyyMMddHHmmss"); 
 		AssessDataBean data = new AssessDataBean();
 		
 		String[] temp = sdd.split("%");
-		data.setStreetid(Integer.parseInt(temp[0]));
-		data.setAssessid(Integer.parseInt(temp[1]));
+		data.setStreetid(temp[0]);
+		data.setAssessid(temp[1]);
 		data.setWuyeid(Integer.parseInt(temp[2]));
+		data.setUserid(Integer.parseInt(uid));
 		data.setScore(Integer.parseInt(temp[3]));
 		try {
 			data.setTime(time.parse(temp[4]));
@@ -60,7 +68,14 @@ public class AssessServlet {
 		data.setImg2(pic2);
 		data.setImg3(pic3);
 		
-		
-		return assessLogic.submit(data) + "";
+		int ret = assessLogic.submit(data);
+		String aseid = data.getAssessid();
+		if(ret == 0) {
+			RetBean jsonRet = new RetBean(0, "");
+			jsonRet.setValue(aseid);
+			return JSON.toJSONString(jsonRet);
+		}else {
+			return JSON.toJSONString(new RetBean(99, "操作失败"));
+		}
     }
 }
