@@ -2,6 +2,7 @@ package wuye.api.service;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,6 +21,8 @@ import wuye.logic.ActiveConfigLogic;
 @RequestMapping("/api/config")
 public class ActiveConfig {
 	
+	private static Logger logger = Logger.getLogger("config");
+	
 	public ActiveConfigLogic getActiveConfigLogic() {
 		return activeConfigLogic;
 	}
@@ -35,6 +38,7 @@ public class ActiveConfig {
 	@RequestMapping("selection/lastversion")
 	@ResponseBody
     public String selectionLastVersion(HttpServletRequest request){
+		logger.info("selectionLastVersion");
 		return RetBean.ParseRet(activeConfigLogic.getConfigVersion()).toJsonString();
     }
 	
@@ -42,6 +46,7 @@ public class ActiveConfig {
 	@RequestMapping("selection/configdata")
 	@ResponseBody
     public String selectionConfigData(HttpServletRequest request){
+		logger.info("selectionConfigData");
 		return RetBean.ParseRet(activeConfigLogic.getConfigData()).toJsonString();
     }
 	
@@ -49,6 +54,7 @@ public class ActiveConfig {
 	@RequestMapping("check/lastversion")
 	@ResponseBody
     public String checkLastVersion(HttpServletRequest request){
+		logger.info("checkLastVersion");
 		return RetBean.ParseRet(activeConfigLogic.getCheckConfigVersion()).toJsonString();
     }
 	
@@ -56,6 +62,7 @@ public class ActiveConfig {
 	@RequestMapping("check/configdata")
 	@ResponseBody
     public String checkConfigdata(HttpServletRequest request){
+		logger.info("checkConfigdata");
 		return RetBean.ParseRet(activeConfigLogic.getCheckConfigData()).toJsonString();
     }
 }

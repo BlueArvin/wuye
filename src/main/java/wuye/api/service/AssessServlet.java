@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,6 +24,8 @@ import wuye.logic.AssessLogic;
 @Controller
 @RequestMapping("/api/Assess")
 public class AssessServlet {
+	
+	private static Logger logger = Logger.getLogger("assess");
 	
 	private AssessLogic assessLogic;
 
@@ -70,6 +73,9 @@ public class AssessServlet {
 		
 		int ret = assessLogic.submit(data);
 		String aseid = data.getAssessid();
+		
+		logger.info("assess:" + ret + "," + JSON.toJSONString(data));
+		
 		if(ret == 0) {
 			RetBean jsonRet = new RetBean(0, "");
 			jsonRet.setValue(aseid);

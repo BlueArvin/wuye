@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,6 +24,8 @@ import wuye.logic.UserLogic;
 @Controller
 @RequestMapping("/api/user")
 public class UserServlet {
+	
+	private static Logger logger = Logger.getLogger("user");
 	
 	public UserLogic getUserLogic() {
 		return userLogic;
@@ -47,6 +50,8 @@ public class UserServlet {
 			request.getSession().setAttribute("userid", loginUser.getUserid() + "");
 		}
 		
+		logger.info("login:" + JSON.toJSONString(loginUser));
+		
 		return JSON.toJSONString(loginUser.toAPIresult());
     }
 	
@@ -63,6 +68,8 @@ public class UserServlet {
 			request.getSession().setAttribute("userid", loginUser.getUserid() + "");
 		}
 		
+		logger.info("exist:" + JSON.toJSONString(loginUser));
+		
 		return JSON.toJSONString(loginUser.toAPIresult());
     }
 	
@@ -75,6 +82,8 @@ public class UserServlet {
 		
 		LoginUserBean loginUser = new LoginUserBean(username, pwd, 0);
 		userLogic.UserChangepwd(loginUser, newpwd);
+		
+		logger.info("changepwd:"+ JSON.toJSONString(loginUser));
 		
 		return JSON.toJSONString(loginUser.toAPIresult());
     }

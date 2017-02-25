@@ -12,6 +12,7 @@ import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,7 @@ import wuye.api.bean.RetBean;
 @RequestMapping("/api/upload")
 public class FileUploadServlet {
 	
+	private static Logger logger = Logger.getLogger("file");
 	
 	public String getDir() {
 		return dir;
@@ -77,10 +79,12 @@ public class FileUploadServlet {
                         File localFile = new File(path);  
                         try {
 							file.transferTo(localFile);
+							logger.info("file upload:" + fileName);
 							return fileName;
 						} catch (IllegalStateException e) {
-
+							logger.info("file upload:" + e.getMessage());
 						} catch (IOException e) {
+							logger.info("file upload:" + e.getMessage());
 						}  
                     }  
                 }  
@@ -136,7 +140,7 @@ public class FileUploadServlet {
                 }
             }
         }
-		
+		logger.info("file download:" + fileName);
 		return "";
     }
 }
