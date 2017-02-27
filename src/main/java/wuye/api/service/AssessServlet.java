@@ -42,7 +42,7 @@ public class AssessServlet {
 	@RequestMapping("submit")
 	@ResponseBody
     public String submit(HttpServletRequest request){
-		String sdd = request.getParameter("data");  // 街道id%检查id%物业id%扣分情况%时间字符串
+		String sdd = request.getParameter("data");  // 城区id%街道id%片区id%胡同id%物业id%检查级别id%业内（1）or业外（2）%检查项id%子检查项id%扣分情况%时间字符串
 		String pic1 = request.getParameter("pic1");      // 图片url
 		String pic2 = request.getParameter("pic2");      // 图片url
 		String pic3 = request.getParameter("pic3");      // 图片url
@@ -56,13 +56,22 @@ public class AssessServlet {
 		AssessDataBean data = new AssessDataBean();
 		
 		String[] temp = sdd.split("%");
-		data.setStreetid(temp[0]);
-		data.setAssessid(temp[1]);
-		data.setWuyeid(Integer.parseInt(temp[2]));
+		data.setAreaid(Integer.parseInt(temp[0].substring(1)));
+		data.setStreetid(Integer.parseInt(temp[1].substring(1)));
+		data.setPianquid(Integer.parseInt(temp[2].substring(1)));
+		data.setHutongid(Integer.parseInt(temp[3].substring(1)));
+		data.setWuyeid(Integer.parseInt(temp[4].substring(2)));
+		data.setJibieid(Integer.parseInt(temp[5]));
+		data.setYeneiid(Integer.parseInt(temp[6]));
+		data.setAssessidtop(Integer.parseInt(temp[7].substring(2)));
+		data.setAssessid(Integer.parseInt(temp[8].substring(2)));
+		data.setScore(Integer.parseInt(temp[9]));
+		
+		
 		data.setUserid(Integer.parseInt(uid));
-		data.setScore(Integer.parseInt(temp[3]));
+		
 		try {
-			data.setTime(time.parse(temp[4]));
+			data.setTime(time.parse(temp[10]));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -72,7 +81,7 @@ public class AssessServlet {
 		data.setImg3(pic3);
 		
 		int ret = assessLogic.submit(data);
-		String aseid = data.getAssessid();
+		int aseid = data.getAssessid();
 		
 		logger.info("assess:" + ret + "," + JSON.toJSONString(data));
 		

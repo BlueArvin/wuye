@@ -8,16 +8,60 @@ public class AssessDataBean {
 	public String id;
 	public int userid;
 	public Date time;
-	public String streetid;    // 街道id，XXX@areaid
+	public int streetid;    // 街道id，XXX@areaid
 	public int areaid;
+	public int pianquid;
+	public int hutongid;
 	public int wuyeid;
-	public String assessid;    // 检查id小类 XXX@大类id
+	public int jibieid;
+	public int yeneiid;
+	public int assessid;    // 检查id小类 XXX@大类id
 	public int assessidtop;    // 检查大类id
 	public int score;
 	public String img1;
 	public String img2 = "";
 	public String img3 = "";
 	
+	public int getPianquid() {
+		return pianquid;
+	}
+
+	public void setPianquid(int pianquid) {
+		this.pianquid = pianquid;
+	}
+
+	public int getHutongid() {
+		return hutongid;
+	}
+
+	public void setHutongid(int hutongid) {
+		this.hutongid = hutongid;
+	}
+
+	public int getJibieid() {
+		return jibieid;
+	}
+
+	public void setJibieid(int jibieid) {
+		this.jibieid = jibieid;
+	}
+
+	public int getYeneiid() {
+		return yeneiid;
+	}
+
+	public void setYeneiid(int yeneiid) {
+		this.yeneiid = yeneiid;
+	}
+
+	public void setStreetid(int streetid) {
+		this.streetid = streetid;
+	}
+
+	public void setAssessidtop(int assessidtop) {
+		this.assessidtop = assessidtop;
+	}
+
 	public AssessDataBean() {
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");//设置日期格式
     	id = "DF" + df.format(new Date());
@@ -35,13 +79,8 @@ public class AssessDataBean {
 	public void setTime(Date time) {
 		this.time = time;
 	}
-	public String getStreetid() {
+	public int getStreetid() {
 		return streetid;
-	}
-	public void setStreetid(String streetid) {
-		this.streetid = streetid;
-		String[] temp = streetid.split("@");
-		this.areaid = Integer.parseInt(temp[1]);
 	}
 	public int getAreaid() {
 		return areaid;
@@ -55,13 +94,8 @@ public class AssessDataBean {
 	public void setWuyeid(int wuyeid) {
 		this.wuyeid = wuyeid;
 	}
-	public String getAssessid() {
+	public int getAssessid() {
 		return assessid;
-	}
-	public void setAssessid(String assessid) {
-		this.assessid = assessid;
-		String[] temp = streetid.split("@");
-		this.assessidtop = Integer.parseInt(temp[1]);
 	}
 	public int getScore() {
 		return score;
@@ -94,6 +128,10 @@ public class AssessDataBean {
 
 	public int getAssessidtop() {
 		return assessidtop;
+	}
+
+	public void setAssessid(int assessid) {
+		this.assessid = assessid;
 	}
 	
 	

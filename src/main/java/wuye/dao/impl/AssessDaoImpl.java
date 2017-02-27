@@ -28,22 +28,28 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         PreparedStatement pstmt = null;
         boolean rs = false;
         try {
-            String sql = "insert into t_assess(intime, streetid, areaid, wuyeid, assessid,assessidtop, score, userid, img1, img2, img3, aseid) "
-            		+ " value(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+            String sql = "insert into t_assess(intime, streetid, areaid, pianquid, hutongid, wuyeid, assessid,assessidtop,"
+            		+ " yeneiid, jibieid, "
+            		+ " score, userid, img1, img2, img3, aseid) "
+            		+ " value(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setTimestamp(1, new Timestamp(data.getTime().getTime()));
-            pstmt.setString(2, data.getStreetid());
+            pstmt.setInt(2, data.getStreetid());
             pstmt.setInt(3, data.getAreaid());
-            pstmt.setInt(4, data.getWuyeid());
-            pstmt.setString(5, data.getAssessid());
-            pstmt.setInt(6, data.getAssessidtop());
-            pstmt.setInt(7, data.getScore());
-            pstmt.setInt(8, data.getUserid());
-            pstmt.setString(9, data.getImg1());
-            pstmt.setString(10, data.getImg2());
-            pstmt.setString(11, data.getImg3());
-            pstmt.setString(12, data.getId());
+            pstmt.setInt(4, data.getPianquid());
+            pstmt.setInt(5, data.getHutongid());
+            pstmt.setInt(6, data.getWuyeid());
+            pstmt.setInt(7, data.getAssessid());
+            pstmt.setInt(8, data.getAssessidtop());
+            pstmt.setInt(9, data.getYeneiid());
+            pstmt.setInt(10, data.getJibieid());
+            pstmt.setInt(11, data.getScore());
+            pstmt.setInt(12, data.getUserid());
+            pstmt.setString(13, data.getImg1());
+            pstmt.setString(14, data.getImg2());
+            pstmt.setString(15, data.getImg3());
+            pstmt.setString(16, data.getId());
             rs = pstmt.execute();
             
             return 0;

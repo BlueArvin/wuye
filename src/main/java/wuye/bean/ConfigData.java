@@ -11,6 +11,8 @@ public class ConfigData {
 	public List<Pair> street;
 	public List<Pair> check;
 	public List<Pair> wuye;
+	public List<Pair> pianqu;
+	public List<Pair> hutong;
 	
 	
 	public static class Pair {
