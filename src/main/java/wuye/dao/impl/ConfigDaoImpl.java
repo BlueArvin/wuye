@@ -86,6 +86,8 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
 		data.street = getStreet();
 		data.check = getCheckLevel();
 		data.wuye = getWuyeCorp();
+		data.pianqu = getPianqu();
+		data.hutong = getHutong();
 		return data;
 	}
 	
@@ -101,7 +103,8 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
 
             rs = pstmt.executeQuery();
             while (rs.next()) {
-            	ret.add(new ConfigData.Pair(rs.getInt("id") + "", rs.getString("statename")));
+            	ret.add(new ConfigData.Pair("s" + rs.getInt("id") + "", 
+            			rs.getString("statename")));
             }
             return ret;
         }catch(Exception e){
@@ -125,9 +128,61 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
 
             rs = pstmt.executeQuery();
             while (rs.next()) {
-            	ret.add(new ConfigData.Pair(rs.getInt("id") + "@" +rs.getString("area_id") , 
+            	ret.add(new ConfigData.Pair("t" + rs.getInt("id"), 
             			rs.getString("street_name"),
-            			rs.getString("area_id") + ""));
+            			"s" + rs.getString("area_id")));
+            }
+            return ret;
+        }catch(Exception e){
+       	 	doCatchException("getBlockList" ,e);
+       	 return ret;
+        } finally {
+            closeConnection(conn, pstmt, null);
+            
+        }
+	}
+	
+	private List<ConfigData.Pair> getPianqu() {
+		List<ConfigData.Pair> ret =new ArrayList<ConfigData.Pair>();
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            String sql = "select id,pianqu_name,father_id from t_pianqu";
+            conn = dataSource.getConnection();
+            pstmt = prepareStatement(conn, sql);
+
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+            	ret.add(new ConfigData.Pair("p"+ rs.getInt("id") , 
+            			rs.getString("pianqu_name"),
+            			"s" + rs.getString("father_id")));
+            }
+            return ret;
+        }catch(Exception e){
+       	 	doCatchException("getBlockList" ,e);
+       	 return ret;
+        } finally {
+            closeConnection(conn, pstmt, null);
+            
+        }
+	}
+	
+	private List<ConfigData.Pair> getHutong() {
+		List<ConfigData.Pair> ret =new ArrayList<ConfigData.Pair>();
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            String sql = "select id,hutong_name,father_id from t_hutong";
+            conn = dataSource.getConnection();
+            pstmt = prepareStatement(conn, sql);
+
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+            	ret.add(new ConfigData.Pair("h" + rs.getInt("id") , 
+            			rs.getString("hutong_name"),
+            			"p"  + rs.getString("father_id")));
             }
             return ret;
         }catch(Exception e){
@@ -158,7 +213,7 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
 
             rs = pstmt.executeQuery();
             while (rs.next()) {
-            	ret.add(new ConfigData.Pair(rs.getInt("id") + "",rs.getString("company_name")));
+            	ret.add(new ConfigData.Pair("wu" + rs.getInt("id") ,rs.getString("company_name")));
             }
             return ret;
         }catch(Exception e){
@@ -189,7 +244,7 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
 
             rs = pstmt.executeQuery();
             while (rs.next()) {
-            	ret.add(new ConfigData.Pair(rs.getInt("score_id") + "",rs.getString("title_name")));
+            	ret.add(new ConfigData.Pair("st" + rs.getInt("score_id") + "", rs.getString("title_name")));
             }
             return ret;
         }catch(Exception e){
@@ -213,8 +268,8 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
 
             rs = pstmt.executeQuery();
             while (rs.next()) {
-            	ret.add(new ConfigData.Pair(rs.getInt("subid") + "@" + rs.getInt("titleid"),rs.getString("sub_name"),
-            			rs.getInt("titleid") + ""));
+            	ret.add(new ConfigData.Pair("ss" + rs.getInt("subid"),rs.getString("sub_name"),
+            			"st" + rs.getInt("titleid") ));
             }
             return ret;
         }catch(Exception e){
