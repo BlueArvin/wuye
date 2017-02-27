@@ -22,5 +22,10 @@
   <servlet-mapping>  
       <servlet-name>springmvc</servlet-name>  
       <url-pattern>/</url-pattern>  
-  </servlet-mapping>  
+  </servlet-mapping> 
+  
+  <!-- 欢迎 -->
+	<welcome-file-list>
+		<welcome-file>/login.jsp</welcome-file>
+	</welcome-file-list> 
 </web-app>
