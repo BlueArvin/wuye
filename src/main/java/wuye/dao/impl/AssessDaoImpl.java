@@ -30,8 +30,8 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         try {
             String sql = "insert into t_assess(intime, streetid, areaid, pianquid, hutongid, wuyeid, assessid,assessidtop,"
             		+ " yeneiid, jibieid, "
-            		+ " score, userid, img1, img2, img3, aseid) "
-            		+ " value(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ";
+            		+ " score, userid, img1, img2, img3, aseid, loc) "
+            		+ " value(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?) ";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setTimestamp(1, new Timestamp(data.getTime().getTime()));
@@ -50,6 +50,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             pstmt.setString(14, data.getImg2());
             pstmt.setString(15, data.getImg3());
             pstmt.setString(16, data.getId());
+            pstmt.setString(17, data.getLoc());
             rs = pstmt.execute();
             
             return 0;

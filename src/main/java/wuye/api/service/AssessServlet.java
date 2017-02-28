@@ -46,10 +46,16 @@ public class AssessServlet {
 		String pic1 = request.getParameter("pic1");      // 图片url
 		String pic2 = request.getParameter("pic2");      // 图片url
 		String pic3 = request.getParameter("pic3");      // 图片url
+		String loc = request.getParameter("loc");        // 经纬度
 		
 		String uid = (String)request.getSession().getAttribute("userid");
 		if(uid == null) {   // 没有登录
 			return JSON.toJSONString(new RetBean(2, "未登录"));
+		}
+		
+		String right = (String)request.getSession().getAttribute("right");
+		if(right == null || ((Integer.parseInt(right)& 0x01) == 0)) {   // 没有权限
+			return JSON.toJSONString(new RetBean(3, "没有提交考评权限"));
 		}
 		
 		SimpleDateFormat time=new SimpleDateFormat("yyyyMMddHHmmss"); 
@@ -66,7 +72,7 @@ public class AssessServlet {
 		data.setAssessidtop(Integer.parseInt(temp[7].substring(2)));
 		data.setAssessid(Integer.parseInt(temp[8].substring(2)));
 		data.setScore(Integer.parseInt(temp[9]));
-		
+		data.setLoc(loc);
 		
 		data.setUserid(Integer.parseInt(uid));
 		

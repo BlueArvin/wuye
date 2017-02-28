@@ -21,7 +21,16 @@ public class AssessDataBean {
 	public String img1;
 	public String img2 = "";
 	public String img3 = "";
+	public String loc = "";
 	
+	public String getLoc() {
+		return loc;
+	}
+
+	public void setLoc(String loc) {
+		this.loc = loc;
+	}
+
 	public int getPianquid() {
 		return pianquid;
 	}

@@ -32,7 +32,7 @@ public class UserDaoImpl extends DaoBasic implements UserDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,passwd,token from t_user where cn=? and status=0 limit 1";
+            String sql = "select id,passwd,token,role from t_user where cn=? and status=0 limit 1";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setString(1, user.getAccount());
@@ -45,6 +45,7 @@ public class UserDaoImpl extends DaoBasic implements UserDao{
             	if(user.getType() == 0) {
             		if(passwd.equals(user.getPwd())) {
             			user.setRet(LoginUserBean.OK);  // ��¼�ɹ�����Ҫ����cookie
+            			user.setRole(rs.getInt("role"));
             			user.setUpdateCookie(random);
             		}else {
             			user.setRet(LoginUserBean.PWDERROR);
@@ -52,6 +53,7 @@ public class UserDaoImpl extends DaoBasic implements UserDao{
             	} else {  // token ��֤
             		if(token.equals(user.getCookie())) {
             			user.setRet(LoginUserBean.OK);  // ��¼�ɹ�����Ҫ����cookie
+            			user.setRole(rs.getInt("role"));
             			user.setUpdateCookie(random);
             		}else {
             			user.setRet(LoginUserBean.COOKIEFAIL);
@@ -111,7 +113,7 @@ public class UserDaoImpl extends DaoBasic implements UserDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,passwd,token from t_user where cn=? and status=0 limit 1";
+            String sql = "select id,passwd,token,role from t_user where cn=? and status=0 limit 1";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setString(1, user.getAccount());
@@ -119,7 +121,7 @@ public class UserDaoImpl extends DaoBasic implements UserDao{
             if (rs.next()) {
             	String passwd = rs.getString("passwd");
             	if(passwd.equals(user.getPwd())) {
-            		user.setRet(LoginUserBean.OK);  //
+            		user.setRet(LoginUserBean.OK);    //
             	}else {
             		user.setRet(LoginUserBean.PWDERROR);
             	}

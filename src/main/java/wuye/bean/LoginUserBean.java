@@ -1,5 +1,8 @@
 package wuye.bean;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import wuye.api.bean.RetBean;
 
 /**
@@ -18,6 +21,7 @@ public class LoginUserBean {
 	private String pwd = "";   	// ���������洢���������md5ֵ
 	private String cookie = "";	// ��¼���cookieֵ
 	private int type = 0;      	// 0. �˺�������ͨ��¼    1. ͨ��cookieֵ��¼
+	private int role = 0;       // 权限
 	
 	private int ret = 1;            // ��Ž��
 	private String updateCookie = ""; // �����ɵ�cookie
@@ -62,6 +66,14 @@ public class LoginUserBean {
 		return type;
 	}
 
+	public int getRole() {
+		return role;
+	}
+
+	public void setRole(int role) {
+		this.role = role;
+	}
+
 	public LoginUserBean(String account, String secret, int type) {
 		if(type == 0) {
 			this.account = account;
@@ -79,7 +91,10 @@ public class LoginUserBean {
 		switch(ret) {
 		case OK:
 			bean = new RetBean(ret, "登录成功");
-			bean.setValue(updateCookie);
+			Map<String, Object> value = new HashMap<String, Object>();
+			value.put("right", role);
+			value.put("token", updateCookie);
+			bean.setValue(value);
 			break;
 		case NOUSER:
 		case PWDERROR:

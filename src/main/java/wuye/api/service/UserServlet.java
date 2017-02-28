@@ -48,6 +48,7 @@ public class UserServlet {
 		
 		if(loginUser.getRet() == 0) {
 			request.getSession().setAttribute("userid", loginUser.getUserid() + "");
+			request.getSession().setAttribute("right", loginUser.getRole() + "");
 		}
 		
 		logger.info("login:" + JSON.toJSONString(loginUser));
@@ -66,6 +67,7 @@ public class UserServlet {
 		
 		if(loginUser.getRet() == 0) {
 			request.getSession().setAttribute("userid", loginUser.getUserid() + "");
+			request.getSession().setAttribute("right", loginUser.getRole() + "");
 		}
 		
 		logger.info("exist:" + JSON.toJSONString(loginUser));
