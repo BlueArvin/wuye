@@ -11,25 +11,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="renderer" content="webkit">
     <title>修改密码</title>  
-    <link rel="stylesheet" href="css/pintuer.css">
-    <link rel="stylesheet" href="css/admin.css">
-    <script src="js/jquery.js"></script>   
+    <link rel="stylesheet" href="/wuye/css/pintuer.css">
+    <link rel="stylesheet" href="/wuye/css/admin.css">
+    <script src="/wuye/js/jquery.js"></script>   
 </head>
 <body>
 <div class="panel admin-panel">
   <div class="panel-head"><strong><span class="icon-key"></span> 修改会员密码</strong></div>
   <div class="body-content">
-    <form method="post" class="form-x" action="">
+    <form method="post" class="form-x" action="/manager/updatePw.aspx">
       <div class="form-group">
         <div class="label">
           <label for="sitename">管理员帐号：</label>
         </div>
         <div class="field">
           <label style="line-height:33px;">
-           admin
+           ${loginName }
           </label>
         </div>
-      </div>      
+      </div>
       <div class="form-group">
         <div class="label">
           <label for="sitename">原始密码：</label>
@@ -62,8 +62,23 @@
         <div class="field">
           <button class="button bg-main icon-check-square-o" type="submit"> 提交</button>   
         </div>
-      </div>      
+      </div>
     </form>
   </div>
 </div>
-</body></html>
+</body>
+
+<script type="text/javascript">
+$(function(){
+  $(".leftnav h2").click(function(){
+	  $(this).next().slideToggle(200);	
+	  $(this).toggleClass("on"); 
+  })
+  $(".leftnav ul li a").click(function(){
+	    $("#a_leader_txt").text($(this).text());
+  		$(".leftnav ul li a").removeClass("on");
+		$(this).addClass("on");
+  })
+});
+</script>
+</html>

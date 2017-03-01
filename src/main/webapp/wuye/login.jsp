@@ -12,10 +12,10 @@
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta name="renderer" content="webkit">
 <title>后台管理中心</title>
-<link rel="stylesheet" href="css/pintuer.css">
-<link rel="stylesheet" href="css/admin.css">
-<script src="js/jquery.js"></script>
-<script src="js/pintuer.js"></script>
+<link rel="stylesheet" href="/wuye/css/pintuer.css">
+<link rel="stylesheet" href="/wuye/css/admin.css">
+<script src="/wuye/js/jquery.js"></script>
+<script src="/wuye/js/pintuer.js"></script>
 </head>
 <body>
 	<div class="bg"></div>
@@ -24,8 +24,7 @@
 			<div class="xs6 xm4 xs3-move xm4-move">
 				<div style="height: 150px;"></div>
 				<div class="media media-y margin-big-bottom"></div>
-				<!-- <form action="login.do" method="post"> -->
-				<form>
+				<!-- <form method="post"> -->
 					<div class="panel loginbox">
 						<div class="text-center margin-big padding-big-top">
 							<h1>后台管理中心</h1>
@@ -46,13 +45,7 @@
 										class="icon icon-key margin-small"></span>
 								</div>
 							</div>
-							<!-- <div class="form-group">
-                        <div class="field">
-                            <input type="text" class="input input-big" name="code" placeholder="填写右侧的验证码" data-validate="required:请填写右侧的验证码" />
-                           <img src="images/passcode.jpg" alt="" width="100" height="32" class="passcode" style="height:43px;cursor:pointer;" onclick="this.src=this.src+'?'">  
-                                                   
-                        </div>
-                    </div> -->
+							<p id ="errorTips" class="pagelist" style="color:red;display:none;overflow:right" >用户名或密码错误</p>
 						</div>
 						<div style="padding: 30px;">
 							<input id="loginBtn" type="submit"
@@ -60,7 +53,7 @@
 								value="登录">
 						</div>
 					</div>
-				</form>
+				<!-- </form> -->
 			</div>
 		</div>
 	</div>
@@ -72,27 +65,35 @@ $(document).ready(function(){
 	$("#loginBtn").on("click",function(){
 		var userName = $("input[name='userName']").val();
 		var passwd = $("input[name='passwd']").val();
+		if(userName==null||userName==""){
+			alert("请输入用户名");
+			return;
+		}
+		if(passwd==null||passwd==""){
+			alert("请输入用密码");
+			return;
+		}
+		
 		
 		$.ajax({
-            type:"GET",
-            url:"/login.do",
-            contentType:"application/json", 
-            data:{loginName:userName,passwd:passwd},
-            //返回数据的格式
-            datatype: "json",//"xml", "html", "script", "json", "jsonp", "text".
-            //在请求之前调用的函数
-            //beforeSend:function(){$("#msg").html("logining");},
-            //成功返回之后调用的函数             
-            success:function(data){
-            	alert(data.ret);
-            }   ,
-            //调用出错执行的函数
-            error: function(){
-                //请求出错处理
-                alert("111")
-            }         
-         });
-		
+			url : "/manager/login.aspx",
+			data : {loginName:userName,passwd:passwd},
+			type : 'post',
+			async : true,
+			cache : false,
+			dataType : 'json',
+			success : function(data) {
+				console.log(data);
+				if(data.ret==0){
+					window.location.href="/manager/index.aspx";
+				}else if(data.ret==-1){
+					$("#errorTips").show();
+				}
+			},
+			error : function() {
+				alert("请求异常！");
+			}
+		});
 	})
 })
 </script>

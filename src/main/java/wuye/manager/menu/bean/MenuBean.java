@@ -1,11 +1,14 @@
 package wuye.manager.menu.bean;
 
+import java.util.List;
+
 public class MenuBean {
 	private String menuCode;
 	private String menuName;
 	private String url;
-	private int level;
+	private String parentCode;
 	private int ordr;
+	List<MenuBean> child;
 	public String getMenuCode() {
 		return menuCode;
 	}
@@ -24,11 +27,11 @@ public class MenuBean {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	public int getLevel() {
-		return level;
+	public String getParentCode() {
+		return parentCode;
 	}
-	public void setLevel(int level) {
-		this.level = level;
+	public void setParentCode(String parentCode) {
+		this.parentCode = parentCode;
 	}
 	public int getOrdr() {
 		return ordr;
@@ -36,5 +39,10 @@ public class MenuBean {
 	public void setOrdr(int ordr) {
 		this.ordr = ordr;
 	}
-	
+	public List<MenuBean> getChild() {
+		return child;
+	}
+	public void setChild(List<MenuBean> child) {
+		this.child = child;
+	}
 }

@@ -11,22 +11,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="renderer" content="webkit">
     <title>后台管理中心</title>  
-    <link rel="stylesheet" href="css/pintuer.css">
-    <link rel="stylesheet" href="css/admin.css">
-    <script src="js/jquery.js"></script>   
+    <link rel="stylesheet" href="/wuye/css/pintuer.css">
+    <link rel="stylesheet" href="/wuye/css/admin.css">
+    <script src="/wuye/js/jquery.js"></script>   
 </head>
 
 <body style="background-color:#f2f9fd;">
 <div class="header bg-main">
   <div class="logo margin-big-left fadein-top">
-    <h1><img src="images/y.jpg" class="radius-circle rotate-hover" height="50" alt="" />后台管理中心</h1>
+    <h1><img src="/wuye/images/y.jpg" class="radius-circle rotate-hover" height="50" alt="" />后台管理中心</h1>
   </div>
-  <div class="head-l"><a class="button button-little bg-green" href="index.jsp" target="_self">
+  <div class="head-l"><a class="button button-little bg-green" href="/wuye/index.jsp" target="_self">
   <span class="icon-home"></span> 返回首页</a> &nbsp;&nbsp;
-  <a href="pass.jsp" target="right" class="button button-little bg-blue"><span class="icon-wrench"></span> 修改密码</a> &nbsp;&nbsp;<a class="button button-little bg-red" href="login.html"><span class="icon-power-off"></span> 退出登录</a> </div>
+  <a href="/manager/toUpdatePw.aspx" target="right" class="button button-little bg-blue"><span class="icon-wrench"></span> 修改密码</a> &nbsp;&nbsp;<a class="button button-little bg-red" href="/manager/logout.aspx"><span class="icon-power-off"></span> 退出登录</a> </div>
 </div>
 <div class="leftnav">
   <div class="leftnav-title"><strong><span class="icon-list"></span>菜单列表</strong></div>
+  
+  
+  
+  
+  <c:forEach var="menu" items="${menuList }" > 
+  	<c:choose>
+	    <c:when test="${menu.menuCode == '100000'}"><!-- 如果 -->  
+	        <h2><span class="icon-user"></span>${menu.menuName } </h2>
+	    </c:when>
+    	<c:otherwise>
+    		<h2><span class="icon-pencil-square-o""></span>${menu.menuName } </h2>
+    	</c:otherwise>
+	</c:choose>
+  	<ul>
+	  	<c:forEach var="menuChild" items="${menu.child }" > 
+	  		<li><a href="${menuChild.url }" target="right"><span class="icon-caret-right"></span>${menuChild.menuName }</a></li>
+	  	</c:forEach>
+  	</ul>
+  </c:forEach>
+  <!-- 
   <h2><span class="icon-user"></span>用户管理</h2>
   <ul>
     <li><a href="user_add.jsp" target="right"><span class="icon-caret-right"></span>用户添加</a></li>
@@ -47,22 +67,7 @@
   <ul>
   <li><a href="add.html" target="right"><span class="icon-caret-right"></span>问题地图</a></li>
   <li><a href="cate.html" target="right"><span class="icon-caret-right"></span>报表导出</a></li> 
-  </ul>
-    <!-- 
-  <ul style="display:block">
-    <li><a href="info.html" target="right"><span class="icon-caret-right"></span>网站设置</a></li>
-    <li><a href="pass.html" target="right"><span class="icon-caret-right"></span>修改密码</a></li>
-    <li><a href="page.html" target="right"><span class="icon-caret-right"></span>单页管理</a></li>  
-    <li><a href="adv.html" target="right"><span class="icon-caret-right"></span>首页轮播</a></li>   
-    <li><a href="book.html" target="right"><span class="icon-caret-right"></span>留言管理</a></li>     
-    <li><a href="column.html" target="right"><span class="icon-caret-right"></span>栏目管理</a></li>
-  </ul>   
-  <h2><span class="icon-pencil-square-o"></span>栏目管理</h2>
-  <ul>
-    <li><a href="list.html" target="right"><span class="icon-caret-right"></span>内容管理</a></li>
-    <li><a href="add.html" target="right"><span class="icon-caret-right"></span>添加内容</a></li>
-    <li><a href="cate.html" target="right"><span class="icon-caret-right"></span>分类管理</a></li>        
-  </ul>   -->
+  </ul> -->
 </div>
 <script type="text/javascript">
 $(function(){
@@ -83,7 +88,7 @@ $(function(){
   <li><b>当前语言：</b><span style="color:red;">中文</span></li>
 </ul>
 <div class="admin">
-  <iframe scrolling="auto" rameborder="0" src="main.jsp" name="right" width="100%" height="100%"></iframe>
+  <iframe scrolling="auto" rameborder="0" src="/wuye/main.jsp" name="right" width="100%" height="100%"></iframe>
 </div>
 </body>
 </html>

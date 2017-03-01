@@ -24,23 +24,23 @@
       <ul class="search">
         <li style="width:280px">
         	<div class="form-group">
-	          <label>考核类别名称：</label>
-	          <select name="type" class="input w66"  style="float:right" >
-	              <option value="">请选择考核类型</option>
-	              <option value="">内业</option>
-	              <option value="">外业</option>
+        	<input type="hidden" id="itemNo" name="itemNo" value=0 />
+	          	<label>考核类别名称：</label>
+	          	<select name="categoryNo" class="input w66"  style="float:right" >
+	              <option value="1">内业</option>
+	              <option value="2">外业</option>
 	            </select>
 	        </div>
-	        <div class="form-group">
+	        <!-- <div class="form-group">
 	          <label>考核项目序号：</label>
 	          <input type="text" class="input" name="userName" style="float:right" />
-            </div>
+            </div> -->
             <div class="form-group">
 	          <label>考核项目内容：</label>
-	          <input type="text" class="input" name="cn" value=""  style="float:right" />
+	          <input type="text" class="input" name="itemContent" value=""  style="float:right" />
 	        </div>
 	    </li>
-	    <li style="width:380px">    
+	    <li style="width:380px">
 	        <div class="form-group">
 	          <label style="float:left">&nbsp;&nbsp;&nbsp;&nbsp;考核&nbsp;&nbsp;&nbsp;&nbsp;</label>
 	          <table>
@@ -64,90 +64,78 @@
         <th>项目内容</th>   
         <th>考核分值</th>       
         <th>操作</th>       
-      </tr>      
-        <tr>
-        <td>环卫保洁</td>
-          <td>1</td>
-          <td>建筑物</td>
-          <td>重点0.5 一般0.5 普通0.5</td>
-          <td>
-          	<div class="button-group">
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 修改</a> 
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a>
-           	</div>
-           </td>
-        </tr>
-        <tr>
-          <td>环卫保洁</td>
-          <td>1</td>
-          <td>建筑物</td>
-          <td>重点0.5 一般0.5 普通0.5</td>
-          <td>
-          	<div class="button-group">
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 修改</a> 
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a>
-           	</div>
-           </td>
-        </tr>
-        <tr>
-          <td>环卫保洁</td>
-          <td>1</td>
-          <td>建筑物</td>
-          <td>重点0.5 一般0.5 普通0.5</td>
-          <td>
-          	<div class="button-group">
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 修改</a> 
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a>
-           	</div>
-           </td>
-        </tr>
-        <tr>
-          <td>环卫保洁</td>
-          <td>1</td>
-          <td>建筑物</td>
-          <td>重点0.5 一般0.5 普通0.5</td>
-          <td>
-          	<div class="button-group">
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 修改</a> 
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a>
-           	</div>
-           </td>
-        </tr>
-        <tr>
-          <td>环卫保洁</td>
-          <td>1</td>
-          <td>建筑物</td>
-          <td>重点0.5 一般0.5 普通0.5</td>
-          <td>
-          	<div class="button-group">
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 修改</a> 
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a>
-           	</div>
-           </td>
-        </tr>
-        <tr>
-          <td>环卫保洁</td>
-          <td>1</td>
-          <td>建筑物</td>
-          <td>重点0.5 一般0.5 普通0.5</td>
-          <td>
-          	<div class="button-group">
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 修改</a> 
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a>
-           	</div>
-           </td>
-        </tr>
+      </tr>
+      
+      <c:forEach  varStatus="i" var="normItemBean" items="${list }" > 
+	      <tr>
+	      	  <td>${normItemBean.categoryName }</td>
+	          <td>${normItemBean.itemNo }</td>
+	          <td>${normItemBean.itemContent }</td>
+	          <td>${normItemBean.scoreName }</td>
+	          <td>
+	          	<div class="button-group">
+	           		<a class="button border-red" href="javascript:void(0)" onclick="return update(${normItemBean.itemNo },'${normItemBean.itemContent }','${normItemBean.categoryName }')"><span class="icon-trash-o"></span> 修改</a> 
+	           		<a class="button border-red" href="javascript:void(0)" onclick="return del(${normItemBean.itemNo })"><span class="icon-trash-o"></span> 删除</a>
+	           	</div>
+	           </td>
+	        </tr>
+      </c:forEach>
+      
       <tr>
-        <td colspan="3"><div class="pagelist"> <a href="">上一页</a> <span class="current">1</span><a href="">2</a><a href="">3</a><a href="">下一页</a><a href="">尾页</a> </div></td>
+        <td colspan="3">
+        	<div class="pagelist">
+	        	<a href="javascript:load(${page.page-1 })">上一页</a>
+	        	<a num="${page.page-2 }" href="javascript:load(${page.page-2 })">${page.page-2 }</a>
+	        	<a num="${page.page-1 }" href="javascript:load(${page.page-1 })">${page.page-1 }</a>
+	        	<span class="current">${page.page }</span>
+	        	<a num="${page.countPage - page.page }" href="javascript:load(${page.page+1 })">${page.page+1 }</a>
+	        	<a num="${page.countPage - page.page - 1 }" href="javascript:load(${page.page+2 })">${page.page+2 }</a>
+	        	<a href="javascript:load(${page.page+1 })">下一页</a>
+	        	<a href="javascript:load(${page.countPage })">尾页</a>
+        	</div>
+        </td>
       </tr>
     </table>
   </div>
 </form>
 <script type="text/javascript">
+$(function(){
+	$("a[num=0],a[num=-1]").hide();
+})
+
+function load(pageNum){
+	var count = ${page.countPage };
+	var now = ${page.page };
+	if(pageNum<=0||pageNum>count){
+		return;
+	}
+	location.href="/manager/toItemSet.aspx?pageNum="+pageNum;
+}
+
+function update(no,content,type){
+	$("#categoryNo").val(no);
+	$("#categoryName").val(name);
+	$("#business").val(business);
+	$("#addBtn").text("确认修改");
+}
 
 function del(id){
 	if(confirm("您确定要删除吗?")){
-		
+		$.ajax({
+			url : "/manager/delKhItem.aspx",
+			data : {id:id},
+			type : 'post',
+			async : true,
+			cache : false,
+			dataType : 'json',
+			success : function(data) {
+				console.log(data);
+				alert(data.msg);
+			},
+			error : function() {
+				alert("请求异常！");
+			}
+		});
 	}
 }
 

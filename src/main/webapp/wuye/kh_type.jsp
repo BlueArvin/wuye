@@ -11,35 +11,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="renderer" content="webkit">
     <title>考核类型</title>  
-    <link rel="stylesheet" href="css/pintuer.css">
-    <link rel="stylesheet" href="css/admin.css">
-    <script src="js/jquery.js"></script>   
-    <script src="js/pintuer.js"></script>  
+    <link rel="stylesheet" href="/wuye/css/pintuer.css">
+    <link rel="stylesheet" href="/wuye/css/admin.css">
+    <script src="/wuye/js/jquery.js"></script>   
+    <script src="/wuye/js/pintuer.js"></script>  
 </head>
 <body>
-<form method="post" action="">
   <div class="panel admin-panel">
     <div class="panel-head"><strong class="icon-reorder"> 考核类型设置</strong></div>
     <div class="padding border-bottom">
       <ul class="search">
         <li>
+        	<form method="post" action="/manager/addKhCate.aspx">
 	        <div class="form-group">
-	          <label>考核类别名称：</label>
-	          <input type="text" class="input" name="name" style="float:right" />
-	          </div>
-	          <div class="form-group">
-	          <label>业务设置：</label>
-	          <select name="type" class="input w66"  style="float:right" >
-	              <option value="">请选择业务类型</option>
-	              <option value="">内业</option>
-	              <option value="">外业</option>
+	        <input type="hidden" id="categoryNo" name="categoryNo" value=0 />
+	          <label style="float:left">考核类别名称：</label>
+	          <input type="text" class="input"  id="categoryName" name="categoryName" data-validate="required:" style="float:left" />
+	          
+	          <label style="float:left">&nbsp;&nbsp;&nbsp;&nbsp;业务设置：</label>
+	          <select class="input w66" id="business" name="business" style="float:left" >
+	              <!-- <option value="">请选择业务类型</option> -->
+	              <option value="1">内业</option>
+	              <option value="2">外业</option>
 	            </select>
+	            &nbsp;&nbsp;&nbsp;&nbsp;
+	            <button type="submit"  class="button border-green"  style="float:right" id="addBtn"><span class="icon-check"></span> 确认添加</button>
 	          </div>
-	          <div class="form-group">
+	          <!-- <div class="form-group">
 	          <label>类型序号：</label>
-	          <input type="text" class="input" name="no" value=""  style="float:right" />
-	        </div>
-	        <button type="button"  class="button border-green"  style="float:right" id="addkhType"><span class="icon-check"></span> 确认添加</button>
+	          <input type="number" class="input" name="categoryNo" value="" data-validate="required:"  style="float:right" />
+	        </div> -->
+	        </form>
         </li>
       </ul>
     </div>
@@ -49,88 +51,80 @@
         <th>名称</th>
         <th>业务</th>       
         <th>操作</th>       
-      </tr>      
-        <tr>
-          <td>1</td>
-          <td>神夜</td>
-          <td>内业</td>
-          <td>
-          	<div class="button-group">
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 修改</a> 
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a>
-           	</div>
-           </td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>神夜</td>
-          <td>内业</td>
-          <td>
-          	<div class="button-group">
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 修改</a> 
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a>
-           	</div>
-           </td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>神夜</td>
-          <td>内业</td>
-          <td>
-          	<div class="button-group">
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 修改</a> 
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a>
-           	</div>
-           </td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>神夜</td>
-          <td>内业</td>
-          <td>
-          	<div class="button-group">
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 修改</a> 
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a>
-           	</div>
-           </td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>神夜</td>
-          <td>内业</td>
-          <td>
-          	<div class="button-group">
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 修改</a> 
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a>
-           	</div>
-           </td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>神夜</td>
-          <td>外业</td>
-          <td>
-          	<div class="button-group">
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 修改</a> 
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a>
-           	</div>
-           </td>
-        </tr>
+      </tr>     
+      <c:forEach  varStatus="i" var="normCateBean" items="${list }" > 
+	      <tr>
+	          <td>${normCateBean.categoryNo }</td>
+	          <td>${normCateBean.categoryName }</td>
+	          <td>${normCateBean.businessName }</td>
+	          <td>
+	          	<div class="button-group">
+	           		<a class="button border-red" href="javascript:void(0)" onclick="return update(${normCateBean.categoryNo },'${normCateBean.categoryName }',${normCateBean.business })"><span class="icon-trash-o"></span> 修改</a> 
+	           		<a class="button border-red" href="javascript:void(0)" onclick="return del(${normLevelBean.categoryNo })"><span class="icon-trash-o"></span> 删除</a>
+	           	</div>
+	           </td>
+	        </tr>
+      </c:forEach>
+      
       <tr>
-        <td colspan="3"><div class="pagelist"> <a href="">上一页</a> <span class="current">1</span><a href="">2</a><a href="">3</a><a href="">下一页</a><a href="">尾页</a> </div></td>
+        <td colspan="4">
+        	<div class="pagelist">
+	        	<a href="javascript:load(${page.page-1 })">上一页</a>
+	        	<a num="${page.page-2 }" href="javascript:load(${page.page-2 })">${page.page-2 }</a>
+	        	<a num="${page.page-1 }" href="javascript:load(${page.page-1 })">${page.page-1 }</a>
+	        	<span class="current">${page.page }</span>
+	        	<a num="${page.countPage - page.page }" href="javascript:load(${page.page+1 })">${page.page+1 }</a>
+	        	<a num="${page.countPage - page.page - 1 }" href="javascript:load(${page.page+2 })">${page.page+2 }</a>
+	        	<a href="javascript:load(${page.page+1 })">下一页</a>
+	        	<a href="javascript:load(${page.countPage })">尾页</a>
+        	</div>
+        </td>
       </tr>
     </table>
   </div>
-</form>
 <script type="text/javascript">
+
+$(function(){
+	$("a[num=0],a[num=-1]").hide();
+})
+
+function load(pageNum){
+	var count = ${page.countPage };
+	var now = ${page.page };
+	if(pageNum<=0||pageNum>count){
+		return;
+	}
+	location.href="/manager/toKhType.aspx?pageNum="+pageNum;
+}
 
 function del(id){
 	if(confirm("您确定要删除吗?")){
-		
+		$.ajax({
+			url : "/manager/delKhCate.aspx",
+			data : {id:id},
+			type : 'post',
+			async : true,
+			cache : false,
+			dataType : 'json',
+			success : function(data) {
+				console.log(data);
+				alert(data.msg);
+			},
+			error : function() {
+				alert("请求异常！");
+			}
+		});
 	}
 }
 
-$("#checkall").click(function(){ 
+function update(no,name,business){
+	$("#categoryNo").val(no);
+	$("#categoryName").val(name);
+	$("#business").val(business);
+	$("#addBtn").text("确认修改");
+}
+
+$("#checkall").click(function(){
   $("input[name='id[]']").each(function(){
 	  if (this.checked) {
 		  this.checked = false;

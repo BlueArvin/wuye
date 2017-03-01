@@ -11,22 +11,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="renderer" content="webkit">
     <title>添加用户</title>  
-    <link rel="stylesheet" href="css/pintuer.css">
-    <link rel="stylesheet" href="css/admin.css">
-    <script src="js/jquery.js"></script>
-    <script src="js/pintuer.js"></script>  
+    <link rel="stylesheet" href="/wuye/css/pintuer.css">
+    <link rel="stylesheet" href="/wuye/css/admin.css">
+    <script src="/wuye/js/jquery.js"></script>
+    <script src="/wuye/js/pintuer.js"></script>  
 </head>
 <body>
 <div class="panel admin-panel">
   <div class="panel-head"><strong><span class="icon-pencil-square-o"></span> 添加用户</strong></div>
   <div class="body-content">
-    <form method="post" class="form-x" action="">
+    <form method="post" class="form-x">
       <div class="form-group">
         <div class="label">
           <label>账户：</label>
         </div>
         <div class="field">
-          <input type="text" class="input" name="cn" value="" />
+          <input type="text" class="input" name="cn" value="${userBean.cn } " />
           <div class="tips"></div>
         </div>
       </div>
@@ -35,7 +35,7 @@
           <label>用户名：</label>
         </div>
         <div class="field">
-          <input type="text" class="input" name="userName" value="" />
+          <input type="text" class="input" name="userName" value="${userBean.userName }" />
           <div class="tips"></div>
         </div>
       </div>
@@ -44,7 +44,7 @@
           <label>初始密码：</label>
         </div>
         <div class="field">
-          <input type="text" class="input" name="passwd" value="" />
+          <input type="text" class="input" name="passwd" value="${userBean.passwd }" />
           <div class="tips"></div>
         </div>
       </div>
@@ -53,8 +53,8 @@
           <label>app权限分配：</label>
         </div>
         <div class="field" style="padding-top:8px;">
-            <input id="xmcheck"  type="checkbox" />项目检查&nbsp;&nbsp;&nbsp;&nbsp;
-            <input id="jlquery"  type="checkbox" />记录查询&nbsp;&nbsp;&nbsp;&nbsp;
+            <input id="xmcheck" name="xmcheck" value="1" type="checkbox" />项目检查&nbsp;&nbsp;&nbsp;&nbsp;
+            <input id="jlquery" name="jlquery" value="1" type="checkbox" />记录查询&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
       </div>
       <div class="form-group">
@@ -62,10 +62,10 @@
           <label>web权限分配：</label>
         </div>
         <div class="field" style="padding-top:8px;">
-                  <input id="yhgl"  type="checkbox" />用户管理&nbsp;&nbsp;&nbsp;&nbsp;
-            <input id="bzsz"  type="checkbox" />标准设置&nbsp;&nbsp;&nbsp;&nbsp;
-                     <input id="khxg"  type="checkbox" />考核修改&nbsp;&nbsp;&nbsp;&nbsp;
-            <input id="sjfx"  type="checkbox" />数据分析&nbsp;&nbsp;&nbsp;&nbsp;
+                  <input id="yhgl" name="yhgl" value="100000"  type="checkbox" />用户管理&nbsp;&nbsp;&nbsp;&nbsp;
+            <input id="bzsz"  name="bzsz" value="200000" type="checkbox" />标准设置&nbsp;&nbsp;&nbsp;&nbsp;
+                     <input id="khxg" name="khxg" value="300000" type="checkbox" />考核修改&nbsp;&nbsp;&nbsp;&nbsp;
+            <input id="sjfx" name="sjfx" value="400000" type="checkbox" />数据分析&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
       </div>
       <div class="form-group">
@@ -73,10 +73,98 @@
           <label></label>
         </div>
         <div class="field">
-          <button class="button bg-main icon-check-square-o" type="submit"> 确认添加</button>
+          <button class="button bg-main icon-check-square-o" onclick="subForm()" type="button"> 确认添加</button>
         </div>
       </div>
     </form>
   </div>
 </div>
-</body></html>
+</body>
+<script type="text/javascript">
+Array.prototype.contains = function(obj) {
+  var i = this.length;
+  while (i--) {
+    if (this[i] === obj) {
+      return true;
+    }
+  }
+  return false;
+}
+$(function(){
+	
+	//初始化checkbox
+	
+	var role = "${userBean.role }";
+	var webRole = "${userBean.webRole }";
+	
+	var xmcheck = false;
+	var jlquery = false;
+	if(role != ""){
+		if(role&2!=0){
+			xmcheck = true;
+		}
+		if(role&1!=0){
+			jlquery = true;
+		}
+	}
+	var cbArray = webRole.split(",");
+	var yhgl = cbArray.contains("100000");
+	var bzsz = cbArray.contains("200000");
+	var khxg = cbArray.contains("300000");
+	var sjfx = cbArray.contains("400000");
+	
+	var ckArray = ["xmcheck","jlquery","yhgl","bzsz","khxg","sjfx"];
+	var ckArrayValue = [xmcheck,jlquery,yhgl,bzsz,khxg,sjfx]
+	
+	for(i=0;i<ckArray.length;i++){
+		var name = ckArray[i];
+		$("input[name='"+name+"']").attr("checked",ckArrayValue[i]);
+	}
+	
+	//alert("xmcheck="+xmcheck+",jlquery="+jlquery+",yhgl="+yhgl+",bzsz="+bzsz+",khxg="+khxg+",sjfx="+sjfx);
+	
+})
+
+function subForm(){
+	var cn = $("input[name='cn']").val();
+	var userName = $("input[name='userName']").val();
+	var passwd = $("input[name='passwd']").val();
+	
+	if(cn==""||userName==""||passwd==""){
+		alert("表单信息不全");
+		return;
+	}
+	
+	var postData = getFormField($("form"), "name");
+	console.log(postData);
+	
+	var id = "${userBean.id }";
+	if(id != ""){
+		postData.id=id;
+	}
+	var url = "/manager/addUser.aspx";
+	$.ajax({
+		url : url,
+		data : postData,
+		type : 'post',
+		async : true,
+		cache : false,
+		dataType : 'json',
+		success : function(data) {
+			console.log(data);
+			alert(data.msg);
+			if(data.ret==0){
+				$("input[type='text']").val("");
+				$("input[type='checkbox']").attr("checked",false);
+				//window.location.href="/manager/index.aspx";
+			}
+		},
+		error : function() {
+			alert("请求异常！");
+		}
+	});
+}
+</script>
+
+
+</html>

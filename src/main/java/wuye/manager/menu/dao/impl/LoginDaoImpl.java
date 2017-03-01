@@ -40,17 +40,18 @@ public class LoginDaoImpl extends DaoBasic implements LoginDao{
             	String cn = rs.getString("cn");
             	ub.setCn(cn);
             	ub.setUserName(rs.getString("userName"));
-            	
-            	sql = "select menu_code from t_role where cn = ?";
-            	conn = dataSource.getConnection();
-                pstmt = prepareStatement(conn, sql);
-                pstmt.setString(1, cn);
-                rs = pstmt.executeQuery();
-                List<String> menus = new ArrayList<String>();
-                while(rs.next()){
-                	menus.add(rs.getString("menu_code"));
-                }
-                ub.setRoleList(menus);
+            	ub.setWebRole(rs.getString("webRole"));
+//            	
+//            	sql = "select menu_code from t_role where cn = ?";
+//            	conn = dataSource.getConnection();
+//                pstmt = prepareStatement(conn, sql);
+//                pstmt.setString(1, cn);
+//                rs = pstmt.executeQuery();
+//                List<String> menus = new ArrayList<String>();
+//                while(rs.next()){
+//                	menus.add(rs.getString("menu_code"));
+//                }
+//                ub.setRoleList(menus);
             	return ub;
             }
             return null;

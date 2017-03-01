@@ -1,3 +1,8 @@
+
+String.prototype.trim=function(){
+	return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+
 $(function(){
 	$(".win-homepage").click(function(){ 
         if(document.all){
@@ -501,3 +506,112 @@ $(function(){
 	});
 
 })
+
+
+function getFormField(form,sel) {
+	var objs = form.find("*[" + sel + "]");
+	var postData = {};
+	for (var i = 0, len = objs.length; i < len; i++) {
+		var obj = objs[i];
+		var nodeName = obj.nodeName.toLowerCase();
+		var field = $(obj).attr(sel);
+
+		if (nodeName == "input") {
+			if (obj.type == "radio"
+					&& (obj.checked || obj.checked == "checked")) {
+
+				postData[field] = $(obj).val();
+				continue;
+			}
+			if (obj.type == "checkbox"
+					&& (obj.checked || obj.checked == "checked")) {
+				var ov = postData[field] || "";
+				var nv = ov + "," + $(obj).val();
+				postData[field] = nv.replace(/^,+/, "");
+				continue;
+			}
+
+			if (obj.type == "text" || obj.type == "hidden") {
+				postData[field] = $(obj).val();
+				continue;
+			}
+			if (obj.type == "file") {
+				postData[field] = $(obj).attr("filename");
+				continue;
+			}
+
+			continue;
+		}
+
+		if (nodeName == "textarea") {
+			postData[field] = $(obj).val();
+			continue;
+		}
+
+		if (nodeName == "select") {
+			var val = obj.options[obj.selectedIndex].value;
+			postData[field] = val;
+			continue;
+		}
+
+		postData[field] = $(obj).html();
+
+	}
+
+	// 返回从表单获取数据的json数据
+	return postData;
+}
+
+
+function setFormField(form,sel,info) {
+	var objs = form.find("*[" + sel + "]");
+	
+	for (var i = 0, len = objs.length; i < len; i++) {
+		var obj = objs[i];
+		var nodeName = obj.nodeName.toLowerCase();
+		var field = $(obj).attr(sel);
+		
+		if(info[field]==null||info[field]==""){
+			continue;
+		}
+		
+		if (nodeName == "input") {
+			if (obj.type == "radio"
+					&& (obj.checked || obj.checked == "checked")) {
+				if(info[field]=="Y"||info[field]=="1"){
+					$(obj).next().trigger("click");
+				}
+				continue;
+			}
+			if (obj.type == "checkbox"
+					&& (obj.checked || obj.checked == "checked")) {
+				
+				//	TODO:checkbox赋值
+				
+				continue;
+			}
+
+			if (obj.type == "text" || obj.type == "hidden") {
+				$(obj).val(info[field]);
+				continue;
+			}
+			if (obj.type == "file") {
+				$(obj).attr("filename",info[field]);
+				$("#"+field+"_img").attr("src",info[field]);
+				continue;
+			}
+			continue;
+		}
+
+		if (nodeName == "textarea") {
+			$(obj).val(info[field]);
+			continue;
+		}
+
+		if (nodeName == "select") {
+			$(obj).val(info[field]);
+			$(obj).change();
+			continue;
+		}
+	}
+}
