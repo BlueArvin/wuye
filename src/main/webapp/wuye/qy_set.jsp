@@ -11,184 +11,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="renderer" content="webkit">
     <title>区域设置</title>  
-    <link rel="stylesheet" href="css/pintuer.css">
-    <link rel="stylesheet" href="css/admin.css">
-    <script src="js/jquery.js"></script>   
-    <script src="js/pintuer.js"></script>  
+    <link rel="stylesheet" href="/wuye/css/pintuer.css">
+    <link rel="stylesheet" href="/wuye/css/admin.css">
+    <script src="/wuye/js/jquery.js"></script>   
+    <script src="/wuye/js/pintuer.js"></script>  
 </head>
 <body>
-<form method="post" action="">
   <div class="panel admin-panel">
-    <div class="panel-head"><strong class="icon-reorder"> 城区设置</strong></div>
-    <div class="padding border-bottom">
-      <ul class="search">
-        <li>
-        	<div class="form-group">
-	          <label>城区名称：</label>
-	          <input type="text" class="input" name="userName" style="float:right" />
-	        </div>
-	    </li>
-	    <li><button type="button"  class="button border-green"  style="float:right" id="addkhLevel"><span class="icon-check"></span> 确认添加</button></li>
-	  </ul>
-	</div> 
-	<div class="panel-head"><strong class="icon-reorder"> 街道设置</strong></div>
-    <div class="padding border-bottom">
-      <ul class="search">
-        <li>
-        	<div class="form-group">
-	          <label>城区名称：</label>
-	          <select name="type" class="input w66"  style="float:right" >
-	              <option value="">请选择城区</option>
-	              <option value="">内业</option>
-	              <option value="">外业</option>
-	            </select>
-	        </div>
-	        <div class="form-group">
-	          <label>街道名称：</label>
-	          <input type="text" class="input" name="userName" style="float:right" />
-	        </div>
-	    </li>
-	    <li><button type="button"  class="button border-green"  style="float:right" id="addkhLevel"><span class="icon-check"></span> 确认添加</button></li>
-	  </ul>
+    <div class="panel-head" onclick="showDiv('stateDiv')"><strong class="icon-reorder"> 城区设置</strong></div>
+    <div id="stateDiv" name="form" class="padding border-bottom">
+    	<iframe scrolling="auto" rameborder="0" src="/manager/toAreaSetChild.aspx?pageNum=1&type=1" name="right" width="100%" id="info1" onload="changeFrameHeight('info1')" ></iframe>
+    </div>
+	<div class="panel-head" onclick="showDiv('streeDiv')"><strong class="icon-reorder"> 街道设置</strong></div>
+    <div id="streeDiv" name="form" class="padding border-bottom hidden">
+    	<iframe scrolling="auto" rameborder="0" src="/manager/toAreaSetChild.aspx?pageNum=1&type=2" name="right" width="100%" id="info2" onload="changeFrameHeight('info2')" ></iframe>
 	</div>
-	<div class="panel-head"><strong class="icon-reorder"> 片区设置</strong></div>
-    <div class="padding border-bottom">
-      <ul class="search">
-        <li>
-        	<div class="form-group">
-	          <label>街道名称：</label>
-	          <select name="type" class="input w66"  style="float:right" >
-	              <option value="">请选择街道</option>
-	              <option value="">内业</option>
-	              <option value="">外业</option>
-	            </select>
-	        </div>
-	        <div class="form-group">
-	          <label>片区名称：</label>
-	          <input type="text" class="input" name="userName" style="float:right" />
-	        </div>
-	    </li>
-	    <li><button type="button"  class="button border-green"  style="float:right" id="addkhLevel"><span class="icon-check"></span> 确认添加</button></li>
-	  </ul>
+	<div class="panel-head" onclick="showDiv('pianquDiv')"><strong class="icon-reorder"> 片区设置</strong></div>
+    <div id="pianquDiv" name="form" class="padding border-bottom hidden">
+    	<iframe scrolling="auto" rameborder="0" src="/manager/toAreaSetChild.aspx?pageNum=1&type=3" name="right" width="100%" id="info3" onload="changeFrameHeight('info3')" ></iframe>
 	</div>
-	<div class="panel-head"><strong class="icon-reorder"> 物业设置</strong></div>
-    <div class="padding border-bottom">
-      <ul class="search">
-        <li>
-        	<div class="form-group">
-	          <label>物业名称：</label>
-	          <input type="text" class="input" name="userName" style="float:right" />
-	        </div>
-	    </li>
-	    <li><button type="button"  class="button border-green"  style="float:right" id="addkhLevel"><span class="icon-check"></span> 确认添加</button></li>
-	  </ul>
+	<div class="panel-head" onclick="showDiv('hutongDiv')"><strong class="icon-reorder"> 胡同设置</strong></div>
+    <div id="hutongDiv" name="form" class="padding border-bottom hidden">
+	    <iframe scrolling="auto" rameborder="0" src="/manager/toAreaSetChild.aspx?pageNum=1&type=4" name="right" width="100%" id="info4" onload="changeFrameHeight('info4')" ></iframe>
 	</div>
-    <table class="table table-hover text-center">
-      <tr>
-        <th width="120">序号</th>
-        <th>考核名称</th>       
-        <th>操作</th>       
-      </tr>      
-        <tr>
-          <td>1</td>
-          <td>神夜</td>
-          <td>
-          	<div class="button-group">
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 修改</a> 
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a>
-           	</div>
-           </td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>神夜</td>
-          <td>
-          	<div class="button-group">
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 修改</a> 
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a>
-           	</div>
-           </td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>神夜</td>
-          <td>
-          	<div class="button-group">
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 修改</a> 
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a>
-           	</div>
-           </td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>神夜</td>
-          <td>
-          	<div class="button-group">
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 修改</a> 
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a>
-           	</div>
-           </td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>神夜</td>
-          <td>
-          	<div class="button-group">
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 修改</a> 
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a>
-           	</div>
-           </td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>神夜</td>
-          <td>
-          	<div class="button-group">
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 修改</a> 
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a>
-           	</div>
-           </td>
-        </tr>
-      <tr>
-        <td colspan="3"><div class="pagelist"> <a href="">上一页</a> <span class="current">1</span><a href="">2</a><a href="">3</a><a href="">下一页</a><a href="">尾页</a> </div></td>
-      </tr>
-    </table>
+	<div class="panel-head" onclick="showDiv('companyDiv')"><strong class="icon-reorder"> 物业设置</strong></div>
+    <div id="companyDiv" name="form" class="padding border-bottom hidden">
+    	<iframe scrolling="auto" rameborder="0" src="/manager/toAreaSetChild.aspx?pageNum=1&type=5" name="right" width="100%" id="info5" onload="changeFrameHeight('info5')" ></iframe>
+	</div>
   </div>
-</form>
 <script type="text/javascript">
 
-function del(id){
-	if(confirm("您确定要删除吗?")){
-		
-	}
+function changeFrameHeight(id){
+    var ifm= $("#"+id);
+    var height = ifm.contents().find("body").height();
+    ifm.attr("height",286);
 }
 
-$("#checkall").click(function(){ 
-  $("input[name='id[]']").each(function(){
-	  if (this.checked) {
-		  this.checked = false;
-	  }
-	  else {
-		  this.checked = true;
-	  }
-  });
-})
 
-function DelSelect(){
-	var Checkbox=false;
-	 $("input[name='id[]']").each(function(){
-	  if (this.checked==true) {		
-		Checkbox=true;	
-	  }
-	});
-	if (Checkbox){
-		var t=confirm("您确认要删除选中的内容吗？");
-		if (t==false) return false; 		
-	}
-	else{
-		alert("请选择您要删除的内容!");
-		return false;
-	}
+function showDiv(showDivId){
+	$("div[name='form']").hide();
+	$("#"+showDivId).removeClass("hidden").show();
 }
 
 </script>

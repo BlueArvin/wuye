@@ -1,5 +1,6 @@
 package wuye.manager.norm.servlet;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,13 +18,8 @@ import wuye.manager.norm.bean.NormCategoryBean;
 import wuye.manager.norm.bean.NormItemBean;
 import wuye.manager.norm.bean.NormLevelBean;
 import wuye.manager.norm.logic.NormLogic;
-import wuye.manager.user.bean.UserBean;
-import wuye.manager.user.logic.ManagerUserLogic;
 import wuye.manager.utils.ManagerRetBean;
-import wuye.manager.utils.ManagerRetListBean;
 import wuye.manager.utils.PageUtil;
-
-import com.alibaba.fastjson.JSONObject;
 
 
 @Controller
@@ -90,35 +86,18 @@ private static Logger logger = Logger.getLogger("manager");
 			pageNum=1;
 		}
 		PageUtil page = new PageUtil(pageNum);
+		page.setPageSize(5);
 		List<NormItemBean> nlb = normLogic.queryNormItemList(page);
+		List<NormLevelBean> levelList = normLogic.queryNormLevelList();
+		
+		List<NormCategoryBean> cateList = normLogic.queryNormCategoryList();
+		
 		request.setAttribute("list", nlb);
+		request.setAttribute("levelList", levelList);
+		request.setAttribute("cateList", cateList);
 		request.setAttribute("page", page);
 		return "xm_set";
 	}
-	
-	/**
-	 * to 考核区域设置页面
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/toAreaSet.aspx")
-	public String toAreaSetting(HttpServletRequest request,HttpServletResponse response){
-//		UserBean ub = (UserBean) request.getSession().getAttribute("user");
-//		request.setAttribute("loginName", ub.getCn());
-		
-		return "qy_set";
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	/**
@@ -131,13 +110,22 @@ private static Logger logger = Logger.getLogger("manager");
 	public String addOrUpdateKhLevel(HttpServletRequest request,HttpServletResponse response
 			,@Validated( { NormLevelBean.class }) NormLevelBean normLevelBean){
 		System.out.println(normLevelBean.toString());
+		String msg = "";
 		if(normLevelBean.getLevelNo()!=0){//修改
-			normLogic.updateNormLevel(normLevelBean);
+			if(normLogic.updateNormLevel(normLevelBean)){
+				msg = "修改成功";
+			}else{
+				msg = "修改失败，请重新尝试";
+			};
+			
 		}else{//添加
-			normLogic.addNormLevel(normLevelBean);
+			if(normLogic.addNormLevel(normLevelBean)){
+				msg = "添加成功";
+			};
 		}
 		List<NormLevelBean> nlb = normLogic.queryNormLevelList();
 		request.setAttribute("list", nlb);
+		request.setAttribute("msg", msg);
 		return "kh_level";
 	}
 	
@@ -170,14 +158,22 @@ private static Logger logger = Logger.getLogger("manager");
 	public String addOrUpdateKhCate(HttpServletRequest request,HttpServletResponse response
 			,@Validated( { NormCategoryBean.class }) NormCategoryBean normCategoryBean){
 		System.out.println(normCategoryBean.toString());
+		
+		String msg="";
 		if(normCategoryBean.getCategoryNo()!=0){//修改
-			normLogic.updateNormCategory(normCategoryBean);
+			if(normLogic.updateNormCategory(normCategoryBean)){
+				msg="修改成功";
+			};
 		}else{//添加
-			normLogic.addNormCategory(normCategoryBean);
+			if(normLogic.addNormCategory(normCategoryBean)){
+				msg="添加成功";
+			};
 		}
+		
 		List<NormCategoryBean> nlb = normLogic.queryNormCategoryList(new PageUtil(1));
 		request.setAttribute("list", nlb);
 		request.setAttribute("page", new PageUtil(1));
+		request.setAttribute("msg", msg);
 		return "kh_type";
 	}
 	
@@ -209,16 +205,43 @@ private static Logger logger = Logger.getLogger("manager");
 	 */
 	@RequestMapping("/addKhItem.aspx")
 	public String addOrUpdateKhItem(HttpServletRequest request,HttpServletResponse response
-			,@Validated( { NormItemBean.class }) NormItemBean normItemBean){
-		System.out.println(normItemBean.toString());
+			,@Validated( { NormItemBean.class }) NormItemBean normItemBean,
+			@RequestParam("scoreValue") List<Integer> scoreValues,
+			@RequestParam("scoreId") List<Integer> scoreIds){
+		
+		
+		System.out.println(normItemBean);
+		
+		List<NormItemBean.NormScoreBean> list = new ArrayList<NormItemBean.NormScoreBean>();
+		for(int i=0;i<scoreIds.size();i++ ){
+			NormItemBean.NormScoreBean nsb = new NormItemBean.NormScoreBean();
+			nsb.setLevelNo(scoreIds.get(i));
+			nsb.setScore(scoreValues.get(i));
+			list.add(nsb);
+		}
+		normItemBean.setScoreList(list);
+		
+		System.out.println("*********"+normItemBean.toString());
+		String msg="";
 		if(normItemBean.getItemNo()!=0){//修改
 			normLogic.updateNormItem(normItemBean);
+			msg="修改成功";
 		}else{//添加
 			normLogic.addNormItem(normItemBean);
+			msg="添加成功";
 		}
-		List<NormItemBean> nlb = normLogic.queryNormItemList(new PageUtil(1));
+		
+		PageUtil page = new PageUtil(1);
+		page.setPageSize(5);
+		List<NormItemBean> nlb = normLogic.queryNormItemList(page);
+		List<NormLevelBean> levelList = normLogic.queryNormLevelList();
+		List<NormCategoryBean> cateList = normLogic.queryNormCategoryList();
+		
 		request.setAttribute("list", nlb);
-		request.setAttribute("page", new PageUtil(1));
+		request.setAttribute("levelList", levelList);
+		request.setAttribute("cateList", cateList);
+		request.setAttribute("page", page);
+		request.setAttribute("msg", msg);
 		return "xm_set";
 	}
 	

@@ -11,24 +11,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="renderer" content="webkit">
     <title>项目设置</title>  
-    <link rel="stylesheet" href="css/pintuer.css">
-    <link rel="stylesheet" href="css/admin.css">
-    <script src="js/jquery.js"></script>   
-    <script src="js/pintuer.js"></script>  
+    <link rel="stylesheet" href="/wuye/css/pintuer.css">
+    <link rel="stylesheet" href="/wuye/css/admin.css">
+    <script src="/wuye/js/jquery.js"></script>   
+    <script src="/wuye/js/pintuer.js"></script>  
 </head>
+		
 <body>
-<form method="post" action="">
   <div class="panel admin-panel">
     <div class="panel-head"><strong class="icon-reorder"> 考核项目管理</strong></div>
     <div class="padding border-bottom">
+    <form method="post" action="/manager/addKhItem.aspx">
       <ul class="search">
         <li style="width:280px">
         	<div class="form-group">
         	<input type="hidden" id="itemNo" name="itemNo" value=0 />
 	          	<label>考核类别名称：</label>
-	          	<select name="categoryNo" class="input w66"  style="float:right" >
+	          	<select id="categoryNo" name="categoryNo" class="input w66"  style="float:right" >
+	          		<c:forEach  varStatus="i" var="normCateBean" items="${cateList }" >
+	          			<option value="${normCateBean.categoryNo }">${normCateBean.categoryName }</option>
+	          		</c:forEach>
+	          	<!-- 
 	              <option value="1">内业</option>
-	              <option value="2">外业</option>
+	              <option value="2">外业</option> -->
 	            </select>
 	        </div>
 	        <!-- <div class="form-group">
@@ -37,25 +42,28 @@
             </div> -->
             <div class="form-group">
 	          <label>考核项目内容：</label>
-	          <input type="text" class="input" name="itemContent" value=""  style="float:right" />
+	          <input type="textarea" class="input" id="itemContent" name="itemContent" data-validate="required:"  value=""  style="float:right" />
 	        </div>
 	    </li>
-	    <li style="width:380px">
+	    <li style="width:100%;padding-top:8px">
 	        <div class="form-group">
-	          <label style="float:left">&nbsp;&nbsp;&nbsp;&nbsp;考核&nbsp;&nbsp;&nbsp;&nbsp;</label>
+	          <label style="float:left">&nbsp;&nbsp;&nbsp;&nbsp;考核&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
 	          <table>
 	          	<tr>
-	          		<td><label style="float:left">重点：</label><input type="text" class="input w55" name="userName" /></td>
-	          		<td><label style="float:left">一般：</label><input type="text" class="input w55" name="userName" /></td>
-	          		<td><label style="float:left">普通：</label><input type="text" class="input w55" name="userName" /></td>
+	          	<c:forEach  varStatus="i" var="normLevelBean" items="${levelList }" >
+	          		<td><label style="float:left">${normLevelBean.levelName }：</label>
+	          		<input type="number" class="input w55" data-validate="required:" value=0 name="scoreValue" levelId="${normLevelBean.levelNo }" />
+	          		<input type="hidden" class="input w55" name="scoreId" value="${normLevelBean.levelNo }" /></td>
+	          	</c:forEach>
 	          	</tr>
 	          </table>
 	        </div>
         </li>
         <li>
-        <button type="button"  class="button border-green"  style="float:right" id="addkhLevel"><span class="icon-check"></span> 确认添加</button>
+        <button type="submit" class="button border-green"  style="float:right" id="addBtn"><span class="icon-check"></span> 确认添加</button>
         </li>
       </ul>
+      </form>
     </div>
     <table class="table table-hover text-center">
       <tr>
@@ -72,9 +80,14 @@
 	          <td>${normItemBean.itemNo }</td>
 	          <td>${normItemBean.itemContent }</td>
 	          <td>${normItemBean.scoreName }</td>
+	          
+	          <c:forEach  varStatus="z" var="normScoreBean" items="${normItemBean.scoreList }" > 
+					<span style="display:none" name="score_${normItemBean.itemNo }" levelId="${normScoreBean.levelNo }" />${normScoreBean.score }</span>
+	          </c:forEach>
+	          
 	          <td>
 	          	<div class="button-group">
-	           		<a class="button border-red" href="javascript:void(0)" onclick="return update(${normItemBean.itemNo },'${normItemBean.itemContent }','${normItemBean.categoryName }')"><span class="icon-trash-o"></span> 修改</a> 
+	           		<a class="button border-red" href="javascript:void(0)" onclick="return update(${normItemBean.itemNo },'${normItemBean.itemContent }','${normItemBean.categoryNo }')"><span class="icon-trash-o"></span> 修改</a> 
 	           		<a class="button border-red" href="javascript:void(0)" onclick="return del(${normItemBean.itemNo })"><span class="icon-trash-o"></span> 删除</a>
 	           	</div>
 	           </td>
@@ -82,7 +95,7 @@
       </c:forEach>
       
       <tr>
-        <td colspan="3">
+        <td colspan="5">
         	<div class="pagelist">
 	        	<a href="javascript:load(${page.page-1 })">上一页</a>
 	        	<a num="${page.page-2 }" href="javascript:load(${page.page-2 })">${page.page-2 }</a>
@@ -97,12 +110,16 @@
       </tr>
     </table>
   </div>
-</form>
 <script type="text/javascript">
 $(function(){
 	$("a[num=0],a[num=-1]").hide();
+	
+	var retMsg="${msg }";
+	if(retMsg!=null&&retMsg!=""){
+		alert(retMsg);
+	}
+	
 })
-
 function load(pageNum){
 	var count = ${page.countPage };
 	var now = ${page.page };
@@ -112,11 +129,19 @@ function load(pageNum){
 	location.href="/manager/toItemSet.aspx?pageNum="+pageNum;
 }
 
-function update(no,content,type){
-	$("#categoryNo").val(no);
-	$("#categoryName").val(name);
-	$("#business").val(business);
+function update(no,content,categoryNo){
+	alert(no);
+	$("#itemNo").val(no);
+	$("#categoryNo").val(categoryNo);
+	$("#itemContent").val(content);
 	$("#addBtn").text("确认修改");
+	var levels = $("span[name='score_"+no+"']");
+	for(i=0;i<levels.length;i++){
+		var levelid = $(levels[i]).attr("levelId");
+		var levelvalue = $(levels[i]).text();
+		$("input[levelId='"+levelid+"']").val(Number(levelvalue));
+	}
+	
 }
 
 function del(id){
@@ -131,6 +156,7 @@ function del(id){
 			success : function(data) {
 				console.log(data);
 				alert(data.msg);
+				location.href="/manager/toItemSet.aspx";
 			},
 			error : function() {
 				alert("请求异常！");

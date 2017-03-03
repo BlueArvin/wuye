@@ -86,6 +86,10 @@
 
 $(function(){
 	$("a[num=0],a[num=-1]").hide();
+	var retMsg="${msg }";
+	if(retMsg!=null&&retMsg!=""){
+		alert(retMsg);
+	}
 })
 
 function load(pageNum){
@@ -109,6 +113,7 @@ function del(id){
 			success : function(data) {
 				console.log(data);
 				alert(data.msg);
+				location.href="/manager/toKhType.aspx";
 			},
 			error : function() {
 				alert("请求异常！");

@@ -126,6 +126,13 @@
     </table>
   </div>
 <script type="text/javascript">
+$(function(){
+	
+	var retMsg="${msg }";
+	if(retMsg!=null&&retMsg!=""){
+		alert(retMsg);
+	}
+})
 
 function del(id){
 	if(confirm("您确定要删除吗?")){

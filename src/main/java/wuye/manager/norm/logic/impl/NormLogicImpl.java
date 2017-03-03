@@ -5,13 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import wuye.manager.norm.bean.NormBean;
 import wuye.manager.norm.bean.NormCategoryBean;
 import wuye.manager.norm.bean.NormItemBean;
 import wuye.manager.norm.bean.NormLevelBean;
 import wuye.manager.norm.dao.NormDao;
 import wuye.manager.norm.logic.NormLogic;
-import wuye.manager.user.bean.UserBean;
 import wuye.manager.utils.PageUtil;
 
 @Service("normLogic")
@@ -19,39 +17,15 @@ public class NormLogicImpl implements NormLogic {
 
 	@Autowired
 	private NormDao normDao;
-	
-	@Override
-	public boolean addPianQu(NormBean NormBean) {
-		// TODO Auto-generated method stub
-		return normDao.addPianQu(NormBean);
-	}
-
-	@Override
-	public List<NormBean> findAllPianQu(NormBean NormBean, PageUtil page) {
-		// TODO Auto-generated method stub
-		return normDao.findAllPianQu(NormBean, page);
-	}
-	
-	public List<NormBean> findPianQuByFatherId(int fatherId){
-		// TODO Auto-generated method stub
-		return normDao.findPianQuByFatherId(fatherId);
-	}
-
-	@Override
-	public NormBean getNormInfo(int id) {
-		// TODO Auto-generated method stub
-		return normDao.getNormInfo(id);
-	}
-	
 
 	//--------------------------------考核级别设置--------------------------------
 	
-	public void addNormLevel(NormLevelBean normLevelBean){
-		normDao.addNormLevel(normLevelBean);
+	public boolean addNormLevel(NormLevelBean normLevelBean){
+		return normDao.addNormLevel(normLevelBean);
 	}
 	
-	public void updateNormLevel(NormLevelBean normLevelBean){
-		normDao.updateNormLevel(normLevelBean);
+	public boolean updateNormLevel(NormLevelBean normLevelBean){
+		return normDao.updateNormLevel(normLevelBean);
 	}
 	
 	public void deleteNormLevel(int id){
@@ -65,12 +39,12 @@ public class NormLogicImpl implements NormLogic {
 	
 	//--------------------------------考核类别设置--------------------------------
 	
-	public void addNormCategory(NormCategoryBean normCategoryBean){
-		normDao.addNormCategory(normCategoryBean);
+	public boolean addNormCategory(NormCategoryBean normCategoryBean){
+		return normDao.addNormCategory(normCategoryBean);
 	}
 	
-	public void updateNormCategory(NormCategoryBean normCategoryBean){
-		normDao.updateNormCategory(normCategoryBean);
+	public boolean updateNormCategory(NormCategoryBean normCategoryBean){
+		return normDao.updateNormCategory(normCategoryBean);
 	}
 	
 	public void deleteNormCategory(int id){
@@ -83,14 +57,18 @@ public class NormLogicImpl implements NormLogic {
 		return normDao.queryNormCategoryList(page);
 	}
 	
-	//--------------------------------考核项目设置--------------------------------
-	
-	public void addNormItem(NormItemBean normItemBean){
-		normDao.addNormItem(normItemBean);
+	public List<NormCategoryBean> queryNormCategoryList(){
+		return normDao.queryNormCategoryList();
 	}
 	
-	public void updateNormItem(NormItemBean normItemBean){
-		normDao.updateNormItem(normItemBean);
+	//--------------------------------考核项目设置--------------------------------
+	
+	public boolean addNormItem(NormItemBean normItemBean){
+		return normDao.addNormItem(normItemBean);
+	}
+	
+	public boolean updateNormItem(NormItemBean normItemBean){
+		return normDao.updateNormItem(normItemBean);
 	}
 	
 	public void deleteNormItem(int id){

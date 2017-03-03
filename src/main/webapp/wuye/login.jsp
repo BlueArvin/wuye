@@ -61,6 +61,9 @@
 </body>
 <script type="text/javascript">
 $(document).ready(function(){
+	 if(window.top!=window.self){//不存在父页面
+		top.document.location.href='/wuye/login.jsp';
+	 }
 	
 	$("#loginBtn").on("click",function(){
 		var userName = $("input[name='userName']").val();

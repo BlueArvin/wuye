@@ -1,10 +1,14 @@
 package wuye.manager.norm.dao.impl;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -12,12 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import wuye.dao.DaoBasic;
-import wuye.manager.norm.bean.NormBean;
 import wuye.manager.norm.bean.NormCategoryBean;
 import wuye.manager.norm.bean.NormItemBean;
 import wuye.manager.norm.bean.NormLevelBean;
 import wuye.manager.norm.dao.NormDao;
-import wuye.manager.user.bean.UserBean;
 import wuye.manager.utils.PageUtil;
 
 @Component("normDao")
@@ -25,120 +27,10 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
 
 	@Autowired
 	private DataSource dataSource;
-	
-	@Override
-	public boolean addPianQu(NormBean normBean) {
-		Connection conn = null;
-        PreparedStatement pstmt = null;
-        boolean rs = false;
-        try {
-            String sql = "insert into t_pianqu (pianqu_name,father_id,type) values (?,?,?)";
-            conn = dataSource.getConnection();
-            pstmt = prepareStatement(conn, sql);
-            pstmt.setString(1, normBean.getPianquName());
-            pstmt.setInt(2, normBean.getFatherId());
-            pstmt.setInt(3, normBean.getType());
-            rs = pstmt.execute();
-        }catch(Exception e){
-       	 	doCatchException("addUser" ,e);
-        } finally {
-            closeConnection(conn, pstmt, null);
-        }
-        return rs;
-	}
-
-	@Override
-	public List<NormBean> findAllPianQu(NormBean normBean, PageUtil page) {
-		Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try {
-            String sql = "select id,pianqu_name,father_id,type from t_pianqu"
-            		+ " order by id desc limit "+page.getStartIndex()+","+page.getPageSize();
-            
-            conn = dataSource.getConnection();
-            pstmt = prepareStatement(conn, sql);
-            rs = pstmt.executeQuery();
-            List<NormBean> list = new ArrayList<NormBean>();
-            while(rs.next()){
-            	NormBean ub = new NormBean();
-            	ub.setId(rs.getInt("id"));
-            	ub.setPianquName(rs.getString("pianqu_name"));
-            	ub.setFatherId(rs.getInt("father_id"));
-            	ub.setType(rs.getInt("type"));
-            	list.add(ub);
-            }
-            return list;
-        }catch(Exception e){
-       	 	doCatchException("findAllUser" ,e);
-        } finally {
-            closeConnection(conn, pstmt, null);
-        }
-		return null;
-	}
-
-	@Override
-	public List<NormBean> findPianQuByFatherId(int fatherId) {
-		Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try {
-            String sql = "select id,pianqu_name,father_id,type from t_pianqu where father_id=?";
-            conn = dataSource.getConnection();
-            pstmt = prepareStatement(conn, sql);
-            pstmt.setInt(1, fatherId);
-            rs = pstmt.executeQuery();
-            List<NormBean> list = new ArrayList<NormBean>();
-            while(rs.next()){
-            	NormBean ub = new NormBean();
-            	ub.setId(rs.getInt("id"));
-            	ub.setPianquName(rs.getString("pianqu_name"));
-            	ub.setFatherId(rs.getInt("father_id"));
-            	ub.setType(rs.getInt("type"));
-            	list.add(ub);
-            }
-            return list;
-        }catch(Exception e){
-       	 	doCatchException("findAllUser" ,e);
-        } finally {
-            closeConnection(conn, pstmt, null);
-        }
-		return null;
-	}
-	
-	@Override
-	public NormBean getNormInfo(int id) {
-		Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try {
-            String sql = "select id,pianqu_name,father_id,type from t_pianqu where id=?";
-            conn = dataSource.getConnection();
-            pstmt = prepareStatement(conn, sql);
-            pstmt.setInt(1, id);
-            rs = pstmt.executeQuery();
-            if(rs.next()){
-            	NormBean ub = new NormBean();
-            	ub.setId(rs.getInt("id"));
-            	ub.setPianquName(rs.getString("pianqu_name"));
-            	ub.setFatherId(rs.getInt("father_id"));
-            	ub.setType(rs.getInt("type"));
-            	return ub;
-            }
-            return null;
-        }catch(Exception e){
-       	 	doCatchException("getUserInfo" ,e);
-        } finally {
-            closeConnection(conn, pstmt, null);
-        }
-		return null;
-	}
-
-	
 
 	//--------------------------------考核级别设置--------------------------------
-	
-	public void addNormLevel(NormLevelBean normLevelBean){
+	@Override
+	public boolean addNormLevel(NormLevelBean normLevelBean){
 		Connection conn = null;
         PreparedStatement pstmt = null;
         boolean rs = false;
@@ -153,9 +45,11 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
         } finally {
             closeConnection(conn, pstmt, null);
         }
+        return rs;
 	}
 	
-	public void updateNormLevel(NormLevelBean normLevelBean){
+	@Override
+	public boolean updateNormLevel(NormLevelBean normLevelBean){
 		Connection conn = null;
         PreparedStatement pstmt = null;
         boolean rs = false;
@@ -171,6 +65,7 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
         } finally {
             closeConnection(conn, pstmt, null);
         }
+        return rs;
 	}
 	
 	public void deleteNormLevel(int id){
@@ -218,7 +113,7 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
 	
 	//--------------------------------考核类别设置--------------------------------
 	
-	public void addNormCategory(NormCategoryBean normCategoryBean){
+	public boolean addNormCategory(NormCategoryBean normCategoryBean){
 		Connection conn = null;
         PreparedStatement pstmt = null;
         boolean rs = false;
@@ -235,9 +130,10 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
         } finally {
             closeConnection(conn, pstmt, null);
         }
+        return rs;
 	}
 	
-	public void updateNormCategory(NormCategoryBean normCategoryBean){
+	public boolean updateNormCategory(NormCategoryBean normCategoryBean){
 		Connection conn = null;
         PreparedStatement pstmt = null;
         boolean rs = false;
@@ -254,6 +150,7 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
         } finally {
             closeConnection(conn, pstmt, null);
         }
+        return rs;
 	}
 	
 	public void deleteNormCategory(int id){
@@ -301,6 +198,32 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
 	}
 	
 	@Override
+	public List<NormCategoryBean> queryNormCategoryList(){
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            String sql = "select * from t_checktitle order by score_id";
+            conn = dataSource.getConnection();
+            pstmt = prepareStatement(conn, sql);
+            rs = pstmt.executeQuery();
+            List<NormCategoryBean> list = new ArrayList<NormCategoryBean>();
+            while(rs.next()){
+            	NormCategoryBean nb = new NormCategoryBean();
+            	nb.setCategoryNo(rs.getInt("score_id"));
+            	nb.setCategoryName(rs.getString("title_name"));
+            	list.add(nb);
+            }
+            return list;
+        }catch(Exception e){
+       	 	doCatchException("queryNormCategoryList" ,e);
+        } finally {
+            closeConnection(conn, pstmt, null);
+        }
+        return null;
+	}
+	
+	@Override
 	public int getNormCategoryTotal(){
 		Connection conn = null;
         PreparedStatement pstmt = null;
@@ -323,25 +246,47 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
 	
 	//--------------------------------考核项目设置--------------------------------
 	
-	public void addNormItem(NormItemBean normItemBean){
+	public boolean addNormItem(NormItemBean normItemBean){
+		Serializable ret = null;
 		Connection conn = null;
         PreparedStatement pstmt = null;
-        boolean rs = false;
+        ResultSet idRs=null;
+        boolean rs=false;
         try {
             String sql = "insert into t_checksub (titleid,sub_name) values (?,?)";
             conn = dataSource.getConnection();
-            pstmt = prepareStatement(conn, sql);
+            pstmt = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             pstmt.setInt(1, normItemBean.getCategoryNo());
             pstmt.setString(2, normItemBean.getItemContent());
-            rs = pstmt.execute();
+            pstmt.executeUpdate();
+            idRs = pstmt.getGeneratedKeys();
+            if (idRs.next()) {
+                ret = (Serializable) idRs.getObject(1);
+                rs = true;
+            }
+            
+            List<NormItemBean.NormScoreBean> list = normItemBean.getScoreList();
+            if(list!=null&&list.size()>0){
+            	sql = "insert into t_checkscore (levelid,subid,score) values ";//(?,?,?)";
+            	for(int i=0;i<list.size();i++){
+            		sql+="("+list.get(i).getLevelNo()+","+ret+","+list.get(i).getScore()+")";
+            		if((i+1)<list.size()){
+            			sql+=",";
+            		}
+            	}
+            	pstmt = prepareStatement(conn, sql);
+            	pstmt.execute();
+            }
+            
         }catch(Exception e){
        	 	doCatchException("addNormCategory" ,e);
         } finally {
             closeConnection(conn, pstmt, null);
         }
+        return rs;
 	}
 	
-	public void updateNormItem(NormItemBean normItemBean){
+	public boolean updateNormItem(NormItemBean normItemBean){
 		Connection conn = null;
         PreparedStatement pstmt = null;
         boolean rs = false;
@@ -353,11 +298,33 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
             pstmt.setString(2, normItemBean.getItemContent());
             pstmt.setInt(3, normItemBean.getCategoryNo());
             rs = pstmt.execute();
+            
+            //先删除后添加
+            sql = "delete from t_checkscore where subid=?";
+            pstmt = prepareStatement(conn, sql);
+            pstmt.setInt(1, normItemBean.getItemNo());
+            pstmt.executeUpdate();
+            
+            //添加
+            List<NormItemBean.NormScoreBean> list = normItemBean.getScoreList();
+            if(list!=null&&list.size()>0){
+            	sql = "insert into t_checkscore (levelid,subid,score) values ";//(?,?,?)";
+            	for(int i=0;i<list.size();i++){
+            		sql+="("+list.get(i).getLevelNo()+","+normItemBean.getItemNo()+","+list.get(i).getScore()+")";
+            		if((i+1)<list.size()){
+            			sql+=",";
+            		}
+            	}
+            	pstmt = prepareStatement(conn, sql);
+            	pstmt.execute();
+            }
+            
         }catch(Exception e){
        	 	doCatchException("updateNormItem" ,e);
         } finally {
             closeConnection(conn, pstmt, null);
         }
+        return rs;
 	}
 	
 	public void deleteNormItem(int id){
@@ -365,8 +332,16 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
         PreparedStatement pstmt = null;
         boolean rs = false;
         try {
-            String sql = "delete from t_checksub where subid=?";
-            conn = dataSource.getConnection();
+        	//先删除子表
+        	String sql = "delete from t_checkscore where subid=?";
+        	conn = dataSource.getConnection();
+            pstmt = prepareStatement(conn, sql);
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+        	
+            //删除主表
+            sql = "delete from t_checksub where subid=?";
+            
             pstmt = prepareStatement(conn, sql);
             pstmt.setInt(1, id);
             rs = pstmt.execute();
@@ -382,18 +357,42 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select subid,titleid,sub_name from t_checksub order by subid limit "+page.getStartIndex()+","+page.getPageSize();
+            String sql = "select subid,a.titleid,b.title_name,sub_name from t_checksub a left join t_checktitle b on a.titleid = b.score_id order by subid limit "+page.getStartIndex()+","+page.getPageSize();
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
             List<NormItemBean> list = new ArrayList<NormItemBean>();
+            String subids = "(";
+            
+            Map<Integer,Integer> map = new HashMap<Integer,Integer>();
+            int i = 0;
             while(rs.next()){
             	NormItemBean nb = new NormItemBean();
-            	nb.setItemNo(rs.getInt("subid"));
+            	int subid = rs.getInt("subid");
+            	nb.setItemNo(subid);
+            	subids+=subid+",";
             	nb.setCategoryNo(rs.getInt("titleid"));
             	nb.setItemContent(rs.getString("sub_name"));
+            	nb.setCategoryName(rs.getString("title_name"));
             	list.add(nb);
+            	//临时保存--对象在list中的位置
+            	map.put(subid, i);
+            	i++;
             }
+            subids+="0)";
+            
+            sql="select levelid,b.level_name,subid,score from t_checkscore a left join t_checklevel b on a.levelid = b.level_id where a.subid in "+subids+" order by a.levelid";
+            pstmt = prepareStatement(conn, sql);
+            rs = pstmt.executeQuery();
+            
+            while(rs.next()){
+            	NormItemBean.NormScoreBean nsb = new NormItemBean.NormScoreBean(); 
+            	nsb.setLevelNo(rs.getInt("levelid"));
+            	nsb.setLevelName(rs.getString("level_name"));
+            	nsb.setScore(rs.getDouble("score"));
+            	list.get(map.get(rs.getInt("subid"))).addScoreBeanToList(nsb);
+            }
+            
             return list;
         }catch(Exception e){
        	 	doCatchException("queryNormCategoryList" ,e);
