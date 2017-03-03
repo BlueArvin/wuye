@@ -65,11 +65,6 @@ public interface AreaDao {
 	 */
 	public List<AreaBean> queryStreetList(PageUtil page);
 	
-	/**
-	 * 查询街道列表
-	 * @return
-	 */
-	public int queryStreetTotal();
 	
 	/**
 	 * 查询片区列表
@@ -77,23 +72,12 @@ public interface AreaDao {
 	 */
 	public List<AreaBean> queryPianquList(PageUtil page);
 	
-	/**
-	 * 查询片区列表
-	 * @return
-	 */
-	public int queryPianquTotal();
 	
 	/**
 	 * 查询胡同列表
 	 * @return
 	 */
 	public List<AreaBean> queryHutongList(PageUtil page);
-	
-	/**
-	 * 查询胡同数量
-	 * @return
-	 */
-	public int queryHutongTotal();
 	
 	
 	/**
@@ -102,11 +86,6 @@ public interface AreaDao {
 	 */
 	public List<AreaBean> queryCompanyList(PageUtil page);
 	
-	/**
-	 * 查询物业数量
-	 * @return
-	 */
-	public int queryCompanyTotal();
 	
 	/**
 	 * 修改城区
@@ -144,40 +123,33 @@ public interface AreaDao {
 	 */
 	public boolean updateCompany(AreaBean companyBean);
 	
-	
-	
 	/**
 	 * 删除城区
 	 * @param id
 	 * @return
 	 */
-	public void addState(int id);
+	public void delArea(String tableName,int id);
+	
 	
 	/**
-	 * 删除街道
-	 * @param id
+	 * 查询城区列表
+	 * @param stateBean
 	 * @return
 	 */
-	public void addStreet(int id);
+	public List<AreaBean> queryAllState();
+	
 	
 	/**
-	 * 删除片区
-	 * @param id
+	 * 查询街道列表
 	 * @return
 	 */
-	public void addPianqu(int id);
+	public List<AreaBean> queryAllStreet();
 	
 	/**
-	 * 删除胡同
-	 * @param id
+	 * 查询片区
+	 * @param stateBean
 	 * @return
 	 */
-	public void addHutong(int id);
+	public List<AreaBean> queryAllPianqu();
 	
-	/**
-	 * 删除物业
-	 * @param id
-	 * @return
-	 */
-	public void addCompany(int id);
 }

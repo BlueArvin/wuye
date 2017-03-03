@@ -15,6 +15,6 @@ public interface AreaLogic {
 	
 	public List<AreaBean> queryAreaList(int type,PageUtil page);
 	
-	
+	public List<AreaBean> queryAreaList(int type);
 	
 }

@@ -17,15 +17,17 @@
     <script src="/wuye/js/pintuer.js"></script>  
 </head>
 <body>
-    <form method="post" action="">
+    <form method="post" action="/manager/addArea.aspx">
       <ul class="search">
         <li>
         	<div class="form-group">
 	          <label>物业名称：</label>
-	          <input type="text" class="input" name="companyName" style="float:right" />
+	          <input type="hidden" class="input" id="type" name="type" value=5 style="float:right" />
+	          <input type="hidden" class="input" id="id" name="id" value=0 style="float:right" />
+	          <input type="text" class="input" id="name" name="name" style="float:right" />
 	        </div>
 	    </li>
-	    <li><button type="submit"  class="button border-green"  style="float:right" id="addkhLevel"><span class="icon-check"></span> 确认添加</button></li>
+	    <li><button type="submit"  class="button border-green"  style="float:right" id="addBtn"><span class="icon-check"></span> 确认添加</button></li>
 	  </ul>
 	  </form>
 	  <table class="table table-hover text-center">
@@ -34,69 +36,79 @@
 	        <th>物业名称</th>
 	        <th>操作</th>       
 	      </tr>      
-	        <tr>
-	          <td>1</td>
-	          <td>海淀区</td>
+	        <c:forEach  varStatus="i" var="areaBean" items="${list }" > 
+	      <tr>
+	          <td>${areaBean.id }</td>
+	          <td>${areaBean.name }</td>
 	          <td>
 	          	<div class="button-group">
-	           		<a class="button border-red" href="javascript:void(0)" onclick="return update(1)"><span class="icon-trash-o"></span> 修改</a> 
-	           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a>
+	           		<a class="button border-red" href="javascript:void(0)" onclick="return update(${areaBean.id },${areaBean.parentId },'${areaBean.name }')"><span class="icon-trash-o"></span> 修改</a> 
+	           		<a class="button border-red" href="javascript:void(0)" onclick="return del(${areaBean.id })"><span class="icon-trash-o"></span> 删除</a>
 	           	</div>
 	           </td>
 	        </tr>
-	         <tr>
-	          <td>1</td>
-	          <td>海淀区</td>
-	          <td>
-	          	<div class="button-group">
-	           		<a class="button border-red" href="javascript:void(0)" onclick="return update(1)"><span class="icon-trash-o"></span> 修改</a> 
-	           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a>
-	           	</div>
-	           </td>
-	        </tr>
+      		</c:forEach>
 	        <tr>
-	        	<td colspan="3"><div class="pagelist"> <a href="">上一页</a> <span class="current">1</span><a href="">2</a><a href="">3</a><a href="">下一页</a><a href="">尾页</a> </div></td>
-	        </tr>
+		        <td colspan="3">
+		        	<div class="pagelist">
+			        	<a href="javascript:load(${page.page-1 })">上一页</a>
+			        	<a num="${page.page-2 }" href="javascript:load(${page.page-2 })">${page.page-2 }</a>
+			        	<a num="${page.page-1 }" href="javascript:load(${page.page-1 })">${page.page-1 }</a>
+			        	<span class="current">${page.page }</span>
+			        	<a num="${page.countPage - page.page }" href="javascript:load(${page.page+1 })">${page.page+1 }</a>
+			        	<a num="${page.countPage - page.page - 1 }" href="javascript:load(${page.page+2 })">${page.page+2 }</a>
+			        	<a href="javascript:load(${page.page+1 })">下一页</a>
+			        	<a href="javascript:load(${page.countPage })">尾页</a>
+		        	</div>
+		        </td>
+		     </tr>
         </table>
 <script type="text/javascript">
 
-function showDiv(showDivId){
-	$("div[name='form']").hide();
-	$("#"+showDivId).removeClass("hidden").show();
+
+$(function(){
+	$("a[num=0],a[num=-1]").hide();
+	var retMsg="${msg }";
+	if(retMsg!=null&&retMsg!=""){
+		alert(retMsg);
+	}
+})
+
+function load(pageNum){
+	var count = ${page.countPage };
+	var now = ${page.page };
+	if(pageNum<=0||pageNum>count){
+		return;
+	}
+	location.href="/manager/toAreaSetChild.aspx?type=5&pageNum="+pageNum;
 }
 
 function del(id){
 	if(confirm("您确定要删除吗?")){
-		
+		$.ajax({
+			url : "/manager/deleteArea.aspx",
+			data : {id:id,type:5},
+			type : 'post',
+			async : true,
+			cache : false,
+			dataType : 'json',
+			success : function(data) {
+				console.log(data);
+				alert(data.msg);
+				location.href="/manager/toAreaSetChild.aspx?type=5&pageNum=1";
+			},
+			error : function() {
+				alert("请求异常！");
+			}
+		});
 	}
 }
 
-$("#checkall").click(function(){ 
-  $("input[name='id[]']").each(function(){
-	  if (this.checked) {
-		  this.checked = false;
-	  }
-	  else {
-		  this.checked = true;
-	  }
-  });
-})
 
-function DelSelect(){
-	var Checkbox=false;
-	 $("input[name='id[]']").each(function(){
-	  if (this.checked==true) {		
-		Checkbox=true;	
-	  }
-	});
-	if (Checkbox){
-		var t=confirm("您确认要删除选中的内容吗？");
-		if (t==false) return false; 		
-	}
-	else{
-		alert("请选择您要删除的内容!");
-		return false;
-	}
+function update(id,parentId,name){
+	$("#id").val(id);
+	$("#name").val(name);
+	$("#addBtn").text("确认修改");
 }
 
 </script>

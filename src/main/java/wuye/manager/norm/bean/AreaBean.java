@@ -48,7 +48,12 @@ public class AreaBean {
 		this.parentName = parentName;
 	}
 
-
+	@Override
+	public String toString() {
+		return "AreaBean [id=" + id + ", name=" + name + ", parentId="
+				+ parentId + ", parentName=" + parentName + ", type=" + type
+				+ "]";
+	}
 
 /*
 

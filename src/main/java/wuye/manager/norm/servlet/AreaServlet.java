@@ -53,48 +53,17 @@ public class AreaServlet {
 //		UserBean ub = (UserBean) request.getSession().getAttribute("user");
 //		request.setAttribute("loginName", ub.getCn());
 		
-		
 		if(type!=1&&type!=5){//城区和物业没有上级
-			List<AreaBean> areaList = areaLogic.queryAreaList(type-1,null);
+			List<AreaBean> areaList = areaLogic.queryAreaList(type-1);
 			request.setAttribute("parentList", areaList);
 		}
 
 		PageUtil page = new PageUtil(pageNum);
 		List<AreaBean> areaList = areaLogic.queryAreaList(type,page);
 		request.setAttribute("list", areaList);
+		request.setAttribute("page", page);
 		String retPage="qy_set_"+type;
 		return retPage;
-//		
-//		switch (type) {
-//		case 1://城区
-//			
-//			List<AreaBean> areaList = areaLogic.queryAreaList(type,page);
-//			request.setAttribute("list", areaList);
-//			retPage = "qy_set_1";
-//			break;
-//		case 2://街道
-//			
-//			areaLogic.queryAreaList(page);
-//			request.setAttribute("list", areaList);
-//			retPage = "qy_set_2";
-//			break;
-//		case 3://片区
-//			
-//			retPage = "qy_set_3";
-//			break;
-//		case 4://胡同
-//			
-//			retPage = "qy_set_4";
-//			break;
-//		case 5://物业
-//			
-//			retPage = "qy_set_5";
-//			break;
-//		default:
-//			break;
-//		}
-//		
-//		return retPage;
 	}
 	
 	
