@@ -39,7 +39,7 @@ public class UserServlet {
 
 	@RequestMapping("/login")
 	@ResponseBody
-    public String login(HttpServletRequest request){  
+    public Object login(HttpServletRequest request){  
 		String username = request.getParameter("username");  // 用户名
 		String passwd = request.getParameter("passwd");      // 密码
 		
@@ -53,12 +53,12 @@ public class UserServlet {
 		
 		logger.info("login:" + JSON.toJSONString(loginUser));
 		
-		return JSON.toJSONString(loginUser.toAPIresult());
+		return loginUser.toAPIresult();
     }
 	
 	@RequestMapping("/exist")
 	@ResponseBody
-    public String exist(HttpServletRequest request){  
+    public Object exist(HttpServletRequest request){  
 		String username = request.getParameter("username");  // 用户名
 		String cookie = request.getParameter("cookie");      // cookie
 		
@@ -72,12 +72,12 @@ public class UserServlet {
 		
 		logger.info("exist:" + JSON.toJSONString(loginUser));
 		
-		return JSON.toJSONString(loginUser.toAPIresult());
+		return loginUser.toAPIresult();
     }
 	
 	@RequestMapping("/passwd")
 	@ResponseBody
-    public String passwd(HttpServletRequest request) {
+    public Object passwd(HttpServletRequest request) {
 		String username = request.getParameter("username");
 		String pwd = request.getParameter("passwd");
 		String newpwd  = request.getParameter("newpasswd");
@@ -87,6 +87,6 @@ public class UserServlet {
 		
 		logger.info("changepwd:"+ JSON.toJSONString(loginUser));
 		
-		return JSON.toJSONString(loginUser.toAPIresult());
+		return loginUser.toAPIresult();
     }
 }
