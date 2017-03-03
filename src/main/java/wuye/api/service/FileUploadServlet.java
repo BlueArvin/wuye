@@ -48,7 +48,7 @@ public class FileUploadServlet {
 
 	@RequestMapping("uploadpic")
 	@ResponseBody
-    public String upload(HttpServletRequest request,HttpServletResponse response) {  
+    public Object upload(HttpServletRequest request,HttpServletResponse response) {  
   
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");//设置日期格式
     	String newName = df.format(new Date());
@@ -80,7 +80,9 @@ public class FileUploadServlet {
                         try {
 							file.transferTo(localFile);
 							logger.info("file upload:" + fileName);
-							return fileName;
+							RetBean jsonRet = new RetBean(0, "");
+							jsonRet.setValue(fileName);
+							return jsonRet;
 						} catch (IllegalStateException e) {
 							logger.info("file upload:" + e.getMessage());
 						} catch (IOException e) {
@@ -91,12 +93,13 @@ public class FileUploadServlet {
                 //记录上传该文件后的时间  
                 int finaltime = (int) System.currentTimeMillis();  
                 System.out.println(finaltime - pre);  
-            }  
-         return "2"; 
+            }
+         RetBean jsonRet = new RetBean(99, "没有文件");
+         return jsonRet; 
     }
 	
 	@RequestMapping(value = "/download/{file}")
-    public String getUrlParam(@PathVariable("file") String fileName,
+    public Object getUrlParam(@PathVariable("file") String fileName,
     		HttpServletRequest request, HttpServletResponse response) {
 		if (fileName != null) {
             String realPath = dir;// request.getServletContext().getRealPath("WEB-INF/File/");
@@ -141,6 +144,7 @@ public class FileUploadServlet {
             }
         }
 		logger.info("file download:" + fileName);
-		return "";
+		RetBean jsonRet = new RetBean(0, "");
+        return jsonRet; 
     }
 }

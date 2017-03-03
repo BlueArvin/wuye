@@ -41,7 +41,7 @@ public class AssessServlet {
 
 	@RequestMapping("submit")
 	@ResponseBody
-    public String submit(HttpServletRequest request){
+    public Object submit(HttpServletRequest request){
 		String sdd = request.getParameter("data");  // 城区id%街道id%片区id%胡同id%物业id%检查级别id%业内（1）or业外（2）%检查项id%子检查项id%扣分情况%时间字符串
 		String pic1 = request.getParameter("pic1");      // 图片url
 		String pic2 = request.getParameter("pic2");      // 图片url
@@ -50,12 +50,12 @@ public class AssessServlet {
 		
 		String uid = (String)request.getSession().getAttribute("userid");
 		if(uid == null) {   // 没有登录
-			return JSON.toJSONString(new RetBean(2, "未登录"));
+			return new RetBean(2, "未登录");
 		}
 		
 		String right = (String)request.getSession().getAttribute("right");
 		if(right == null || ((Integer.parseInt(right)& 0x01) == 0)) {   // 没有权限
-			return JSON.toJSONString(new RetBean(3, "没有提交考评权限"));
+			return new RetBean(3, "没有提交考评权限");
 		}
 		
 		SimpleDateFormat time=new SimpleDateFormat("yyyyMMddHHmmss"); 
@@ -94,9 +94,9 @@ public class AssessServlet {
 		if(ret == 0) {
 			RetBean jsonRet = new RetBean(0, "");
 			jsonRet.setValue(aseid);
-			return JSON.toJSONString(jsonRet);
+			return jsonRet;
 		}else {
-			return JSON.toJSONString(new RetBean(99, "操作失败"));
+			return new RetBean(99, "操作失败");
 		}
     }
 }

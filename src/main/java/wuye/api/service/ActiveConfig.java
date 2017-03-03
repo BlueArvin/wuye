@@ -37,32 +37,32 @@ public class ActiveConfig {
 	
 	@RequestMapping("selection/lastversion")
 	@ResponseBody
-    public String selectionLastVersion(HttpServletRequest request){
+    public Object selectionLastVersion(HttpServletRequest request){
 		logger.info("selectionLastVersion");
-		return RetBean.ParseRet(activeConfigLogic.getConfigVersion()).toJsonString();
+		return RetBean.ParseRet(activeConfigLogic.getConfigVersion());
     }
 	
 
 	@RequestMapping("selection/configdata")
 	@ResponseBody
-    public String selectionConfigData(HttpServletRequest request){
+    public Object selectionConfigData(HttpServletRequest request){
 		logger.info("selectionConfigData");
-		return RetBean.ParseRet(activeConfigLogic.getConfigData()).toJsonString();
+		return RetBean.ParseRet(activeConfigLogic.getConfigData());
     }
 	
 	
 	@RequestMapping("check/lastversion")
 	@ResponseBody
-    public String checkLastVersion(HttpServletRequest request){
+    public Object checkLastVersion(HttpServletRequest request){
 		logger.info("checkLastVersion");
-		return RetBean.ParseRet(activeConfigLogic.getCheckConfigVersion()).toJsonString();
+		return RetBean.ParseRet(activeConfigLogic.getCheckConfigVersion());
     }
 	
 
 	@RequestMapping("check/configdata")
 	@ResponseBody
-    public String checkConfigdata(HttpServletRequest request){
+    public Object checkConfigdata(HttpServletRequest request){
 		logger.info("checkConfigdata");
-		return RetBean.ParseRet(activeConfigLogic.getCheckConfigData()).toJsonString();
+		return RetBean.ParseRet(activeConfigLogic.getCheckConfigData());
     }
 }
