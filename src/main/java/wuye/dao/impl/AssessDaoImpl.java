@@ -2,7 +2,12 @@ package wuye.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -60,6 +65,31 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         } finally {
             closeConnection(conn, pstmt, null);
         }
+	}
+
+	@Override
+	public List<String> getPoint() {
+		List<String> ret = new ArrayList<String>();
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            String sql = "select loc from t_assess";
+            conn = dataSource.getConnection();
+            pstmt = prepareStatement(conn, sql);
+
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+            	ret.add(rs.getString("loc"));
+            }
+        }catch(Exception e){
+       	 	doCatchException("getBlockList" ,e);
+	       	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+	       	return ret;
+        } finally {
+            closeConnection(conn, pstmt, null);
+        }
+		return ret;
 	}
 
 }

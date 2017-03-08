@@ -17,7 +17,7 @@ import wuye.bean.AssessDataBean;
 import wuye.logic.AssessLogic;
 
 /**
- * 考核数据相关
+ * 
  * @author lujinfei
  *
  */
@@ -37,25 +37,23 @@ public class AssessServlet {
 		this.assessLogic = assessLogic;
 	}
 
-
-
 	@RequestMapping("submit")
 	@ResponseBody
     public Object submit(HttpServletRequest request){
-		String sdd = request.getParameter("data");  // 城区id%街道id%片区id%胡同id%物业id%检查级别id%业内（1）or业外（2）%检查项id%子检查项id%扣分情况%时间字符串
-		String pic1 = request.getParameter("pic1");      // 图片url
-		String pic2 = request.getParameter("pic2");      // 图片url
-		String pic3 = request.getParameter("pic3");      // 图片url
-		String loc = request.getParameter("loc");        // 经纬度
+		String sdd = request.getParameter("data");  // 
+		String pic1 = request.getParameter("pic1");      // 
+		String pic2 = request.getParameter("pic2");      // 
+		String pic3 = request.getParameter("pic3");      // 
+		String loc = request.getParameter("loc");        // 
 		
 		String uid = (String)request.getSession().getAttribute("userid");
-		if(uid == null) {   // 没有登录
+		if(uid == null) {   //
 			return new RetBean(2, "未登录");
 		}
 		
 		String right = (String)request.getSession().getAttribute("right");
-		if(right == null || ((Integer.parseInt(right)& 0x01) == 0)) {   // 没有权限
-			return new RetBean(3, "没有提交考评权限");
+		if(right == null || ((Integer.parseInt(right)& 0x01) == 0)) {   // 
+			return new RetBean(3, "没有权限");
 		}
 		
 		SimpleDateFormat time=new SimpleDateFormat("yyyyMMddHHmmss"); 
@@ -96,7 +94,13 @@ public class AssessServlet {
 			jsonRet.setValue(aseid);
 			return jsonRet;
 		}else {
-			return new RetBean(99, "操作失败");
+			return new RetBean(99, "其他错误");
 		}
     }
+	
+	@RequestMapping("point")
+	@ResponseBody
+    public Object point(HttpServletRequest request) {
+		return assessLogic.getPoint();
+	}
 }

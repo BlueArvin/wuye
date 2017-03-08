@@ -13,7 +13,7 @@ public class RetBean {
 	@JSONField(ordinal=2)
 	public String msg;
 	@JSONField(ordinal=3)
-	public Object value;
+	public Object value = null;
 
 	public RetBean(int ret, String msg){
 		this.ret = ret;

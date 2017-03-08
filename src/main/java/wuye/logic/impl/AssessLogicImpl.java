@@ -1,5 +1,7 @@
 package wuye.logic.impl;
 
+import java.util.List;
+
 import wuye.bean.AssessDataBean;
 import wuye.dao.AssessDao;
 import wuye.logic.AssessLogic;
@@ -19,6 +21,11 @@ public class AssessLogicImpl implements AssessLogic {
 	public int submit(AssessDataBean data) {
 		
 		return assessDao.submit(data);
+	}
+
+	@Override
+	public List<String> getPoint() {
+		return assessDao.getPoint();
 	}
 
 }

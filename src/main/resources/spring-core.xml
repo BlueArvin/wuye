@@ -20,14 +20,8 @@
 	<!-- 加载配置文件 -->
 	<context:property-placeholder location="etc/*.properties" />
 	
-	<!-- 监听注解 -->
-	<context:component-scan base-package="com.changyou.jia.*"/>
-	
 	<!-- 监听定时任务 -->
 	<task:annotation-driven />
-	
-	<!-- 非注入方式获取bean对象 getBean("") -->
-	<bean class="com.changyou.jia.utils.SpringContextHolder" lazy-init="false" />
 	
 	<aop:aspectj-autoproxy proxy-target-class="false"/>	
 </beans>

@@ -53,40 +53,4 @@
 		<!-- <property name="filters" value="mergeStat,wall" /> -->
 	</bean>
 
-
-	<!-- 配置数据源 -->
-	<bean name="dataSourceOld" parent="abstractProxoolDataSource">
-		<property name="url" value="${jdbc.0.url}" />
-		<property name="username" value="${jdbc.0.username}" />
-		<property name="password" value="${jdbc.0.password}" />
-	</bean>
-
-	<!-- 配置数据源tlshow -->
-	<bean name="dataSourceRelation" parent="abstractProxoolDataSource">
-		<property name="url" value="${jdbc.1.url}" />
-		<property name="username" value="${jdbc.1.username}" />
-		<property name="password" value="${jdbc.1.password}" />
-	</bean>
-
-	<!-- 在service中切换数据源,因此不能在service上加事务 -->
-	<bean id="transactionManager" name="transactionManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource">
-			<ref bean="dataSourceRelation" />
-		</property>
-	</bean>
-
-	<tx:advice id="transactionAdvice" transaction-manager="transactionManager">
-		<tx:attributes>
-			<tx:method name="*" propagation="REQUIRED" rollback-for="Exception" />
-		</tx:attributes>
-	</tx:advice>
-
-	<aop:config proxy-target-class="true">
-		<aop:pointcut id="transactionPointcut"
-			expression="execution(* com.changyou.jia.**.service.*.*(..))" />
-		<aop:advisor pointcut-ref="transactionPointcut"
-			advice-ref="transactionAdvice" />
-	</aop:config>
-
 </beans>
