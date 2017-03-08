@@ -73,7 +73,9 @@ private static Logger logger = Logger.getLogger("manager");
 		if(sjfx!=null){
 			webRole += sjfx+",";
 		}
-		userBean.setWebRole(webRole);
+		if(!webRole.equals("")){
+			userBean.setWebRole(webRole);
+		}
 		
 		if(userBean.getId()!=0){
 			managerUserLogic.updateUserInfo(userBean);
@@ -118,6 +120,25 @@ private static Logger logger = Logger.getLogger("manager");
 		retbean.setMsg("修改成功");
 		return retbean;
 	}
+	
+	@RequestMapping("/checkUserCn.aspx")
+	@ResponseBody
+	public Object checkUserCn(HttpServletRequest request,HttpServletResponse response,
+			@RequestParam(value = "cn", required = false)String loginName,
+			@RequestParam(value = "count", required = true)Integer count){
+		
+		System.out.println("---------------------"+loginName.toString());
+		boolean b = managerUserLogic.checkUserCn(loginName,count);
+		ManagerRetBean retbean = new ManagerRetBean();
+		if(b){
+			retbean.setRet(0);
+		}else{
+			retbean.setRet(-1);
+			retbean.setMsg("用户名已存在，请重新输入");
+		}
+		return retbean;
+	}
+
 
 	@RequestMapping("/userList.aspx")
 	public String getUserList(HttpServletRequest request,HttpServletResponse response,

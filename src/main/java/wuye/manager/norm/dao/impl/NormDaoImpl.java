@@ -33,39 +33,43 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
 	public boolean addNormLevel(NormLevelBean normLevelBean){
 		Connection conn = null;
         PreparedStatement pstmt = null;
-        boolean rs = false;
         try {
             String sql = "insert into t_checklevel (level_name) values (?)";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setString(1, normLevelBean.getLevelName());
-            rs = pstmt.execute();
+            int rs = pstmt.executeUpdate();
+            if(rs>0){
+            	return true;
+            }
         }catch(Exception e){
        	 	doCatchException("addNormLevel" ,e);
         } finally {
             closeConnection(conn, pstmt, null);
         }
-        return rs;
+        return false;
 	}
 	
 	@Override
 	public boolean updateNormLevel(NormLevelBean normLevelBean){
 		Connection conn = null;
         PreparedStatement pstmt = null;
-        boolean rs = false;
         try {
             String sql = "update t_checklevel set level_name = ? where level_id=? ";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setString(1, normLevelBean.getLevelName());
             pstmt.setInt(2, normLevelBean.getLevelNo());
-            rs = pstmt.execute();
+            int rs = pstmt.executeUpdate();
+            if(rs>0){
+            	return true;
+            }
         }catch(Exception e){
        	 	doCatchException("deleteNormLevel" ,e);
         } finally {
             closeConnection(conn, pstmt, null);
         }
-        return rs;
+        return false;
 	}
 	
 	public void deleteNormLevel(int id){
@@ -116,27 +120,27 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
 	public boolean addNormCategory(NormCategoryBean normCategoryBean){
 		Connection conn = null;
         PreparedStatement pstmt = null;
-        boolean rs = false;
         try {
-
             String sql = "insert into t_checktitle (title_name,type) values (?,?)";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setString(1, normCategoryBean.getCategoryName());
             pstmt.setInt(2, normCategoryBean.getBusiness());
-            rs = pstmt.execute();
+            int rs = pstmt.executeUpdate();
+            if(rs>0){
+            	return true;
+            }
         }catch(Exception e){
        	 	doCatchException("addNormCategory" ,e);
         } finally {
             closeConnection(conn, pstmt, null);
         }
-        return rs;
+        return false;
 	}
 	
 	public boolean updateNormCategory(NormCategoryBean normCategoryBean){
 		Connection conn = null;
         PreparedStatement pstmt = null;
-        boolean rs = false;
         try {
             String sql = "update t_checktitle set title_name=?,type=? where score_id=?";
             conn = dataSource.getConnection();
@@ -144,13 +148,16 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
             pstmt.setString(1, normCategoryBean.getCategoryName());
             pstmt.setInt(2, normCategoryBean.getBusiness());
             pstmt.setInt(3, normCategoryBean.getCategoryNo());
-            rs = pstmt.execute();
+            int rs = pstmt.executeUpdate();
+            if(rs>0){
+            	return true;
+            }
         }catch(Exception e){
        	 	doCatchException("updateNormCategory" ,e);
         } finally {
             closeConnection(conn, pstmt, null);
         }
-        return rs;
+        return false;
 	}
 	
 	public void deleteNormCategory(int id){
@@ -297,7 +304,10 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
             pstmt.setInt(1, normItemBean.getItemNo());
             pstmt.setString(2, normItemBean.getItemContent());
             pstmt.setInt(3, normItemBean.getCategoryNo());
-            rs = pstmt.execute();
+            int ret = pstmt.executeUpdate();
+            if(ret>0){
+            	rs = true;
+            }
             
             //先删除后添加
             sql = "delete from t_checkscore where subid=?";

@@ -60,7 +60,7 @@
 	          <td>
 	          	<div class="button-group">
 	           		<a class="button border-red" href="javascript:void(0)" onclick="return update(${normCateBean.categoryNo },'${normCateBean.categoryName }',${normCateBean.business })"><span class="icon-trash-o"></span> 修改</a> 
-	           		<a class="button border-red" href="javascript:void(0)" onclick="return del(${normLevelBean.categoryNo })"><span class="icon-trash-o"></span> 删除</a>
+	           		<a class="button border-red" href="javascript:void(0)" onclick="return del(${normCateBean.categoryNo })"><span class="icon-trash-o"></span> 删除</a>
 	           	</div>
 	           </td>
 	        </tr>

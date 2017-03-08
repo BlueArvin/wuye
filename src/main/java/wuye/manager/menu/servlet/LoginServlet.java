@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import wuye.manager.menu.bean.MenuBean;
 import wuye.manager.menu.logic.LoginLogic;
 import wuye.manager.menu.logic.MenuLogic;
+import wuye.manager.norm.bean.NormLevelBean;
 import wuye.manager.user.bean.UserBean;
 import wuye.manager.user.logic.ManagerUserLogic;
 import wuye.manager.utils.ManagerRetBean;
@@ -107,27 +108,31 @@ private static Logger logger = Logger.getLogger("manager");
 	 * @return
 	 */
 	@RequestMapping("/updatePw.aspx")
-	@ResponseBody
-	public Object updatePw(HttpServletRequest request,HttpServletResponse response,
+//	@ResponseBody
+	public String updatePw(HttpServletRequest request,HttpServletResponse response,
 			@RequestParam(value = "mpass", required = true)String passwd,
 			@RequestParam(value = "newpass", required = true)String passwd1,
 			@RequestParam(value = "renewpass", required = true)String passwd2){
 		
 		UserBean ub = (UserBean) request.getSession().getAttribute("user");
+		request.setAttribute("loginName", ub.getCn());
+		
 		
 		ManagerRetBean retbean = new ManagerRetBean();
 		UserBean userBean = loginLogic.checkUser(ub.getCn(), passwd);
 		if(userBean==null){
 			retbean.setRet(-1);
 			retbean.setMsg("原生密码不正确，请重新输入");
-			return retbean;
+			request.setAttribute("msg", retbean.getMsg());
+			return "pass";
 		}
 		
 		
 		if(!passwd1.equals(passwd2)){
 			retbean.setRet(-1);
 			retbean.setMsg("密码不一致");
-			return retbean;
+			request.setAttribute("msg", retbean.getMsg());
+			return "pass";
 		}
 		
 		boolean flag = managerUserLogic.updateUserPasswd(ub.getCn(), passwd1);
@@ -139,7 +144,8 @@ private static Logger logger = Logger.getLogger("manager");
 			retbean.setRet(-1);
 			retbean.setMsg("修改失败，请重新尝试");
 		}
-		return retbean;
+		request.setAttribute("msg", retbean.getMsg());
+		return "pass";
 	}
 	
 }

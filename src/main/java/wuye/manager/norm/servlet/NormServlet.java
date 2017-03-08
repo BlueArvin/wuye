@@ -188,6 +188,7 @@ private static Logger logger = Logger.getLogger("manager");
 	public Object delKhCate(HttpServletRequest request,HttpServletResponse response
 			,@RequestParam(value = "id", required = false)Integer id){
 		
+		System.out.println("id===="+id);
 		normLogic.deleteNormCategory(id);
 		
 		ManagerRetBean ret = new ManagerRetBean();

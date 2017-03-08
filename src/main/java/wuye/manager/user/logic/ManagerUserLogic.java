@@ -36,4 +36,12 @@ public interface ManagerUserLogic {
 	 * @return
 	 */
 	public void updateUserInfo(UserBean userBean);
+	
+	
+	/**
+	 * 验证cn是否可用
+	 * @param loginName
+	 * @return
+	 */
+	public boolean checkUserCn(String loginName,int count);
 }

@@ -13,10 +13,15 @@ public class LoginLogicImpl implements LoginLogic {
 	@Autowired
 	private LoginDao loginDao;
 	
+	@Override
 	public UserBean checkUser(String loginName, String passwd) {
 		return loginDao.checkUser(loginName, passwd);
 	}
 
+	@Override
+	public void updateSysVersion(boolean version,boolean checkversion){
+		loginDao.updateSysVersion(version,checkversion);
+	}
 	
 	
 }

@@ -50,13 +50,13 @@ public class UserBean {
 	}
 	
 	public String getRoleName() {
-		return roleName;
+		return roleName==null?"":roleName;
 	}
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
 	}
 	public String getWebRoleName() {
-		return webRoleName;
+		return webRoleName==null?"":webRoleName;
 	}
 	public void setWebRoleName(String webRoleName) {
 		this.webRoleName = webRoleName;
@@ -82,15 +82,16 @@ public class UserBean {
 	public void setWebRole(String webRole) {
 		this.webRole = webRole;
 		roleList = new ArrayList<String>();
-		String name = "";
-		if(webRole!=null){
+		if(webRole!=null&&!"".equals(webRole)){
+			String name = "";
 			String[] webRoles = webRole.split(",");
 			for(int i=0;i<webRoles.length;i++){
 				roleList.add(webRoles[i]);
 				name+=UserRoleEnum.getName(webRoles[i])+" ";
 			}
+			this.webRoleName = name;
 		}
-		this.webRoleName = name;
+		
 	}
 	public List<String> getRoleList() {
 		return roleList;

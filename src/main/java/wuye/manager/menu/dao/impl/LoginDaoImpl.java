@@ -24,6 +24,7 @@ public class LoginDaoImpl extends DaoBasic implements LoginDao{
 	@Autowired
 	private DataSource dataSource;
 	
+	@Override
 	public UserBean checkUser(String loginName, String passwd) {
 		Connection conn = null;
         PreparedStatement pstmt = null;
@@ -58,6 +59,29 @@ public class LoginDaoImpl extends DaoBasic implements LoginDao{
         }catch(Exception e){
        	 	doCatchException("checkUser" ,e);
             return null;
+        } finally {
+            closeConnection(conn, pstmt, null);
+        }
+	}
+	
+	@Override
+	public void updateSysVersion(boolean version,boolean checkversion){
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            String sql = "update t_sys set ";
+            if(version){
+            	sql+=" version ="+System.currentTimeMillis(); 
+            }
+            if(checkversion){
+            	sql+=" checkversion ="+System.currentTimeMillis(); 
+            }
+            sql+=" where id = 1";
+            conn = dataSource.getConnection();
+            pstmt = prepareStatement(conn, sql);
+            pstmt.executeUpdate();
+        }catch(Exception e){
+       	 	doCatchException("updateSysVersion" ,e);
         } finally {
             closeConnection(conn, pstmt, null);
         }

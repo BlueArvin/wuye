@@ -52,7 +52,7 @@
 	          	<tr>
 	          	<c:forEach  varStatus="i" var="normLevelBean" items="${levelList }" >
 	          		<td><label style="float:left">${normLevelBean.levelName }：</label>
-	          		<input type="number" class="input w55" data-validate="required:" value=0 name="scoreValue" levelId="${normLevelBean.levelNo }" />
+	          		<input type="number" class="input w55" data-validate="required:"  step="0.1" min="0" value=0 name="scoreValue" levelId="${normLevelBean.levelNo }" />
 	          		<input type="hidden" class="input w55" name="scoreId" value="${normLevelBean.levelNo }" /></td>
 	          	</c:forEach>
 	          	</tr>
@@ -70,7 +70,8 @@
       <th>考核类别</th>
         <th width="120">序号</th>
         <th>项目内容</th>   
-        <th>考核分值</th>       
+        <th>考核分值</th>
+        <th>项目总分</th>          
         <th>操作</th>       
       </tr>
       
@@ -80,7 +81,7 @@
 	          <td>${normItemBean.itemNo }</td>
 	          <td>${normItemBean.itemContent }</td>
 	          <td>${normItemBean.scoreName }</td>
-	          
+	          <td>${normItemBean.scoreCount }</td>
 	          <c:forEach  varStatus="z" var="normScoreBean" items="${normItemBean.scoreList }" > 
 					<span style="display:none" name="score_${normItemBean.itemNo }" levelId="${normScoreBean.levelNo }" />${normScoreBean.score }</span>
 	          </c:forEach>

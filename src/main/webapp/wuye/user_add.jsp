@@ -18,7 +18,14 @@
 </head>
 <body>
 <div class="panel admin-panel">
-  <div class="panel-head"><strong><span class="icon-pencil-square-o"></span> 添加用户</strong></div>
+  <div class="panel-head"><strong><span class="icon-pencil-square-o"></span> 
+ <c:if test="${empty userBean}"> 
+     添加用户
+</c:if>
+<c:if test="${not empty userBean}"> 
+     修改用户
+</c:if> 
+  </strong></div>
   <div class="body-content">
     <form method="post" class="form-x">
       <div class="form-group">
@@ -26,8 +33,8 @@
           <label>账户：</label>
         </div>
         <div class="field">
-          <input type="text" class="input" name="cn" value="${userBean.cn } " />
-          <div class="tips"></div>
+          <input type="text" class="input" name="cn" value="${userBean.cn }" />
+          <div id="cnTips" class="tips" style="color:red"></div>
         </div>
       </div>
       <div class="form-group">
@@ -73,7 +80,14 @@
           <label></label>
         </div>
         <div class="field">
-          <button class="button bg-main icon-check-square-o" onclick="subForm()" type="button"> 确认添加</button>
+          <button class="button bg-main icon-check-square-o" onclick="subForm()" type="button">
+          <c:if test="${empty userBean}"> 
+      确认添加
+</c:if>
+<c:if test="${not empty userBean}"> 
+      确认修改
+</c:if> 
+</button>
         </div>
       </div>
     </form>
@@ -123,6 +137,43 @@ $(function(){
 	
 	//alert("xmcheck="+xmcheck+",jlquery="+jlquery+",yhgl="+yhgl+",bzsz="+bzsz+",khxg="+khxg+",sjfx="+sjfx);
 	
+	
+	//为cn字段加监听，判断是否已经存在
+	$("input[name='cn']").blur(function(){
+		var scope = $(this);
+		var value = scope.val();
+		var count = 1;
+		
+		var id = "${userBean.id }";
+		if(id != ""){
+			count==2;//修改
+		}
+		
+		if(value!=null&&value.trim()!=""){
+			var url = "/manager/checkUserCn.aspx";
+			$.ajax({
+				url : url,
+				data : {cn:value.trim(),count:count},
+				type : 'post',
+				async : true,
+				cache : false,
+				dataType : 'json',
+				success : function(data) {
+					console.log(data);
+					if(data.ret==-1){
+						$("#cnTips").text(data.msg);
+						scope.focus();
+					}else if(data.ret==0){
+						$("#cnTips").text("");
+					}
+				},
+				error : function() {
+					alert("请求异常！");
+				}
+			});
+		}
+	  });
+	
 })
 
 function subForm(){
@@ -156,7 +207,11 @@ function subForm(){
 			if(data.ret==0){
 				$("input[type='text']").val("");
 				$("input[type='checkbox']").attr("checked",false);
-				//window.location.href="/manager/index.aspx";
+				
+				
+				if(id != ""){
+					window.location.href="/manager/userList.aspx?pageNum=1";
+				}
 			}
 		},
 		error : function() {

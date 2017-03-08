@@ -20,23 +20,23 @@
   <div class="panel admin-panel">
     <div class="panel-head" onclick="showDiv('stateDiv')"><strong class="icon-reorder"> 城区设置</strong></div>
     <div id="stateDiv" name="form" class="padding border-bottom">
-    	<iframe scrolling="auto" rameborder="0" src="/manager/toAreaSetChild.aspx?pageNum=1&type=1" name="right" width="100%" id="info1" onload="changeFrameHeight('info1')" ></iframe>
+    	<iframe scrolling="auto" rameborder="0" presrc="/manager/toAreaSetChild.aspx?pageNum=1&type=1" src="/manager/toAreaSetChild.aspx?pageNum=1&type=1" name="right" width="100%" id="info1" onload="changeFrameHeight('info1')" ></iframe>
     </div>
 	<div class="panel-head" onclick="showDiv('streeDiv')"><strong class="icon-reorder"> 街道设置</strong></div>
     <div id="streeDiv" name="form" class="padding border-bottom hidden">
-    	<iframe scrolling="auto" rameborder="0" src="/manager/toAreaSetChild.aspx?pageNum=1&type=2" name="right" width="100%" id="info2" onload="changeFrameHeight('info2')" ></iframe>
+    	<iframe scrolling="auto" rameborder="0" presrc="/manager/toAreaSetChild.aspx?pageNum=1&type=2" name="right" width="100%" id="info2" onload="changeFrameHeight('info2')" ></iframe>
 	</div>
 	<div class="panel-head" onclick="showDiv('pianquDiv')"><strong class="icon-reorder"> 片区设置</strong></div>
     <div id="pianquDiv" name="form" class="padding border-bottom hidden">
-    	<iframe scrolling="auto" rameborder="0" src="/manager/toAreaSetChild.aspx?pageNum=1&type=3" name="right" width="100%" id="info3" onload="changeFrameHeight('info3')" ></iframe>
+    	<iframe scrolling="auto" rameborder="0" presrc="/manager/toAreaSetChild.aspx?pageNum=1&type=3" name="right" width="100%" id="info3" onload="changeFrameHeight('info3')" ></iframe>
 	</div>
 	<div class="panel-head" onclick="showDiv('hutongDiv')"><strong class="icon-reorder"> 胡同设置</strong></div>
     <div id="hutongDiv" name="form" class="padding border-bottom hidden">
-	    <iframe scrolling="auto" rameborder="0" src="/manager/toAreaSetChild.aspx?pageNum=1&type=4" name="right" width="100%" id="info4" onload="changeFrameHeight('info4')" ></iframe>
+	    <iframe scrolling="auto" rameborder="0" presrc="/manager/toAreaSetChild.aspx?pageNum=1&type=4" name="right" width="100%" id="info4" onload="changeFrameHeight('info4')" ></iframe>
 	</div>
 	<div class="panel-head" onclick="showDiv('companyDiv')"><strong class="icon-reorder"> 物业设置</strong></div>
     <div id="companyDiv" name="form" class="padding border-bottom hidden">
-    	<iframe scrolling="auto" rameborder="0" src="/manager/toAreaSetChild.aspx?pageNum=1&type=5" name="right" width="100%" id="info5" onload="changeFrameHeight('info5')" ></iframe>
+    	<iframe scrolling="auto" rameborder="0" presrc="/manager/toAreaSetChild.aspx?pageNum=1&type=5" name="right" width="100%" id="info5" onload="changeFrameHeight('info5')" ></iframe>
 	</div>
   </div>
 <script type="text/javascript">
@@ -44,12 +44,14 @@
 function changeFrameHeight(id){
     var ifm= $("#"+id);
     var height = ifm.contents().find("body").height();
-    ifm.attr("height",286);
+    ifm.attr("height",height);
 }
 
 
 function showDiv(showDivId){
 	$("div[name='form']").hide();
+	var src = $("#"+showDivId+" iframe").attr("presrc");
+	$("#"+showDivId+" iframe").attr("src",src);
 	$("#"+showDivId).removeClass("hidden").show();
 }
 

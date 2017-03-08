@@ -44,4 +44,9 @@ public class ManagerUserLogicImpl implements ManagerUserLogic {
 	public void updateUserInfo(UserBean userBean) {
 		managerUserDao.updateUserInfo(userBean);
 	}
+
+	@Override
+	public boolean checkUserCn(String loginName,int count) {
+		return managerUserDao.checkUserCn(loginName,count);
+	}
 }

@@ -34,14 +34,12 @@
 	      <tr>
 	        <th width="120">序号</th>
 	        <th>城区名称</th>
-	        <th>隶属于</th>       
 	        <th>操作</th>       
 	      </tr>
 	      <c:forEach  varStatus="i" var="areaBean" items="${list }" > 
 	      <tr>
 	          <td>${areaBean.id }</td>
 	          <td>${areaBean.name }</td>
-	          <td>${areaBean.parentName }</td>
 	          <td>
 	          	<div class="button-group">
 	           		<a class="button border-red" href="javascript:void(0)" onclick="return update(${areaBean.id },${areaBean.parentId },'${areaBean.name }')"><span class="icon-trash-o"></span> 修改</a> 

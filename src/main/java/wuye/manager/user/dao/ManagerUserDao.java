@@ -45,4 +45,11 @@ public interface ManagerUserDao {
 	 */
 	public void updateUserInfo(UserBean userBean);
 	
+	
+	/**
+	 * 验证用户cn是否可用
+	 * @param loginName
+	 * @return
+	 */
+	public boolean checkUserCn(String loginName,int count);
 }

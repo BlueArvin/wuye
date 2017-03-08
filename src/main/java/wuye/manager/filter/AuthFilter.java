@@ -13,7 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import wuye.manager.enums.RoleAuthEnum;
+import wuye.manager.menu.logic.LoginLogic;
 import wuye.manager.user.bean.UserBean;
+import wuye.manager.utils.SpringContextHolder;
 
 
 public class AuthFilter implements Filter {
@@ -46,6 +49,19 @@ public class AuthFilter implements Filter {
             
             if(ub!=null){
             	arg2.doFilter(req, response);
+            	
+            	//获取返回
+            	//判断是否需要刷新数据库version
+            	
+            	boolean version = RoleAuthEnum.AreaVersionEnum.include(serverPath);
+            	boolean checkversion = RoleAuthEnum.normVersionEnum.include(serverPath);
+            	System.out.println("version:"+version+"------------checkversion:"+checkversion);
+            	
+            	//更新t_sys 版本
+            	if(version||checkversion){
+            		LoginLogic loginLogic = SpringContextHolder.getBean("loginLogic");
+            		loginLogic.updateSysVersion(version, checkversion);
+            	}
             	return;
             }else{
             	response.setHeader("Cache-Control", "no-store");  
@@ -58,6 +74,7 @@ public class AuthFilter implements Filter {
         }
     }
 
+    
     
     
     @Override

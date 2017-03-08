@@ -27,20 +27,23 @@ public class ManagerUserDaoImpl extends DaoBasic implements ManagerUserDao{
 	public boolean updateUserPasswd(String cn,String passwd){
 		Connection conn = null;
         PreparedStatement pstmt = null;
-        boolean rs = false;
+        int rs = 0;
         try {
             String sql = "update t_user set passwd = ? where cn = ?";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setString(1, passwd);
             pstmt.setString(2, cn);
-            rs = pstmt.execute();
+            rs = pstmt.executeUpdate();
+            if(rs==1){
+            	return true;
+            }
         }catch(Exception e){
        	 	doCatchException("checkUser" ,e);
         } finally {
             closeConnection(conn, pstmt, null);
         }
-        return rs;
+        return false;
 	}
 	
 	
@@ -119,11 +122,11 @@ public class ManagerUserDaoImpl extends DaoBasic implements ManagerUserDao{
             
             
             if(userBean.getUserName()!=null){
-            	sql += "userName="+userBean.getUserName().trim()+",";
+            	sql += "userName='"+userBean.getUserName().trim()+"',";
             }
             
             if(userBean.getUserName()!=null){
-            	sql += "passwd="+userBean.getPasswd().trim()+",";
+            	sql += "passwd='"+userBean.getPasswd().trim()+"',";
             }
             
             if(userBean.getRole()!=0){
@@ -131,7 +134,7 @@ public class ManagerUserDaoImpl extends DaoBasic implements ManagerUserDao{
             }
             
             if(userBean.getWebRole()!=null){
-            	sql += "webRole="+userBean.getWebRole().trim()+",";
+            	sql += "webRole='"+userBean.getWebRole().trim()+"',";
             }
             
             if(userBean.getStatus()!=null){
@@ -139,7 +142,7 @@ public class ManagerUserDaoImpl extends DaoBasic implements ManagerUserDao{
             }
             
             if(userBean.getCn()!=null){
-            	sql += "cn="+userBean.getCn().trim()+",";
+            	sql += "cn='"+userBean.getCn().trim()+"',";
             }
             
             sql += "id="+userBean.getId()+" where id="+userBean.getId();
@@ -214,6 +217,32 @@ public class ManagerUserDaoImpl extends DaoBasic implements ManagerUserDao{
         }
 		return null;
 	
+	}
+
+
+	@Override
+	public boolean checkUserCn(String loginName,int count) {
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            String sql = "select count(id) as con from t_user where cn=?";
+            conn = dataSource.getConnection();
+            pstmt = prepareStatement(conn, sql);
+            pstmt.setString(1, loginName);
+            rs = pstmt.executeQuery();
+            
+            if(rs.next()){
+            	if(rs.getInt("con")>=count){
+            		return false;//cn已经存在
+            	}
+            }
+        }catch(Exception e){
+       	 	doCatchException("checkUserCn" ,e);
+        } finally {
+            closeConnection(conn, pstmt, null);
+        }
+		return true;
 	}
 	
 }

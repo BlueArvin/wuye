@@ -21,7 +21,7 @@
   <div class="logo margin-big-left fadein-top">
     <h1><img src="/wuye/images/y.jpg" class="radius-circle rotate-hover" height="50" alt="" />后台管理中心</h1>
   </div>
-  <div class="head-l"><a class="button button-little bg-green" href="/wuye/index.jsp" target="_self">
+  <div class="head-l"><a class="button button-little bg-green" href="/manager/index.aspx" target="_self">
   <span class="icon-home"></span> 返回首页</a> &nbsp;&nbsp;
   <a href="/manager/toUpdatePw.aspx" target="right" class="button button-little bg-blue"><span class="icon-wrench"></span> 修改密码</a> &nbsp;&nbsp;<a class="button button-little bg-red" href="/manager/logout.aspx"><span class="icon-power-off"></span> 退出登录</a> </div>
 </div>
