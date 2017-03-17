@@ -6,6 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import wuye.manager.cache.Cache;
+import wuye.manager.cache.CacheKeyConstant;
+import wuye.manager.cache.CacheManager;
 import wuye.manager.norm.bean.AreaBean;
 import wuye.manager.norm.dao.AreaDao;
 import wuye.manager.norm.logic.AreaLogic;
@@ -39,6 +42,8 @@ public class AreaLogicImpl implements AreaLogic {
 		default:
 			break;
 		}
+		
+		CacheManager.getCacheInfo(CacheKeyConstant.KEY_AREA+areaBean.getType()).setExpired(true);//设置缓存超时
 		return ret;
 	}
 
@@ -64,6 +69,7 @@ public class AreaLogicImpl implements AreaLogic {
 		default:
 			break;
 		}
+		CacheManager.getCacheInfo(CacheKeyConstant.KEY_AREA+areaBean.getType()).setExpired(true);//设置缓存超时
 		return ret;
 	}
 
@@ -90,6 +96,8 @@ public class AreaLogicImpl implements AreaLogic {
 			break;
 		}
 		areaDao.delArea(tableName, id);
+		
+		CacheManager.getCacheInfo(CacheKeyConstant.KEY_AREA+type).setExpired(true);//设置缓存超时
 	}
 
 	@Override
@@ -127,8 +135,14 @@ public class AreaLogicImpl implements AreaLogic {
 
 	@Override
 	public List<AreaBean> queryAreaList(int type) {
+		Cache areaCache = CacheManager.getCacheInfo(CacheKeyConstant.KEY_AREA+type);
+		if(areaCache!=null&&!areaCache.isExpired()){
+			return (List<AreaBean>) areaCache.getValue();
+		}else{
+			CacheManager.clearOnly(CacheKeyConstant.KEY_AREA+type);
+		}
+		
 		List<AreaBean> ret = new ArrayList<AreaBean>();
-		String tableName = "";
 		switch (type) {
 		case 1:
 			ret = areaDao.queryAllState();
@@ -139,9 +153,51 @@ public class AreaLogicImpl implements AreaLogic {
 		case 3:
 			ret = areaDao.queryAllPianqu();
 			break;
+		case 4:
+			ret = areaDao.queryAllHutong();
+			break;
+		case 5:
+			ret = areaDao.queryAllCompany();
+			break;
 		default:
 			break;
 		}
+		
+		//缓存
+		Cache cache = new Cache();
+		cache.setKey(String.valueOf(type));
+		cache.setValue(ret);
+		CacheManager.putCache(CacheKeyConstant.KEY_AREA+type, cache);
 		return ret;
+	}
+	
+	public String getAreaName(int id,int type){
+		Cache areaCache = CacheManager.getCacheInfo(CacheKeyConstant.KEY_AREA+type);
+		boolean flag = true;
+		List<AreaBean> areaList = null;
+		if(areaCache==null){
+			flag = false;
+			areaList = queryAreaList(type);
+		}else{
+			areaList = (List<AreaBean>) areaCache.getValue();
+		}
+		
+		for(int i=0;i<areaList.size();i++){
+			AreaBean area = areaList.get(i);
+			if(area.getId()==id){
+				return area.getName();
+			}
+		}
+		//缓存中没有--重新查询所有再次遍历
+		if(flag){
+			areaList = queryAreaList(type);
+			for(int i=0;i<areaList.size();i++){
+				AreaBean area = areaList.get(i);
+				if(area.getId()==id){
+					return area.getName();
+				}
+			}
+		}
+		return "";//已删除或不存在了
 	}
 }
