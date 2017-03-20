@@ -17,10 +17,6 @@ public class ManAssessBean extends AssessDataBean {
 	private String assessName;    // 检查id小类 XXX@大类id
 	private String assesstopName;    // 检查大类id
 	
-	public void setId(String id) {
-		this.id = id;
-	}
-	
 	public String getTimeStr() {
 		DateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");//设置日期格式
 		return df.format(time);
