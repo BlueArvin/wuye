@@ -31,10 +31,6 @@ public class AssessDataBean {
 		this.loc = loc;
 	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
-
 	public int getPianquid() {
 		return pianquid;
 	}

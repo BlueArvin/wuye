@@ -17,6 +17,4 @@ public interface AreaLogic {
 	
 	public List<AreaBean> queryAreaList(int type);
 	
-	public String getAreaName(int id,int type);
-	
 }

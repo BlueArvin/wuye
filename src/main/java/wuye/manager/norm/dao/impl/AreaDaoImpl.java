@@ -413,7 +413,7 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,statename from t_state";
+            String sql = "select * from t_state";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
@@ -443,7 +443,7 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,street_name from t_street";
+            String sql = "select * from t_street";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
@@ -473,7 +473,7 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,pianqu_name from t_pianqu";
+            String sql = "select * from t_pianqu";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
@@ -487,58 +487,6 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
             return list;
         }catch(Exception e){
        	 	doCatchException("queryAllPianqu" ,e);
-        } finally {
-            closeConnection(conn, pstmt, null);
-        }
-		return null;
-	}
-
-	@Override
-	public List<AreaBean> queryAllHutong() {
-		Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try {
-            String sql = "select id,hutong_name from t_hutong";
-            conn = dataSource.getConnection();
-            pstmt = prepareStatement(conn, sql);
-            rs = pstmt.executeQuery();
-            List<AreaBean> list = new ArrayList<AreaBean>();
-            while(rs.next()){
-            	AreaBean nb = new AreaBean();
-            	nb.setId(rs.getInt("id"));
-            	nb.setName(rs.getString("hutong_name"));
-            	list.add(nb);
-            }
-            return list;
-        }catch(Exception e){
-       	 	doCatchException("queryAllHutong" ,e);
-        } finally {
-            closeConnection(conn, pstmt, null);
-        }
-		return null;
-	}
-
-	@Override
-	public List<AreaBean> queryAllCompany() {
-		Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try {
-        	String sql = "select id,company_name from t_managecompany";
-            conn = dataSource.getConnection();
-            pstmt = prepareStatement(conn, sql);
-            rs = pstmt.executeQuery();
-            List<AreaBean> list = new ArrayList<AreaBean>();
-            while(rs.next()){
-            	AreaBean nb = new AreaBean();
-            	nb.setId(rs.getInt("id"));
-            	nb.setName(rs.getString("company_name"));
-            	list.add(nb);
-            }
-            return list;
-        }catch(Exception e){
-       	 	doCatchException("queryAllCompany" ,e);
         } finally {
             closeConnection(conn, pstmt, null);
         }

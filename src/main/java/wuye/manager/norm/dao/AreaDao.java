@@ -147,20 +147,9 @@ public interface AreaDao {
 	
 	/**
 	 * 查询片区
+	 * @param stateBean
 	 * @return
 	 */
 	public List<AreaBean> queryAllPianqu();
-	
-	/**
-	 * 查询胡同
-	 * @return
-	 */
-	public List<AreaBean> queryAllHutong();
-	
-	/**
-	 * 查询所有物业公司
-	 * @return
-	 */
-	public List<AreaBean> queryAllCompany();
 	
 }
