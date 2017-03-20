@@ -3,6 +3,7 @@ package wuye.dao.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,8 +36,8 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         try {
             String sql = "insert into t_assess(intime, streetid, areaid, pianquid, hutongid, wuyeid, assessid,assessidtop,"
             		+ " yeneiid, jibieid, "
-            		+ " score, userid, img1, img2, img3, aseid, loc) "
-            		+ " value(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?) ";
+            		+ " score, userid, img1, img2, img3, img4, aseid, loc, msg) "
+            		+ " value(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ? ,?,?) ";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setTimestamp(1, new Timestamp(data.getTime().getTime()));
@@ -54,11 +55,18 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             pstmt.setString(13, data.getImg1());
             pstmt.setString(14, data.getImg2());
             pstmt.setString(15, data.getImg3());
-            pstmt.setString(16, data.getId());
-            pstmt.setString(17, data.getLoc());
+            pstmt.setString(16, data.getImg4());
+            pstmt.setString(17, data.getSerailID());
+            pstmt.setString(18, data.getLoc());
+            pstmt.setString(19, data.getMsg());
             rs = pstmt.execute();
             
             return 0;
+        }catch(SQLException e) {
+        	if(e.getErrorCode() == 1062) {
+        		return 0;
+        	}
+        	return -1;
         }catch(Exception e){
        	 	doCatchException("getBlockList" ,e);
             return -1;

@@ -42,7 +42,7 @@ $.ajax({
 		// 	location.href="/manager/toKhLevel.aspx";
 		// }
 		display(data);
-		alert(data);
+		// alert(data);
 	},
 	error : function() {
 		alert("请求异常！");
@@ -55,7 +55,7 @@ function display(data) {
 
 	for(var key in obj){ //第一层循环取到各个list 
 		var List = obj[key]; 
-		alert(List);
+		// alert(List);
 
 		var s = List.split(",");
 		dot(s[0], s[1]);

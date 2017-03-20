@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -39,14 +40,18 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
 
             rs = pstmt.executeQuery();
             if (rs.next()) {
-            	return rs.getString("version");
+            	long data = Long.parseLong(rs.getString("version"));
+            	Calendar cal = Calendar.getInstance();  
+                cal.setTimeInMillis(data);
+                SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+            	return df.format(cal.getTime());
             } else {
-            	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            	SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//设置日期格式
             	return df.format(new Date());
             }
         }catch(Exception e){
        	 	doCatchException("getBlockList" ,e);
-	       	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+	       	SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//设置日期格式
 	       	return df.format(new Date());
         } finally {
             closeConnection(conn, pstmt, null);
@@ -64,14 +69,18 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
 
             rs = pstmt.executeQuery();
             if (rs.next()) {
-            	return rs.getString("checkversion");
+            	long data = Long.parseLong(rs.getString("checkversion"));
+            	Calendar cal = Calendar.getInstance();  
+                cal.setTimeInMillis(data);
+                SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+            	return df.format(cal.getTime());
             } else {
-            	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            	SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//设置日期格式
             	return df.format(new Date());
             }
         }catch(Exception e){
        	 	doCatchException("getBlockList" ,e);
-	       	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+	       	SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//设置日期格式
 	       	return df.format(new Date());
         } finally {
             closeConnection(conn, pstmt, null);
@@ -156,7 +165,7 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
             while (rs.next()) {
             	ret.add(new ConfigData.Pair("p"+ rs.getInt("id") , 
             			rs.getString("pianqu_name"),
-            			"s" + rs.getString("father_id")));
+            			"t" + rs.getString("father_id")));
             }
             return ret;
         }catch(Exception e){
@@ -196,9 +205,27 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
 	
 	private List<ConfigData.Pair> getCheckLevel() {
 		List<ConfigData.Pair> ret =new ArrayList<ConfigData.Pair>();
-		ret.add(new ConfigData.Pair("1","A"));
-		ret.add(new ConfigData.Pair("2","B"));
-		return ret;
+		
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            String sql = "select level_id,level_name from t_checklevel";
+            conn = dataSource.getConnection();
+            pstmt = prepareStatement(conn, sql);
+
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+            	ret.add(new ConfigData.Pair("" + rs.getInt("level_id") ,rs.getString("level_name")));
+            }
+            return ret;
+        }catch(Exception e){
+       	 	doCatchException("getCheckLevel" ,e);
+       	 	return ret;
+        } finally {
+            closeConnection(conn, pstmt, null);
+            
+        }
 	}
 	
 	private List<ConfigData.Pair> getWuyeCorp() {

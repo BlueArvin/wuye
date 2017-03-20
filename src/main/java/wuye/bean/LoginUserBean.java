@@ -1,5 +1,8 @@
 package wuye.bean;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +25,7 @@ public class LoginUserBean {
 	private String cookie = "";	// ��¼���cookieֵ
 	private int type = 0;      	// 0. �˺�������ͨ��¼    1. ͨ��cookieֵ��¼
 	private int role = 0;       // 权限
+	private String name = "";
 	
 	private int ret = 1;            // ��Ž��
 	private String updateCookie = ""; // �����ɵ�cookie
@@ -74,6 +78,18 @@ public class LoginUserBean {
 		this.role = role;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		try {
+			this.name = URLEncoder.encode(name, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			this.name = name;
+		}
+	}
+
 	public LoginUserBean(String account, String secret, int type) {
 		if(type == 0) {
 			this.account = account;
@@ -94,6 +110,9 @@ public class LoginUserBean {
 			Map<String, Object> value = new HashMap<String, Object>();
 			value.put("right", role);
 			value.put("token", updateCookie);
+			value.put("name", name);
+			Formatter fmt = new Formatter();
+			value.put("userid", fmt.format("%05x", userid).toString());
 			bean.setValue(value);
 			break;
 		case NOUSER:

@@ -40,11 +40,14 @@ public class AssessServlet {
 	@RequestMapping("submit")
 	@ResponseBody
     public Object submit(HttpServletRequest request){
+		String serailID = request.getParameter("serailid");
 		String sdd = request.getParameter("data");  // 
 		String pic1 = request.getParameter("pic1");      // 
 		String pic2 = request.getParameter("pic2");      // 
 		String pic3 = request.getParameter("pic3");      // 
+		String pic4 = request.getParameter("pic4");
 		String loc = request.getParameter("loc");        // 
+		String msg = request.getParameter("msg");
 		
 		String uid = (String)request.getSession().getAttribute("userid");
 		if(uid == null) {   //
@@ -80,9 +83,12 @@ public class AssessServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		data.setSerailID(serailID);
 		data.setImg1(pic1);
 		data.setImg2(pic2);
 		data.setImg3(pic3);
+		data.setImg4(pic4);
+		data.setMsg(msg);
 		
 		int ret = assessLogic.submit(data);
 		int aseid = data.getAssessid();

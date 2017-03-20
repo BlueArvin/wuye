@@ -1,5 +1,8 @@
 package wuye.bean;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -18,11 +21,23 @@ public class AssessDataBean {
 	public int assessid;    // 检查id小类 XXX@大类id
 	public int assessidtop;    // 检查大类id
 	public int score;
-	public String img1;
+	public String img1 = "";
 	public String img2 = "";
 	public String img3 = "";
+	public String img4 = "";
 	public String loc = "";
+	public String msg = "";
 	
+	public String serailID = "";
+	
+	public String getSerailID() {
+		return serailID;
+	}
+
+	public void setSerailID(String serailID) {
+		this.serailID = serailID;
+	}
+
 	public String getLoc() {
 		return loc;
 	}
@@ -33,6 +48,16 @@ public class AssessDataBean {
 
 	public int getPianquid() {
 		return pianquid;
+	}
+	
+	
+
+	public String getImg4() {
+		return img4;
+	}
+
+	public void setImg4(String img4) {
+		this.img4 = img4;
 	}
 
 	public void setPianquid(int pianquid) {
@@ -141,6 +166,19 @@ public class AssessDataBean {
 
 	public void setAssessid(int assessid) {
 		this.assessid = assessid;
+	}
+
+	public String getMsg() {
+		try {
+			return URLDecoder.decode(msg, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			return msg;
+		}
+	}
+
+	public void setMsg(String msg) {
+		this.msg = msg;
 	}
 	
 	
