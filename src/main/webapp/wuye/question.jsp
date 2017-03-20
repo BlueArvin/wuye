@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@page isELIgnored="false" %>    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>    
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -9,10 +11,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="renderer" content="webkit">
     <title>问题修改</title>  
-    <link rel="stylesheet" href="css/pintuer.css">
-    <link rel="stylesheet" href="css/admin.css">
-    <script src="js/jquery.js"></script>   
-    <script src="js/pintuer.js"></script>  
+    <link rel="stylesheet" href="/wuye/css/pintuer.css">
+    <link rel="stylesheet" href="/wuye/css/admin.css">
+    <script src="/wuye/js/jquery.js"></script>   
+    <script src="/wuye/js/pintuer.js"></script>  
 </head>
 <body>
 <form method="post" action="">
@@ -65,103 +67,120 @@
         <th>街道</th>
         <th>片区</th>
         <th>胡同</th>
+        <th>物业</th>
+        <th>评分</th>
         <th>检查人</th>
         <th>操作</th>       
-      </tr>      
-        <tr>
-          <td>1</td>
-          <td>神夜</td>
-          <td>13420925611</td>
-          <td>564379992@qq.com</td>  
-          <td>2016-07-01</td>
-          <td>
-          	<div class="button-group">
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 修改</a> 
-           		<a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 停用</a>
-           	</div>
-           </td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>神夜</td>
-          <td>13420925611</td>
-          <td>564379992@qq.com</td>  
-          <td>2016-07-01</td>
-          <td><div class="button-group"> <a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a> </div></td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>神夜</td>
-          <td>13420925611</td>
-          <td>564379992@qq.com</td>  
-          <td>2016-07-01</td>
-          <td><div class="button-group"> <a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a> </div></td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>神夜</td>
-          <td>13420925611</td>
-          <td>564379992@qq.com</td>  
-          <td>2016-07-01</td>
-          <td><div class="button-group"> <a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a> </div></td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>神夜</td>
-          <td>13420925611</td>
-          <td>564379992@qq.com</td>  
-          <td>2016-07-01</td>
-          <td><div class="button-group"> <a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a> </div></td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>神夜</td>
-          <td>13420925611</td>
-          <td>564379992@qq.com</td>  
-          <td>2016-07-01</td>
-          <td><div class="button-group"> <a class="button border-red" href="javascript:void(0)" onclick="return del(1)"><span class="icon-trash-o"></span> 删除</a> </div></td>
-        </tr>
+      </tr>     
+      <c:forEach  varStatus="i" var="assessBean" items="${list }" > 
+	      <tr>
+	          <td>${assessBean.timeStr }</td>
+	          <td>${assessBean.areaName }</td>
+	          <td>${assessBean.streetName }</td>
+	          <td>${assessBean.pianquName }</td>
+	          <td>${assessBean.hutongName }</td>
+	          <td>${assessBean.wuyeName }</td>
+	          <td align="center"><span id="score_span_${assessBean.id}">${assessBean.score }</span><input type="number" class="input" style="width:80px;display:none;" id="score_input_${assessBean.id }" value="${assessBean.score }" /></td>
+	          <td>${assessBean.userName }</td>
+	          <td>
+	          	<div class="button-group">
+	           		<a class="button border-red" href="javascript:void(0)" onclick="return update(${assessBean.id },this)"><span class="icon-trash-o"></span> 修改</a>
+	           		<a class="button border-green" style="display:none;" href="javascript:void(0)" onclick="return save(${assessBean.id },this)"><span class="icon-trash-o"></span> 完成</a> 
+	           		<a class="button border-red" href="javascript:void(0)" onclick="return del(${assessBean.id })"><span class="icon-trash-o"></span> 删除</a>
+	           	</div>
+	           </td>`
+	        </tr>
+      </c:forEach>
       <tr>
-        <td colspan="6"><div class="pagelist"> <a href="">上一页</a> <span class="current">1</span><a href="">2</a><a href="">3</a><a href="">下一页</a><a href="">尾页</a> </div></td>
+        <td colspan="8">
+        	<div class="pagelist">
+	        	<a href="javascript:load(${page.page-1 })">上一页</a>
+	        	<a num="${page.page-2 }" href="javascript:load(${page.page-2 })">${page.page-2 }</a>
+	        	<a num="${page.page-1 }" href="javascript:load(${page.page-1 })">${page.page-1 }</a>
+	        	<span class="current">${page.page }</span>
+	        	<a num="${page.countPage - page.page }" href="javascript:load(${page.page+1 })">${page.page+1 }</a>
+	        	<a num="${page.countPage - page.page - 1 }" href="javascript:load(${page.page+2 })">${page.page+2 }</a>
+	        	<a href="javascript:load(${page.page+1 })">下一页</a>
+	        	<a href="javascript:load(${page.countPage })">尾页</a>
+        	</div>
+        </td>
       </tr>
     </table>
   </div>
 </form>
 <script type="text/javascript">
 
-function del(id){
-	if(confirm("您确定要删除吗?")){
-		
+$(function(){
+	$("a[num=0],a[num=-1]").hide();
+	var retMsg="${msg }";
+	if(retMsg!=null&&retMsg!=""){
+		alert(retMsg);
 	}
-}
-
-$("#checkall").click(function(){ 
-  $("input[name='id[]']").each(function(){
-	  if (this.checked) {
-		  this.checked = false;
-	  }
-	  else {
-		  this.checked = true;
-	  }
-  });
 })
 
-function DelSelect(){
-	var Checkbox=false;
-	 $("input[name='id[]']").each(function(){
-	  if (this.checked==true) {		
-		Checkbox=true;	
-	  }
-	});
-	if (Checkbox){
-		var t=confirm("您确认要删除选中的内容吗？");
-		if (t==false) return false; 		
+function load(pageNum){
+	var count = ${page.countPage };
+	var now = ${page.page };
+	if(pageNum<=0||pageNum>count){
+		return;
 	}
-	else{
-		alert("请选择您要删除的内容!");
-		return false;
+	location.href="/manager/toAssess.aspx?pageNum="+pageNum;
+}
+
+function del(id){
+	if(confirm("您确定要删除吗?")){
+		$.ajax({
+			url : "/manager/delAssess.aspx",
+			data : {id:id},
+			type : 'post',
+			async : true,
+			cache : false,
+			dataType : 'json',
+			success : function(data) {
+				console.log(data);
+				alert(data.msg);
+				location.href="/manager/toAssess.aspx?pageNum=1";
+			},
+			error : function() {
+				alert("请求异常！");
+			}
+		});
 	}
 }
+
+function update(id,obj){
+	$(obj).hide();
+	$(obj).next("a").show();
+	$("#score_span_"+id).hide();
+	$("#score_input_"+id).show();
+}
+
+
+function save(id,obj){
+	$(obj).hide();
+	$(obj).prev("a").show();
+	var value = $("#score_input_"+id).val();
+	$("#score_input_"+id).hide();
+	$("#score_span_"+id).text(value).show();
+	
+	$.ajax({
+		url : "/manager/updateAssess.aspx",
+		data : {id:id,score:value},
+		type : 'post',
+		async : true,
+		cache : false,
+		dataType : 'json',
+		success : function(data) {
+			console.log(data);
+			alert(data.msg);
+		},
+		error : function() {
+			alert("请求异常！");
+		}
+	});
+	
+}
+
 
 </script>
 </body></html>
