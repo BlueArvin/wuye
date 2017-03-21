@@ -25,37 +25,26 @@
         <li>
 	        <div style="float:left">
 	          <label  style="float:left" >检查日期：</label>
-	          <select name="type" class="input w66"  style="float:left" >
-	              <option value="">请选择考核类型</option>
-	              <option value="">内业</option>
-	              <option value="">外业</option>
-	            </select>
-	          
+	          <input type="date" class="input w66"  id="time" name="time" style="float:left" />
 	          <label  style="float:left" >&nbsp;&nbsp;&nbsp;&nbsp;城区名称：</label>
-	          <select name="type" class="input w66"  style="float:left" >
-	              <option value="">请选择考核类型</option>
-	              <option value="">内业</option>
-	              <option value="">外业</option>
+	          <select name="areaid" id="areaid" class="input w66"  style="float:left" >
+	              <option value=0>请选择城区</option>
+	              <c:forEach varStatus="i" var="areaBean" items="${areaList }" > 
+	              	<option value=${areaBean.id }>${areaBean.name }</option>
+	              </c:forEach>
 	            </select>
 	        </div>
         </li>
         <li style="padding-top: 5px">
 	        <div style="float:left">
 	          <label  style="float:left" >街道名称：</label>
-	          <select name="type" class="input w66"  style="float:left" >
-	              <option value="">请选择考核类型</option>
-	              <option value="">内业</option>
-	              <option value="">外业</option>
+	          <select name="streetid" id="streetid" class="input w66"  style="float:left" >
+	              <option value=0>请选择街道</option>
 	            </select>
-	          
 	          <label  style="float:left" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;检查人：</label>
-	          <select name="type" class="input w66"  style="float:left" >
-	              <option value="">请选择考核类型</option>
-	              <option value="">内业</option>
-	              <option value="">外业</option>
-	            </select>
+	          <input type="text" class="input w66"  id="userName" name="userName" style="float:left" />
 	            &nbsp;&nbsp;&nbsp;
-	          <button type="button"  class="button border-green" id="queryUser" ><span class="icon-check"></span> 查询</button>
+	          <button type="button"  class="button border-green" onclick="queryAll()" ><span class="icon-check"></span> 查询</button>
 	        </div>
         </li>
       </ul>
@@ -88,7 +77,7 @@
 	           		<a class="button border-green" style="display:none;" href="javascript:void(0)" onclick="return save(${assessBean.id },this)"><span class="icon-trash-o"></span> 完成</a> 
 	           		<a class="button border-red" href="javascript:void(0)" onclick="return del(${assessBean.id })"><span class="icon-trash-o"></span> 删除</a>
 	           	</div>
-	           </td>`
+	           </td>
 	        </tr>
       </c:forEach>
       <tr>
@@ -116,7 +105,65 @@ $(function(){
 	if(retMsg!=null&&retMsg!=""){
 		alert(retMsg);
 	}
+	
+	
+	$("#areaid").change(function(){
+		var areaId = $(this).val();
+		$("#streetid").val(0);
+		$("#streetid option:not(:first)").remove();
+		if(areaId==0){
+			return;
+		}
+		$.ajax({
+			url : "/manager/queryStreet.aspx",
+			data : {parentId:areaId},
+			type : 'post',
+			async : true,
+			cache : false,
+			dataType : 'json',
+			success : function(data) {
+				console.log(data);
+				if(data.ret==0){
+					var options = "";
+					$.each(data.data, function (index, info) {
+						var id = info.id;
+						var name = info.name;
+						options+="<option value="+id+">"+name+"</option>";
+					 })
+					$("#streetid").append(options);
+				}
+			},
+			error : function() {
+				alert("请求异常！");
+			}
+		});
+	});
 })
+
+function queryAll(){
+	var time = $("#time").val();
+	var areaid = $("#areaid").val();
+	var streetid = $("#streetid").val();
+	var userName = $("#userName").val();
+	alert(time+"--"+areaid+"--"+streetid+"--"+userName);
+	var url = "/manager/toAssess.aspx?pageNum=1";
+	
+	var param = "";
+	if(time != null&&time!=""){
+		param+="&timeStr="+time;
+	}
+	if(areaid != 0){
+		param+="&areaid="+areaid;
+	}
+	if(streetid != 0){
+		param+="&streetid="+streetid;
+	}
+	if(userName.trim() != ""){
+		param+="&userName="+userName.trim();
+	}
+	localStorage.setItem("questionParam",param);
+	location.href=url+param;
+}
 
 function load(pageNum){
 	var count = ${page.countPage };
@@ -124,7 +171,8 @@ function load(pageNum){
 	if(pageNum<=0||pageNum>count){
 		return;
 	}
-	location.href="/manager/toAssess.aspx?pageNum="+pageNum;
+	var param = localStorage.getItem("questionParam");
+	location.href="/manager/toAssess.aspx?pageNum="+pageNum+param;
 }
 
 function del(id){

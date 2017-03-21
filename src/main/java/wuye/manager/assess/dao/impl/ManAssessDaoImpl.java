@@ -39,7 +39,7 @@ public class ManAssessDaoImpl extends DaoBasic implements ManAssessDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select t.id,t.score,t.areaid,t.streetid,t.pianquid,t.hutongid,t.userid,t.wuyeid,t.assessidtop,t.assessid,t.intime from t_assess t where 1=1 ";
+            String sql = "select t.id,t.score,t.areaid,t.streetid,t.pianquid,t.hutongid,t.userid,t.wuyeid,t.assessidtop,t.assessid,t.intime from t_assess t where del = 0 ";
             
             if(manAssessBean.getAreaid()!=0){
             	sql+=" and t.areaid = "+ manAssessBean.getAreaid();
@@ -54,7 +54,7 @@ public class ManAssessDaoImpl extends DaoBasic implements ManAssessDao{
             }
 
             if(manAssessBean.getTime()!=null){
-            	sql+=" and DATEDIFF(t.intime,"+manAssessBean.getTime()+")=0 ";
+            	sql+=" and DATEDIFF(t.intime,DATE('"+manAssessBean.getTimeStr()+"'))=0 ";
             }
             
             sql+=" limit "+page.getStartIndex()+","+page.getPageSize();
@@ -108,7 +108,7 @@ public class ManAssessDaoImpl extends DaoBasic implements ManAssessDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select count(id) as con from t_assess t where 1=1 ";
+            String sql = "select count(id) as con from t_assess t where del = 0 ";
             
             if(manAssessBean.getAreaid()!=0){
             	sql+=" and t.areaid = "+ manAssessBean.getAreaid();
@@ -123,9 +123,9 @@ public class ManAssessDaoImpl extends DaoBasic implements ManAssessDao{
             }
 
             if(manAssessBean.getTime()!=null){
-            	sql+=" and DATEDIFF(t.intime,"+manAssessBean.getTime()+")=0 ";
+            	sql+=" and DATEDIFF(t.intime,DATE('"+manAssessBean.getTimeStr()+"'))=0 ";
             }
-            
+            System.out.println(sql);
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
@@ -176,7 +176,8 @@ public class ManAssessDaoImpl extends DaoBasic implements ManAssessDao{
         PreparedStatement pstmt = null;
         int rs = 0;
         try {
-            String sql = "delete from t_assess where id=? ";
+        	String sql = "update t_assess set del = 1 where id=? ";
+//            String sql = "delete from t_assess where id=? ";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setString(1, manAssessBean.getId());

@@ -148,13 +148,13 @@ public class AreaLogicImpl implements AreaLogic {
 			ret = areaDao.queryAllState();
 			break;
 		case 2:
-			ret = areaDao.queryAllStreet();
+			ret = areaDao.queryAllStreet(0);
 			break;
 		case 3:
-			ret = areaDao.queryAllPianqu();
+			ret = areaDao.queryAllPianqu(0);
 			break;
 		case 4:
-			ret = areaDao.queryAllHutong();
+			ret = areaDao.queryAllHutong(0);
 			break;
 		case 5:
 			ret = areaDao.queryAllCompany();
@@ -168,6 +168,24 @@ public class AreaLogicImpl implements AreaLogic {
 		cache.setKey(String.valueOf(type));
 		cache.setValue(ret);
 		CacheManager.putCache(CacheKeyConstant.KEY_AREA+type, cache);
+		return ret;
+	}
+	
+	public List<AreaBean> queryAreaByParentId(int type,int parentId){
+		List<AreaBean> ret = new ArrayList<AreaBean>();
+		switch (type) {
+		case 2:
+			ret = areaDao.queryAllStreet(parentId);
+			break;
+		case 3:
+			ret = areaDao.queryAllPianqu(parentId);
+			break;
+		case 4:
+			ret = areaDao.queryAllHutong(parentId);
+			break;
+		default:
+			break;
+		}
 		return ret;
 	}
 	

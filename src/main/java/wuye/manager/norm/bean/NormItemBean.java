@@ -14,6 +14,9 @@ public class NormItemBean {
 	
 	private int scoreCount;
 	
+	public void setScoreCount(int scoreCount) {
+		this.scoreCount = scoreCount;
+	}
 	public int getCategoryNo() {
 		return categoryNo;
 	}
@@ -65,14 +68,15 @@ public class NormItemBean {
 	}
 	
 	public int getScoreCount() {
-		int sco = 0;
-		if(scoreList!=null&&scoreList.size()>0){
-			for(int i=0;i<scoreList.size();i++){
-				NormScoreBean nsb = scoreList.get(i);
-				sco+=nsb.getScore();
-			}
-		}
-		return sco;
+		return this.scoreCount;
+//		int sco = 0;
+//		if(scoreList!=null&&scoreList.size()>0){
+//			for(int i=0;i<scoreList.size();i++){
+//				NormScoreBean nsb = scoreList.get(i);
+//				sco+=nsb.getScore();
+//			}
+//		}
+//		return sco;
 	}
 	public void setScoreName(String scoreName) {
 		this.scoreName = scoreName;
@@ -80,7 +84,7 @@ public class NormItemBean {
 	@Override
 	public String toString() {
 		return "NormItemBean [categoryNo=" + categoryNo + ", categoryName="
-				+ categoryName + ", itemNo=" + itemNo + ", itemContent="
+				+ categoryName + ", scoreCount=" + scoreCount + ", itemNo=" + itemNo + ", itemContent="
 				+ itemContent + "]";
 	}
 	

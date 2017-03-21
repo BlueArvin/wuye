@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import wuye.manager.assess.bean.ManAssessBean;
 import wuye.manager.assess.logic.ManAssessLogic;
+import wuye.manager.norm.bean.AreaBean;
+import wuye.manager.norm.logic.AreaLogic;
 import wuye.manager.utils.ManagerRetBean;
 import wuye.manager.utils.PageUtil;
 
@@ -24,6 +26,8 @@ public class ManAssessServlet {
 	@Autowired
 	private ManAssessLogic manAssessLogic;
 	
+	@Autowired
+	private AreaLogic areaLogic;
 	
 	
 	/**
@@ -43,8 +47,37 @@ public class ManAssessServlet {
 		List<ManAssessBean> nlb = manAssessLogic.queryList(manAssessBean,page);
 		request.setAttribute("page", page);
 		request.setAttribute("list", nlb);
+		
+		//城区列表
+		List<AreaBean> areaList = areaLogic.queryAreaList(1);
+		request.setAttribute("areaList", areaList);
+		
 		return "question";
 	}
+
+	
+	
+	/**
+	 * 更加区域id查询街道信息
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/queryStreet.aspx")
+	@ResponseBody
+	public Object queryStreet(HttpServletRequest request,HttpServletResponse response
+			,@RequestParam(value = "parentId", required = true)Integer parentId){
+		
+		//城区列表
+		List<AreaBean> areaList = areaLogic.queryAreaByParentId(2,parentId);//查询所有街道
+		request.setAttribute("areaList", areaList);
+		ManagerRetBean ret = new ManagerRetBean();
+		ret.setRet(0);
+		ret.setMsg("查询成功");
+		ret.setData(areaList);
+		return ret;
+	}
+	
 	
 	
 	/**

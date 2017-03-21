@@ -143,19 +143,19 @@ public interface AreaDao {
 	 * 查询街道列表
 	 * @return
 	 */
-	public List<AreaBean> queryAllStreet();
+	public List<AreaBean> queryAllStreet(int parentId);
 	
 	/**
 	 * 查询片区
 	 * @return
 	 */
-	public List<AreaBean> queryAllPianqu();
+	public List<AreaBean> queryAllPianqu(int parentId);
 	
 	/**
 	 * 查询胡同
 	 * @return
 	 */
-	public List<AreaBean> queryAllHutong();
+	public List<AreaBean> queryAllHutong(int parentId);
 	
 	/**
 	 * 查询所有物业公司

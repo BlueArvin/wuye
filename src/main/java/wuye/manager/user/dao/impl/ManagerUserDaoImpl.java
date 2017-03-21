@@ -77,7 +77,7 @@ public class ManagerUserDaoImpl extends DaoBasic implements ManagerUserDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,cn,token,status,role,webRole,userName from t_user where 1=1";
+            String sql = "select id,cn,token,status,role,webRole,userName from t_user where del = 0 ";
             
             if(userBean.getCn()!=null){
             	sql+=" and cn='"+userBean.getCn()+"'"; 
@@ -163,7 +163,7 @@ public class ManagerUserDaoImpl extends DaoBasic implements ManagerUserDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select count(id) as con from t_user where 1=1";
+            String sql = "select count(id) as con from t_user where del = 0";
             
             if(userBean.getCn()!=null){
             	sql+=" and cn='"+userBean.getCn()+"'"; 
@@ -193,7 +193,7 @@ public class ManagerUserDaoImpl extends DaoBasic implements ManagerUserDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select * from t_user where id=?";
+            String sql = "select * from t_user where del = 0 and id=?";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setInt(1, id);
@@ -226,7 +226,7 @@ public class ManagerUserDaoImpl extends DaoBasic implements ManagerUserDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select count(id) as con from t_user where cn=?";
+            String sql = "select count(id) as con from t_user where del = 0 and cn=?";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setString(1, loginName);

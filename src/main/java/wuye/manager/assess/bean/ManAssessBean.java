@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import wuye.bean.AssessDataBean;
+import wuye.manager.utils.DateUtil;
 
 public class ManAssessBean extends AssessDataBean {
 	
@@ -21,9 +22,12 @@ public class ManAssessBean extends AssessDataBean {
 		this.id = id;
 	}
 	
+	public void setTimeStr(String timeStr){
+		this.time = DateUtil.dateString2Date(timeStr);
+	}
+	
 	public String getTimeStr() {
-		DateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");//设置日期格式
-		return df.format(time);
+		return DateUtil.date2String(time);
 	}
 	
 	public String getUserName() {

@@ -127,7 +127,7 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select * from t_state limit "+page.getStartIndex()+","+page.getPageSize();
+            String sql = "select * from t_state a where a.del = 0 limit "+page.getStartIndex()+","+page.getPageSize();
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
@@ -153,7 +153,7 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select count(id) as con from "+tableName;
+            String sql = "select count(id) as con from "+tableName +" where del = 0";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
@@ -161,7 +161,7 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
             	return rs.getInt("con");
             }
         }catch(Exception e){
-       	 	doCatchException("queryNormCategoryList" ,e);
+       	 	doCatchException("queryAreaTotal" ,e);
         } finally {
             closeConnection(conn, pstmt, null);
         }
@@ -174,7 +174,7 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select a.id,a.street_name,a.area_id,b.statename from t_street a left join t_state b on b.id=a.area_id order by a.id desc limit "+page.getStartIndex()+","+page.getPageSize();
+            String sql = "select a.id,a.street_name,a.area_id,b.statename from t_street a left join t_state b on b.id=a.area_id  where a.del = 0 order by a.id desc limit "+page.getStartIndex()+","+page.getPageSize();
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
@@ -203,7 +203,7 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select a.id,b.street_name,a.pianqu_name,a.father_id from t_pianqu a left join t_street b on b.id=a.father_id order by a.id desc limit "+page.getStartIndex()+","+page.getPageSize();
+            String sql = "select a.id,b.street_name,a.pianqu_name,a.father_id from t_pianqu a left join t_street b on b.id=a.father_id  where a.del = 0 order by a.id desc limit "+page.getStartIndex()+","+page.getPageSize();
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
@@ -232,7 +232,7 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select a.id,a.hutong_name,b.pianqu_name,a.father_id from t_hutong a left join t_pianqu b on b.id=a.father_id order by a.id desc limit "+page.getStartIndex()+","+page.getPageSize();
+            String sql = "select a.id,a.hutong_name,b.pianqu_name,a.father_id from t_hutong a left join t_pianqu b on b.id=a.father_id where a.del = 0 order by a.id desc limit "+page.getStartIndex()+","+page.getPageSize();
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
@@ -364,7 +364,7 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select * from t_managecompany limit "+page.getStartIndex()+","+page.getPageSize();
+            String sql = "select * from t_managecompany where del = 0 limit "+page.getStartIndex()+","+page.getPageSize();
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
@@ -391,7 +391,8 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         boolean rs = false;
         try {
-            String sql = "delete from "+tableName+" where id =?";
+        	String sql = "update "+tableName+" set del = 0 where id = ?";
+//            String sql = "delete from "+tableName+" where id =?";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setInt(1, id);
@@ -438,12 +439,15 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
 	 * 查询街道列表
 	 * @return
 	 */
-	public List<AreaBean> queryAllStreet(){
+	public List<AreaBean> queryAllStreet(int parentId){
 		Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
             String sql = "select id,street_name from t_street";
+            if(parentId>0){
+            	sql+= " where area_id="+parentId;
+            }
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
@@ -468,12 +472,15 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
 	 * @param stateBean
 	 * @return
 	 */
-	public List<AreaBean> queryAllPianqu(){
+	public List<AreaBean> queryAllPianqu(int parentId){
 		Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
             String sql = "select id,pianqu_name from t_pianqu";
+            if(parentId>0){
+            	sql+= " where father_id="+parentId;
+            }
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
@@ -494,12 +501,15 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
 	}
 
 	@Override
-	public List<AreaBean> queryAllHutong() {
+	public List<AreaBean> queryAllHutong(int parentId) {
 		Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
             String sql = "select id,hutong_name from t_hutong";
+            if(parentId>0){
+            	sql+= " where father_id="+parentId;
+            }
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();

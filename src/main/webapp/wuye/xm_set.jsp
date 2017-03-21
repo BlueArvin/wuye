@@ -44,6 +44,10 @@
 	          <label>考核项目内容：</label>
 	          <input type="textarea" class="input" id="itemContent" name="itemContent" data-validate="required:"  value=""  style="float:right" />
 	        </div>
+	        <div class="form-group">
+	          <label>项目总分：</label>
+	          <input type="number" class="input" id="scoreCount" name="scoreCount" data-validate="required:"   step="0.1" min="0" value=0 style="float:right" />
+	        </div>
 	    </li>
 	    <li style="width:100%;padding-top:8px">
 	        <div class="form-group">
@@ -88,7 +92,7 @@
 	          
 	          <td>
 	          	<div class="button-group">
-	           		<a class="button border-red" href="javascript:void(0)" onclick="return update(${normItemBean.itemNo },'${normItemBean.itemContent }','${normItemBean.categoryNo }')"><span class="icon-trash-o"></span> 修改</a> 
+	           		<a class="button border-red" href="javascript:void(0)" onclick="return update(${normItemBean.itemNo },'${normItemBean.itemContent }','${normItemBean.categoryNo }',${normItemBean.scoreCount })"><span class="icon-trash-o"></span> 修改</a> 
 	           		<a class="button border-red" href="javascript:void(0)" onclick="return del(${normItemBean.itemNo })"><span class="icon-trash-o"></span> 删除</a>
 	           	</div>
 	           </td>
@@ -130,11 +134,12 @@ function load(pageNum){
 	location.href="/manager/toItemSet.aspx?pageNum="+pageNum;
 }
 
-function update(no,content,categoryNo){
+function update(no,content,categoryNo,scoreCount){
 	alert(no);
 	$("#itemNo").val(no);
 	$("#categoryNo").val(categoryNo);
 	$("#itemContent").val(content);
+	$("#scoreCount").val(scoreCount);
 	$("#addBtn").text("确认修改");
 	var levels = $("span[name='score_"+no+"']");
 	for(i=0;i<levels.length;i++){
@@ -142,7 +147,7 @@ function update(no,content,categoryNo){
 		var levelvalue = $(levels[i]).text();
 		$("input[levelId='"+levelid+"']").val(Number(levelvalue));
 	}
-	
+
 }
 
 function del(id){

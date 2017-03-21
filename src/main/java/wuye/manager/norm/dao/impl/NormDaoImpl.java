@@ -65,7 +65,7 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
             	return true;
             }
         }catch(Exception e){
-       	 	doCatchException("deleteNormLevel" ,e);
+       	 	doCatchException("updateNormLevel" ,e);
         } finally {
             closeConnection(conn, pstmt, null);
         }
@@ -77,7 +77,8 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
         PreparedStatement pstmt = null;
         boolean rs = false;
         try {
-            String sql = "delete from t_checklevel where level_id=? ";
+        	String sql = "update t_checklevel set del = 0 where level_id=? ";
+//            String sql = "delete from t_checklevel where level_id=? ";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setInt(1, id);
@@ -94,7 +95,7 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select level_id,level_name from t_checklevel";
+            String sql = "select level_id,level_name from t_checklevel where del = 0";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
@@ -165,7 +166,8 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
         PreparedStatement pstmt = null;
         boolean rs = false;
         try {
-            String sql = "delete from t_checktitle where score_id=?";
+        	String sql = "update t_checktitle set del = 0 where score_id=? ";
+//            String sql = "delete from t_checktitle where score_id=?";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setInt(1, id);
@@ -183,7 +185,7 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select * from t_checktitle order by score_id limit "+page.getStartIndex()+","+page.getPageSize();
+            String sql = "select * from t_checktitle where del = 0 order by score_id limit "+page.getStartIndex()+","+page.getPageSize();
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
@@ -210,7 +212,7 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select * from t_checktitle order by score_id";
+            String sql = "select * from t_checktitle  where del = 0 order by score_id";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
@@ -236,7 +238,7 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select count(score_id) as cou from t_checktitle";
+            String sql = "select count(score_id) as cou from t_checktitle  where del = 0";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
@@ -260,11 +262,12 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
         ResultSet idRs=null;
         boolean rs=false;
         try {
-            String sql = "insert into t_checksub (titleid,sub_name) values (?,?)";
+            String sql = "insert into t_checksub (titleid,sub_name,score) values (?,?,?)";
             conn = dataSource.getConnection();
             pstmt = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             pstmt.setInt(1, normItemBean.getCategoryNo());
             pstmt.setString(2, normItemBean.getItemContent());
+            pstmt.setInt(3, normItemBean.getScoreCount());
             pstmt.executeUpdate();
             idRs = pstmt.getGeneratedKeys();
             if (idRs.next()) {
@@ -298,12 +301,13 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
         PreparedStatement pstmt = null;
         boolean rs = false;
         try {
-            String sql = "update t_checksub set titleid=?,sub_name=? where subid=?";
+            String sql = "update t_checksub set titleid=?,sub_name=?,score=? where subid=?";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setInt(1, normItemBean.getItemNo());
             pstmt.setString(2, normItemBean.getItemContent());
-            pstmt.setInt(3, normItemBean.getCategoryNo());
+            pstmt.setInt(3, normItemBean.getScoreCount());
+            pstmt.setInt(4, normItemBean.getCategoryNo());
             int ret = pstmt.executeUpdate();
             if(ret>0){
             	rs = true;
@@ -343,14 +347,16 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
         boolean rs = false;
         try {
         	//先删除子表
-        	String sql = "delete from t_checkscore where subid=?";
+        	String sql = "update t_checkscore set del = 0 where subid=?";
+//        	String sql = "delete from t_checkscore where subid=?";
         	conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
         	
             //删除主表
-            sql = "delete from t_checksub where subid=?";
+            sql = "update t_checksub set del = 0 where subid=?";
+//            sql = "delete from t_checksub where subid=?";
             
             pstmt = prepareStatement(conn, sql);
             pstmt.setInt(1, id);
@@ -367,7 +373,7 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select subid,a.titleid,b.title_name,sub_name from t_checksub a left join t_checktitle b on a.titleid = b.score_id order by subid limit "+page.getStartIndex()+","+page.getPageSize();
+            String sql = "select subid,a.titleid,b.title_name,sub_name,score from t_checksub a left join t_checktitle b on a.titleid = b.score_id  where a.del = 0 order by subid limit "+page.getStartIndex()+","+page.getPageSize();
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
@@ -384,6 +390,7 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
             	nb.setCategoryNo(rs.getInt("titleid"));
             	nb.setItemContent(rs.getString("sub_name"));
             	nb.setCategoryName(rs.getString("title_name"));
+            	nb.setScoreCount(rs.getInt("score"));
             	list.add(nb);
             	//临时保存--对象在list中的位置
             	map.put(subid, i);
@@ -391,7 +398,7 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
             }
             subids+="0)";
             
-            sql="select levelid,b.level_name,subid,score from t_checkscore a left join t_checklevel b on a.levelid = b.level_id where a.subid in "+subids+" order by a.levelid";
+            sql="select levelid,b.level_name,subid,score from t_checkscore a left join t_checklevel b on a.levelid = b.level_id where a.del = 0 and a.subid in "+subids+" order by a.levelid";
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
             
@@ -418,7 +425,7 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select count(subid) as cou from t_checksub";
+            String sql = "select count(subid) as cou from t_checksub where del = 0";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
