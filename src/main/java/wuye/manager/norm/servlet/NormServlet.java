@@ -207,7 +207,7 @@ private static Logger logger = Logger.getLogger("manager");
 	@RequestMapping("/addKhItem.aspx")
 	public String addOrUpdateKhItem(HttpServletRequest request,HttpServletResponse response
 			,@Validated( { NormItemBean.class }) NormItemBean normItemBean,
-			@RequestParam("scoreValue") List<Integer> scoreValues,
+			@RequestParam("scoreValue") List<String> scoreValues,
 			@RequestParam("scoreId") List<Integer> scoreIds){
 		
 		

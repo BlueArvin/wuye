@@ -406,7 +406,7 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
             	NormItemBean.NormScoreBean nsb = new NormItemBean.NormScoreBean(); 
             	nsb.setLevelNo(rs.getInt("levelid"));
             	nsb.setLevelName(rs.getString("level_name"));
-            	nsb.setScore(rs.getDouble("score"));
+            	nsb.setScore(rs.getString("score"));
             	list.get(map.get(rs.getInt("subid"))).addScoreBeanToList(nsb);
             }
             

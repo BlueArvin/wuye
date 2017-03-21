@@ -92,7 +92,7 @@ public class NormItemBean {
 	public static class NormScoreBean{
 		private int levelNo;
 		private String levelName;
-		private double score;
+		private String score;
 		public int getLevelNo() {
 			return levelNo;
 		}
@@ -106,10 +106,10 @@ public class NormItemBean {
 		public void setLevelName(String levelName) {
 			this.levelName = levelName;
 		}
-		public double getScore() {
+		public String getScore() {
 			return score;
 		}
-		public void setScore(double score) {
+		public void setScore(String score) {
 			this.score = score;
 		}
 	}
