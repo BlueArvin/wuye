@@ -23,7 +23,7 @@ public class AssessLogicImpl implements AssessLogic {
 		return assessDao.submit(data);
 	}
 
-	@Override
+
 	public List<String> getPoint() {
 		return assessDao.getPoint();
 	}
