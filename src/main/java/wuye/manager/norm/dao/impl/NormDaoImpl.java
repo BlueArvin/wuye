@@ -77,7 +77,7 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
         PreparedStatement pstmt = null;
         boolean rs = false;
         try {
-        	String sql = "update t_checklevel set del = 0 where level_id=? ";
+        	String sql = "update t_checklevel set del = 1 where level_id=? ";
 //            String sql = "delete from t_checklevel where level_id=? ";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
@@ -166,7 +166,7 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
         PreparedStatement pstmt = null;
         boolean rs = false;
         try {
-        	String sql = "update t_checktitle set del = 0 where score_id=? ";
+        	String sql = "update t_checktitle set del = 1 where score_id=? ";
 //            String sql = "delete from t_checktitle where score_id=?";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
@@ -347,7 +347,7 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
         boolean rs = false;
         try {
         	//先删除子表
-        	String sql = "update t_checkscore set del = 0 where subid=?";
+        	String sql = "update t_checkscore set del = 1 where subid=?";
 //        	String sql = "delete from t_checkscore where subid=?";
         	conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
@@ -355,7 +355,7 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
             pstmt.executeUpdate();
         	
             //删除主表
-            sql = "update t_checksub set del = 0 where subid=?";
+            sql = "update t_checksub set del = 1 where subid=?";
 //            sql = "delete from t_checksub where subid=?";
             
             pstmt = prepareStatement(conn, sql);

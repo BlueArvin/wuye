@@ -391,7 +391,7 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         boolean rs = false;
         try {
-        	String sql = "update "+tableName+" set del = 0 where id = ?";
+        	String sql = "update "+tableName+" set del = 1 where id = ?";
 //            String sql = "delete from "+tableName+" where id =?";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
