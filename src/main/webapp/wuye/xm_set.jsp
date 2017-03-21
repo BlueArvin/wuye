@@ -100,7 +100,7 @@
       </c:forEach>
       
       <tr>
-        <td colspan="5">
+        <td colspan="6">
         	<div class="pagelist">
 	        	<a href="javascript:load(${page.page-1 })">上一页</a>
 	        	<a num="${page.page-2 }" href="javascript:load(${page.page-2 })">${page.page-2 }</a>
