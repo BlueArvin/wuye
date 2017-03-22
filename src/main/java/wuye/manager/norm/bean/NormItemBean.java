@@ -11,10 +11,9 @@ public class NormItemBean {
 	private String itemContent;//项目内容
 	private List<NormScoreBean> scoreList;
 	private String scoreName;
+	private String scoreCount;
 	
-	private int scoreCount;
-	
-	public void setScoreCount(int scoreCount) {
+	public void setScoreCount(String scoreCount) {
 		this.scoreCount = scoreCount;
 	}
 	public int getCategoryNo() {
@@ -67,7 +66,7 @@ public class NormItemBean {
 		return content;
 	}
 	
-	public int getScoreCount() {
+	public String getScoreCount() {
 		return this.scoreCount;
 //		int sco = 0;
 //		if(scoreList!=null&&scoreList.size()>0){

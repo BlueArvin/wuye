@@ -135,7 +135,6 @@ function load(pageNum){
 }
 
 function update(no,content,categoryNo,scoreCount){
-	alert(no);
 	$("#itemNo").val(no);
 	$("#categoryNo").val(categoryNo);
 	$("#itemContent").val(content);

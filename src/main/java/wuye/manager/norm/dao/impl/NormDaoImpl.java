@@ -267,7 +267,7 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
             pstmt = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             pstmt.setInt(1, normItemBean.getCategoryNo());
             pstmt.setString(2, normItemBean.getItemContent());
-            pstmt.setInt(3, normItemBean.getScoreCount());
+            pstmt.setString(3, normItemBean.getScoreCount());
             pstmt.executeUpdate();
             idRs = pstmt.getGeneratedKeys();
             if (idRs.next()) {
@@ -304,10 +304,10 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
             String sql = "update t_checksub set titleid=?,sub_name=?,score=? where subid=?";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
-            pstmt.setInt(1, normItemBean.getItemNo());
+            pstmt.setInt(1, normItemBean.getCategoryNo());
             pstmt.setString(2, normItemBean.getItemContent());
-            pstmt.setInt(3, normItemBean.getScoreCount());
-            pstmt.setInt(4, normItemBean.getCategoryNo());
+            pstmt.setString(3, normItemBean.getScoreCount());
+            pstmt.setInt(4, normItemBean.getItemNo());
             int ret = pstmt.executeUpdate();
             if(ret>0){
             	rs = true;
@@ -390,7 +390,7 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
             	nb.setCategoryNo(rs.getInt("titleid"));
             	nb.setItemContent(rs.getString("sub_name"));
             	nb.setCategoryName(rs.getString("title_name"));
-            	nb.setScoreCount(rs.getInt("score"));
+            	nb.setScoreCount(rs.getString("score"));
             	list.add(nb);
             	//临时保存--对象在list中的位置
             	map.put(subid, i);
