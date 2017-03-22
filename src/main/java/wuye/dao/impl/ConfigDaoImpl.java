@@ -106,7 +106,7 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,statename from t_state";
+            String sql = "select id,statename from t_state where del = 0 ";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
 
@@ -131,7 +131,7 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,street_name,area_id from t_street";
+            String sql = "select id,street_name,area_id from t_street where del = 0 ";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
 
@@ -157,7 +157,7 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,pianqu_name,father_id from t_pianqu";
+            String sql = "select id,pianqu_name,father_id from t_pianqu where del = 0 ";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
 
@@ -183,7 +183,7 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,hutong_name,father_id from t_hutong";
+            String sql = "select id,hutong_name,father_id from t_hutong where del = 0 ";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
 
@@ -210,7 +210,7 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select level_id,level_name from t_checklevel";
+            String sql = "select level_id,level_name from t_checklevel where del = 0 ";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
 
@@ -234,7 +234,7 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,company_name from t_managecompany";
+            String sql = "select id,company_name from t_managecompany where del = 0 ";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
 
@@ -265,13 +265,13 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select score_id,title_name from t_checktitle";
+            String sql = "select score_id,title_name,type from t_checktitle where del = 0 ";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
 
             rs = pstmt.executeQuery();
             while (rs.next()) {
-            	ret.add(new ConfigData.Pair("st" + rs.getInt("score_id") + "", rs.getString("title_name")));
+            	ret.add(new ConfigData.Pair("st" + rs.getInt("score_id") + "", rs.getString("title_name"), rs.getInt("type")));
             }
             return ret;
         }catch(Exception e){
@@ -289,7 +289,7 @@ public class ConfigDaoImpl extends DaoBasic implements ConfigDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select subid,sub_name,titleid from t_checksub";
+            String sql = "select subid,sub_name,titleid from t_checksub where del = 0 ";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
 

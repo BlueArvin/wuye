@@ -18,11 +18,22 @@ public class ConfigData {
 	public static class Pair {
 		public String key;
 		public String displayValue;
+		public int property = 0;
 		public String parent;
 		
 		public Pair(String key, String name, String parent) {
 			this.key = key;
 			this.parent = parent;
+			try {
+				this.displayValue = URLEncoder.encode(name, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				this.displayValue = name;
+			}
+		}
+		
+		public Pair(String key, String name, int property) {
+			this.key = key;
+			this.property = property;
 			try {
 				this.displayValue = URLEncoder.encode(name, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
@@ -38,6 +49,5 @@ public class ConfigData {
 				this.displayValue = name;
 			}
 		}
-		
 	}
 }

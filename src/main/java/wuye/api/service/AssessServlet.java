@@ -118,8 +118,8 @@ public class AssessServlet {
 		
 		String start = request.getParameter("start");      // 
 		String end = request.getParameter("end");      // 
-		String areaid = request.getParameter("areaid");      // 
-		String level = request.getParameter("level");
+		String areaid = request.getParameter("areaid");      //  层次选
+		String level = request.getParameter("level");   // 必选
 		
 		try{
 			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
@@ -178,8 +178,8 @@ public class AssessServlet {
 	@ResponseBody
     public Object wuyesort(HttpServletRequest request) {
 		String start = request.getParameter("start");      // 
-		String end = request.getParameter("end");      // 
-		String areaid = request.getParameter("areaid");
+		String end = request.getParameter("end");          // 
+		String areaid = request.getParameter("areaid");    // 地区
 		
 		try{
 			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
