@@ -28,7 +28,10 @@ public class PageUtil {
 	}
 	
 	public int getCountPage() {
-		return (total/(pageSize+1))+1;
+		if(total%pageSize==0){
+			return total/pageSize;
+		}
+		return (total/(pageSize))+1;
 	}
 
 	public int getPageSize() {
