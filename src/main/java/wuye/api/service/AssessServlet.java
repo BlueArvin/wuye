@@ -2,6 +2,7 @@ package wuye.api.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -108,5 +109,107 @@ public class AssessServlet {
 	@ResponseBody
     public Object point(HttpServletRequest request) {
 		return assessLogic.getPoint();
+	}
+	
+	@RequestMapping("allsort")
+	@ResponseBody
+    public Object allsort(HttpServletRequest request) {
+		
+		String start = request.getParameter("start");      // 
+		String end = request.getParameter("end");      // 
+		String areaid = request.getParameter("areaid");      // 
+		String level = request.getParameter("level");
+		
+		try{
+			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+			Date dStart = df.parse(start);
+			
+			Date dEnd = df.parse(end);
+			
+			return assessLogic.getPoint();
+		} catch(Exception e) {
+			return new RetBean(2, "参数错误");
+		}
+	}
+	
+	@RequestMapping("itemsort")
+	@ResponseBody
+    public Object itemsort(HttpServletRequest request) {
+		String start = request.getParameter("start");      // 
+		String end = request.getParameter("end");      // 
+		String checkitem = request.getParameter("checkitem");      // 
+		String areaid = request.getParameter("areaid");
+		String level = request.getParameter("level");
+		
+		
+		try{
+			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+			Date dStart = df.parse(start);
+			
+			Date dEnd = df.parse(end);
+			
+			return assessLogic.getPoint();
+		} catch(Exception e) {
+			return new RetBean(2, "参数错误");
+		}
+	}
+	
+	@RequestMapping("squresort")
+	@ResponseBody
+    public Object squresort(HttpServletRequest request) {
+		String start = request.getParameter("start");      // 
+		String end = request.getParameter("end");      // 
+		String areaid = request.getParameter("areaid");
+		
+		try{
+			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+			Date dStart = df.parse(start);
+			
+			Date dEnd = df.parse(end);
+			
+			return assessLogic.getPoint();
+		} catch(Exception e) {
+			return new RetBean(2, "参数错误");
+		}
+	}
+	
+	@RequestMapping("wuyesort")
+	@ResponseBody
+    public Object wuyesort(HttpServletRequest request) {
+		String start = request.getParameter("start");      // 
+		String end = request.getParameter("end");      // 
+		String areaid = request.getParameter("areaid");
+		
+		try{
+			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+			Date dStart = df.parse(start);
+			
+			Date dEnd = df.parse(end);
+			
+			return assessLogic.getPoint();
+		} catch(Exception e) {
+			return new RetBean(2, "参数错误");
+		}
+	}
+	
+	@RequestMapping("detailitem")
+	@ResponseBody
+    public Object detailitem(HttpServletRequest request) {
+		String start = request.getParameter("start");      // 
+		String end = request.getParameter("end");      // 
+		String areaid = request.getParameter("areaid");
+		String checktitle = request.getParameter("checktitle");      // 
+		String checksub = request.getParameter("checksub");
+		
+		try{
+			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+			Date dStart = df.parse(start);
+			
+			Date dEnd = df.parse(end);
+			
+			return assessLogic.getPoint();
+		} catch(Exception e) {
+			return new RetBean(2, "参数错误");
+		}
 	}
 }

@@ -28,7 +28,6 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 
 	private DataSource dataSource;
 	
-	
 	public int submit(AssessDataBean data) {
 		Connection conn = null;
         PreparedStatement pstmt = null;
@@ -75,7 +74,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         }
 	}
 
-	@Override
+
 	public List<String> getPoint() {
 		List<String> ret = new ArrayList<String>();
 		Connection conn = null;
