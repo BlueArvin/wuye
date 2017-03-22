@@ -1,5 +1,6 @@
 package wuye.logic.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import wuye.bean.AssessDataBean;
@@ -26,6 +27,12 @@ public class AssessLogicImpl implements AssessLogic {
 
 	public List<String> getPoint() {
 		return assessDao.getPoint();
+	}
+
+	@Override
+	public List<AssessDataBean> getDetailitem(Date dStart, Date dEnd,
+			String areaid, String checkyewai, String checktitle, int page) {
+		return assessDao.getDetailitem(dStart, dEnd, areaid, checkyewai, checktitle, page);
 	}
 
 }

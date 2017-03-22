@@ -28,6 +28,83 @@ public class AssessDataBean {
 	public String loc = "";
 	public String msg = "";
 	
+	public String areaName = "";
+	public String streetName = "";
+	public String pianquName = "";
+	public String hutongName = "";
+	public String wuyeName = "";
+	
+	public String checktopName = "";
+	public String checksubName = "";
+	public String checkerName = "";
+	
+	
+	
+	
+	public String getCheckerName() {
+		return checkerName;
+	}
+
+	public void setCheckerName(String checkerName) {
+		this.checkerName = checkerName;
+	}
+
+	public String getChecktopName() {
+		return checktopName;
+	}
+
+	public void setChecktopName(String checktopName) {
+		this.checktopName = checktopName;
+	}
+
+	public String getChecksubName() {
+		return checksubName;
+	}
+
+	public void setChecksubName(String checksubName) {
+		this.checksubName = checksubName;
+	}
+
+	public String getWuyeName() {
+		return wuyeName;
+	}
+
+	public void setWuyeName(String wuyeName) {
+		this.wuyeName = wuyeName;
+	}
+
+	public String getAreaName() {
+		return areaName;
+	}
+
+	public void setAreaName(String areaName) {
+		this.areaName = areaName;
+	}
+
+	public String getStreetName() {
+		return streetName;
+	}
+
+	public void setStreetName(String streetName) {
+		this.streetName = streetName;
+	}
+
+	public String getPianquName() {
+		return pianquName;
+	}
+
+	public void setPianquName(String pianquName) {
+		this.pianquName = pianquName;
+	}
+
+	public String getHutongName() {
+		return hutongName;
+	}
+
+	public void setHutongName(String hutongName) {
+		this.hutongName = hutongName;
+	}
+
 	public String serailID = "";
 	
 	public String getSerailID() {
@@ -97,8 +174,8 @@ public class AssessDataBean {
 	}
 
 	public AssessDataBean() {
-		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");//设置日期格式
-    	id = "DF" + df.format(new Date());
+//		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");//设置日期格式
+//    	id = "DF" + df.format(new Date());
 	}
 	
 	public int getUserid() {

@@ -32,7 +32,7 @@ public class UserDaoImpl extends DaoBasic implements UserDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,passwd,token,role,userName from t_user where cn=? and status=0 limit 1";
+            String sql = "select id,passwd,token,role,userName from t_user where cn=? and status=0  and del=0 limit 1";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setString(1, user.getAccount());
@@ -82,7 +82,7 @@ public class UserDaoImpl extends DaoBasic implements UserDao{
         PreparedStatement pstmt = null;
         boolean rs = false;
         try {
-            String sql = "update t_user set token=? where id=? ";
+            String sql = "update t_user set token=? where id=? and del=0";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setString(1, cookie);
@@ -115,7 +115,7 @@ public class UserDaoImpl extends DaoBasic implements UserDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,passwd,token,role from t_user where cn=? and status=0 limit 1";
+            String sql = "select id,passwd,token,role from t_user where cn=? and status=0 and del=0 limit 1";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setString(1, user.getAccount());
@@ -144,7 +144,7 @@ public class UserDaoImpl extends DaoBasic implements UserDao{
         PreparedStatement pstmt = null;
         boolean rs = false;
         try {
-            String sql = "update t_user set passwd=? where cn=?";
+            String sql = "update t_user set passwd=? where cn=? and del=0";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setString(1, newpwd);

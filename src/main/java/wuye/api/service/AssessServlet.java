@@ -3,6 +3,7 @@ package wuye.api.service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -196,18 +197,23 @@ public class AssessServlet {
 	@ResponseBody
     public Object detailitem(HttpServletRequest request) {
 		String start = request.getParameter("start");      // 
-		String end = request.getParameter("end");      // 
+		String end = request.getParameter("end");      		// 
 		String areaid = request.getParameter("areaid");
-		String checktitle = request.getParameter("checktitle");      // 
-		String checksub = request.getParameter("checksub");
+		String checkyewai = request.getParameter("checkyewai");      // 这个是业内还是业外
+		String checktitle = request.getParameter("checktitle");       // 大项
+		String page = request.getParameter("page");    // 当前页
 		
 		try{
 			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
 			Date dStart = df.parse(start);
-			
 			Date dEnd = df.parse(end);
 			
-			return assessLogic.getPoint();
+			int iPage = Integer.parseInt(page);
+			
+			List<AssessDataBean> ret = assessLogic.getDetailitem(dStart, dEnd, areaid, checkyewai, checktitle.substring(2), iPage);
+			RetBean jsonRet = new RetBean(0, "");
+			jsonRet.setValue(ret);
+			return jsonRet;
 		} catch(Exception e) {
 			return new RetBean(2, "参数错误");
 		}

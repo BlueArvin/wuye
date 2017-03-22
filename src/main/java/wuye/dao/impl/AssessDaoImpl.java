@@ -12,12 +12,19 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import wuye.bean.AssessDataBean;
 import wuye.dao.AssessDao;
 import wuye.dao.DaoBasic;
+import wuye.manager.assess.bean.ManAssessBean;
+import wuye.manager.norm.logic.AreaLogic;
 
 public class AssessDaoImpl extends DaoBasic implements AssessDao {
 
+	@Autowired
+	private AreaLogic areaLogic;
+	
 	public DataSource getDataSource() {
 		return dataSource;
 	}
@@ -97,6 +104,98 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             closeConnection(conn, pstmt, null);
         }
 		return ret;
+	}
+
+	@Override
+	public List<AssessDataBean> getDetailitem(Date dStart, Date dEnd, String areaid, String checkyewai,
+			String checktitle, int page) {
+		// TODO Auto-generated method stub
+		List<AssessDataBean> list = new ArrayList<AssessDataBean>();
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            String sql = "select t.aseid,t.id,t.score,t.areaid,t.streetid,t.pianquid,t.hutongid,t.userid,t.wuyeid,"
+            		+ "t.assessidtop,t.assessid,t.intime,t.img1,t.img2,t.img3, t.img4, t.yeneiid,t.msg ,u.userName, ct.title_name, cb.sub_name "
+            		+ " from t_assess t LEFT JOIN t_user u ON u.id = t.userid LEFT JOIN t_checktitle ct ON  ct.score_id = t.assessidtop"
+            		+ " LEFT JOIN t_checksub cb ON cb.subid = t.assessid  where t.del = 0 ";
+            
+            sql += " and TIMESTAMPDIFF(SECOND, intime,'" + df.format(dStart) + "')<0 and TIMESTAMPDIFF(SECOND, intime,'" + df.format(dEnd) + "')>0 ";
+            
+            if(!checkyewai.equals("0")) {
+            	sql += " and yeneiid=" + checkyewai + " ";
+            }
+            
+            if(!checktitle.equals("0")) {
+            	sql += " and assessidtop=" + checktitle + " ";
+            }
+            
+            switch(areaid.charAt(0)) {
+            case 's':
+            	sql += " and areaid=" + areaid.substring(1) + " ";
+            case 't':
+            	sql += " and streetid=" + areaid.substring(1) + " ";
+            case 'p':
+            	sql += " and pianquid=" + areaid.substring(1) + " ";
+            case 'h':
+            	sql += " and hutongid=" + areaid.substring(1) + " ";
+            }
+            
+            int curindex = (page-1)*20;
+            sql += " limit "+ curindex +", 20";
+            
+            conn = dataSource.getConnection();
+            pstmt = prepareStatement(conn, sql);
+            rs = pstmt.executeQuery();
+            
+            while(rs.next()){
+            	AssessDataBean ad = new AssessDataBean();
+            	ad.setScore(rs.getInt("score"));
+            	ad.setYeneiid(rs.getInt("yeneiid"));
+            	
+            	ad.setImg1("" + rs.getString("img1"));
+            	ad.setImg2("" + rs.getString("img2"));
+            	ad.setImg3("" + rs.getString("img3"));
+            	ad.setImg4("" + rs.getString("img4"));
+            	ad.setSerailID(rs.getString("aseid"));
+            	
+            	
+            	int dbareaid = rs.getInt("areaid");
+            	ad.setAreaid(dbareaid);
+            	ad.setAreaName(areaLogic.getAreaName(dbareaid, 1));
+            	
+            	int dbsteetid = rs.getInt("streetid");
+            	ad.setStreetid(dbsteetid);
+            	ad.setStreetName(areaLogic.getAreaName(dbsteetid, 2));
+            	
+            	int dbpianquid = rs.getInt("pianquid");
+            	ad.setPianquid(dbpianquid);
+            	ad.setPianquName(areaLogic.getAreaName(dbpianquid,3));
+            	
+            	int dbhutongid = rs.getInt("hutongid");
+            	ad.setHutongid(dbhutongid);
+            	ad.setHutongName(areaLogic.getAreaName(dbhutongid,4));
+            	
+            	int dbwuyeid = rs.getInt("wuyeid");
+            	ad.setWuyeid(dbwuyeid);
+            	ad.setWuyeName(areaLogic.getAreaName(dbwuyeid,5));
+            	
+            	ad.setUserid(rs.getInt("userid"));
+            	ad.setAssessid(rs.getInt("assessid"));
+            	ad.setAssessidtop(rs.getInt("assessidtop"));
+            	ad.setTime(rs.getDate("intime"));
+            	ad.setMsg(rs.getString("msg"));
+            	ad.setChecktopName(rs.getString("title_name"));
+            	ad.setChecksubName(rs.getString("sub_name"));
+            	ad.setCheckerName(rs.getString("userName"));
+            	list.add(ad);
+            }
+            return list;
+        }catch(Exception e) {
+        	e.printStackTrace();
+        	return list;
+        }
 	}
 
 }
