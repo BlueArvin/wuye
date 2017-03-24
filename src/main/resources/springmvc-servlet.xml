@@ -134,4 +134,10 @@
             <ref bean="assessLogic"/>
         </property>
     </bean>
+    
+    <bean id="taskJob" class="wuye.api.task.TaskJob">
+        <property name="assessLogic">
+            <ref bean="assessLogic"/>
+        </property>
+    </bean>
 </beans>

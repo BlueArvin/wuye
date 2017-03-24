@@ -98,7 +98,7 @@ public class FileUploadServlet {
          return jsonRet; 
     }
 	
-	@RequestMapping(value = "/download/{file}")
+	@RequestMapping(value = "c{file}")
     public Object getUrlParam(@PathVariable("file") String fileName,
     		HttpServletRequest request, HttpServletResponse response) {
 		if (fileName != null) {

@@ -13,4 +13,13 @@ public interface AssessDao {
 	
 	public List<AssessDataBean> getDetailitem(Date dStart, Date dEnd,
 			String areaid, String checkyewai, String checktitle, int page) ;
+	
+	
+	public int weekSumWuye();
+	
+	public int weekSumPianqu();
+	
+	public int monthSumWuye();
+	
+	public int monthSumPianqu();
 }

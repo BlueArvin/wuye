@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import wuye.bean.AssessDataBean;
+import wuye.bean.SortBean;
 import wuye.dao.AssessDao;
 import wuye.dao.DaoBasic;
 import wuye.manager.assess.bean.ManAssessBean;
@@ -195,7 +197,323 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         }catch(Exception e) {
         	e.printStackTrace();
         	return list;
+        }finally {
+            closeConnection(conn, pstmt, rs);
         }
+	}
+
+	@Override
+	public int weekSumWuye() {
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        
+        long time = new Date().getTime() - 7*24*3600*1000;
+        
+        List<SortBean> list = new ArrayList<SortBean>();
+        
+        try {
+            String sql = "SELECT wuyeid,SUM(score) as score FROM t_assess ";
+            
+            sql += "  where TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date(time)) + "')<0 and TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date()) + "')>0 "
+            		+ "GROUP BY wuyeid ORDER BY SUM(score) ";
+            
+            conn = dataSource.getConnection();
+            pstmt = prepareStatement(conn, sql);
+            rs = pstmt.executeQuery();
+            
+            int paiming = 1;
+            
+            float score = 0;
+            
+            int index = 0;
+            while(rs.next()){
+            	index++;
+            
+            	SortBean bean = new SortBean();
+            	bean.setDisId(rs.getInt("wuyeid"));
+            	bean.setTime(new Date(time - 5*24*3600*1000) );
+            	bean.setScore(rs.getFloat("score"));
+            	float ss = rs.getFloat("score");
+            	if(ss > score) {
+            		score = ss;
+            		paiming ++;
+            		bean.setPaiming(index);
+            	} else {
+            		bean.setPaiming(paiming);
+            	}
+            	list.add(bean);
+            }
+        } catch(Exception e) {
+        	
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+        
+        if(list.size() ==0 ) {return 0; } 
+        SimpleDateFormat df2 = new SimpleDateFormat("yyyyMMdd");
+        try {
+            String sql = "replace into tb_weekwuye(wuyeid, atime, score, paiming) value(?,?,?,?)";
+            
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            pstmt = prepareStatement(conn, sql);
+            
+            int length = list.size();
+            for(int i = 0; i< length;i++) {
+	            pstmt.setInt(1, list.get(i).getDisId());
+	            pstmt.setString(2, df2.format(list.get(i).getTime()));
+	            pstmt.setInt(4, list.get(i).getPaiming());
+	            pstmt.setFloat(3, list.get(i).getScore());
+	            pstmt.execute();
+            }
+            conn.commit();
+            
+        } catch(Exception e) {
+        	
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+        
+		return list.size();
+	}
+
+	@Override
+	public int weekSumPianqu() {
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        
+        long time = new Date().getTime() - 7*24*3600*1000;
+        
+        List<SortBean> list = new ArrayList<SortBean>();
+        
+        try {
+            String sql = "SELECT pianquid,SUM(score) as score FROM t_assess ";
+            
+            sql += " where TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date(time)) + "')<0 and TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date()) + "')>0 "
+            		+ " GROUP BY pianquid ORDER BY SUM(score) ";
+            
+            conn = dataSource.getConnection();
+            pstmt = prepareStatement(conn, sql);
+            rs = pstmt.executeQuery();
+            
+            int paiming = 1;
+            
+            float score = 0;
+            
+            int index = 0;
+            while(rs.next()){
+            	index++;
+            
+            	SortBean bean = new SortBean();
+            	bean.setDisId(rs.getInt("pianquid"));
+            	bean.setTime(new Date(time - 5*24*3600*1000) );
+            	bean.setScore(rs.getFloat("score"));
+            	float ss = rs.getFloat("score");
+            	if(ss > score) {
+            		score = ss;
+            		paiming ++;
+            		bean.setPaiming(index);
+            	} else {
+            		bean.setPaiming(paiming);
+            	}
+            	list.add(bean);
+            }
+        } catch(Exception e) {
+        	
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+        
+        if(list.size() ==0 ) {return 0; } 
+        SimpleDateFormat df2 = new SimpleDateFormat("yyyyMMdd");
+        try {
+            String sql = "replace into tb_weekpianqu(pianquid, atime, score, paiming) value(?,?,?,?)";
+            
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            pstmt = prepareStatement(conn, sql);
+            
+            int length = list.size();
+            for(int i = 0; i< length;i++) {
+	            pstmt.setInt(1, list.get(i).getDisId());
+	            pstmt.setString(2, df2.format(list.get(i).getTime()));
+	            pstmt.setInt(4, list.get(i).getPaiming());
+	            pstmt.setFloat(3, list.get(i).getScore());
+	            pstmt.execute();
+            }
+            conn.commit();
+            
+        } catch(Exception e) {
+        	
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+        
+		return 0;
+	}
+
+	@Override
+	public int monthSumWuye() {
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.add(Calendar.MONTH, -1);
+        Date m = c.getTime();
+        
+        List<SortBean> list = new ArrayList<SortBean>();
+        
+        try {
+            String sql = "SELECT wuyeid,SUM(score) as score FROM t_assess ";
+            
+            sql += "  where TIMESTAMPDIFF(SECOND, intime,'" + df.format(m) + "')<0 and TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date()) + "')>0 "
+            		+ "GROUP BY wuyeid ORDER BY SUM(score) ";
+            
+            conn = dataSource.getConnection();
+            pstmt = prepareStatement(conn, sql);
+            rs = pstmt.executeQuery();
+            
+            int paiming = 1;
+            
+            float score = 0;
+            
+            int index = 0;
+            while(rs.next()){
+            	index++;
+            
+            	SortBean bean = new SortBean();
+            	bean.setDisId(rs.getInt("wuyeid"));
+            	bean.setTime(new Date());
+            	bean.setScore(rs.getFloat("score"));
+            	float ss = rs.getFloat("score");
+            	if(ss > score) {
+            		score = ss;
+            		paiming ++;
+            		bean.setPaiming(index);
+            	} else {
+            		bean.setPaiming(paiming);
+            	}
+            	list.add(bean);
+            }
+        } catch(Exception e) {
+        	
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+        
+        if(list.size() ==0 ) {return 0; } 
+        SimpleDateFormat df2 = new SimpleDateFormat("yyyyMM");
+        try {
+            String sql = "replace into tb_monthwuye(wuyeid, atime, score, paiming) value(?,?,?,?)";
+            
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            pstmt = prepareStatement(conn, sql);
+            
+            int length = list.size();
+            for(int i = 0; i< length;i++) {
+	            pstmt.setInt(1, list.get(i).getDisId());
+	            pstmt.setString(2, df2.format(list.get(i).getTime()));
+	            pstmt.setInt(4, list.get(i).getPaiming());
+	            pstmt.setFloat(3, list.get(i).getScore());
+	            pstmt.execute();
+            }
+            conn.commit();
+            
+        } catch(Exception e) {
+        	
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+        
+		return list.size();
+	}
+
+	@Override
+	public int monthSumPianqu() {
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.add(Calendar.MONTH, -1);
+        Date m = c.getTime();
+        
+        List<SortBean> list = new ArrayList<SortBean>();
+        
+        try {
+            String sql = "SELECT pianquid,SUM(score) as score FROM t_assess ";
+            
+            sql += " where TIMESTAMPDIFF(SECOND, intime,'" + df.format(m) + "')<0 and TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date()) + "')>0 "
+            		+ " GROUP BY pianquid ORDER BY SUM(score) ";
+            
+            conn = dataSource.getConnection();
+            pstmt = prepareStatement(conn, sql);
+            rs = pstmt.executeQuery();
+            
+            int paiming = 1;
+            
+            float score = 0;
+            
+            int index = 0;
+            while(rs.next()){
+            	index++;
+            
+            	SortBean bean = new SortBean();
+            	bean.setDisId(rs.getInt("pianquid"));
+            	bean.setTime(new Date() );
+            	bean.setScore(rs.getFloat("score"));
+            	float ss = rs.getFloat("score");
+            	if(ss > score) {
+            		score = ss;
+            		paiming ++;
+            		bean.setPaiming(index);
+            	} else {
+            		bean.setPaiming(paiming);
+            	}
+            	list.add(bean);
+            }
+        } catch(Exception e) {
+        	
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+        
+        if(list.size() ==0 ) {return 0; } 
+        SimpleDateFormat df2 = new SimpleDateFormat("yyyyMM");
+        try {
+            String sql = "replace into tb_monthpianqu(pianquid, atime, score, paiming) value(?,?,?,?)";
+            
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            pstmt = prepareStatement(conn, sql);
+            
+            int length = list.size();
+            for(int i = 0; i< length;i++) {
+	            pstmt.setInt(1, list.get(i).getDisId());
+	            pstmt.setString(2, df2.format(list.get(i).getTime()));
+	            pstmt.setInt(4, list.get(i).getPaiming());
+	            pstmt.setFloat(3, list.get(i).getScore());
+	            pstmt.execute();
+            }
+            conn.commit();
+            
+        } catch(Exception e) {
+        	
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+        
+		return 0;
 	}
 
 }

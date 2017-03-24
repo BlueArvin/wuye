@@ -35,4 +35,15 @@ public class AssessLogicImpl implements AssessLogic {
 		return assessDao.getDetailitem(dStart, dEnd, areaid, checkyewai, checktitle, page);
 	}
 
+	@Override
+	public void doSumWeek() {
+		assessDao.weekSumWuye();
+		assessDao.weekSumPianqu();
+	}
+
+	@Override
+	public void doSumMonth() {
+		assessDao.monthSumPianqu();
+		assessDao.monthSumWuye();
+	}
 }

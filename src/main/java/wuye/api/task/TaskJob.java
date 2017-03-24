@@ -3,14 +3,33 @@ package wuye.api.task;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import wuye.logic.AssessLogic;
+
 @Component("taskJob")  
 public class TaskJob {  
+	
+	private AssessLogic assessLogic;
+
+	public AssessLogic getAssessLogic() {
+		return assessLogic;
+	}
+
+	public void setAssessLogic(AssessLogic assessLogic) {
+		this.assessLogic = assessLogic;
+	}
+	
+	
     @Scheduled(cron = "30 3 * * 6 ?")
-    public void job1() {   // 每周六的定时任务
-        System.out.println("任务进行中。。。");
+    public void jobWeek() {   // 每周六的定时任务
+        System.out.println("week任务进行中。。。");
         
-        // 进行本周的数据统计，这里是物业排名
+        assessLogic.doSumWeek();
+    }
+    
+    @Scheduled(cron = "0 2 1 * * ?")
+    public void jobMonth() {   // 每周六的定时任务
+        System.out.println("month任务进行中。。。");
         
-        // 进行片区排名
+        assessLogic.doSumMonth();
     }
 }

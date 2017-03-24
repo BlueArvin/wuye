@@ -13,4 +13,8 @@ public interface AssessLogic {
 	
 	public List<AssessDataBean> getDetailitem(Date dStart, Date dEnd,
 			String areaid, String checkyewai, String checktitle, int page);
+	
+	public void doSumWeek();
+	
+	public void doSumMonth();
 }
