@@ -116,16 +116,14 @@ public class AssessServlet {
 	@ResponseBody
     public Object allsort(HttpServletRequest request) {
 		
-		String start = request.getParameter("start");      // 
-		String end = request.getParameter("end");      // 
+		String timetype = request.getParameter("timetype");  // 
+		String time = request.getParameter("time");          // 
 		String areaid = request.getParameter("areaid");      //  层次选
-		String level = request.getParameter("level");   // 必选
+		String level = request.getParameter("level");        // 必选
 		
 		try{
 			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
-			Date dStart = df.parse(start);
-			
-			Date dEnd = df.parse(end);
+
 			
 			return assessLogic.getPoint();
 		} catch(Exception e) {

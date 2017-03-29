@@ -37,13 +37,18 @@ public class AssessLogicImpl implements AssessLogic {
 
 	@Override
 	public void doSumWeek() {
-		assessDao.weekSumWuye();
-		assessDao.weekSumPianqu();
+		assessDao.weekjisuanpianqu(); // 评定分数 这里，会有相关的分数压缩，也就是单项最大分
+//		assessDao.weekSumWuye(1);
+//		assessDao.weekSumWuye(2);
+//		assessDao.weekSumPianqu(1);
+//		assessDao.weekSumPianqu(2);
 	}
 
 	@Override
 	public void doSumMonth() {
-		assessDao.monthSumPianqu();
-		assessDao.monthSumWuye();
+		assessDao.monthSumPianqu(1);
+		assessDao.monthSumPianqu(2);
+		assessDao.monthSumWuye(1);
+		assessDao.monthSumWuye(2);
 	}
 }

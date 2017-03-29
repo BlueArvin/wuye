@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import wuye.bean.AssessDataBean;
+import wuye.bean.PianquData;
 
 public interface AssessDao {
 
@@ -14,12 +15,15 @@ public interface AssessDao {
 	public List<AssessDataBean> getDetailitem(Date dStart, Date dEnd,
 			String areaid, String checkyewai, String checktitle, int page) ;
 	
+	public int weekjisuanpianqu();
 	
-	public int weekSumWuye();
+	public int weekSumWuye(int yenei);
 	
-	public int weekSumPianqu();
+	public int weekSumPianqu(int yenei);
 	
-	public int monthSumWuye();
+	public int monthSumWuye(int yenei);
 	
-	public int monthSumPianqu();
+	public int monthSumPianqu(int yenei);
+	
+	public List<PianquData> getPianquSortData(char type, String date, int yenei, String areaid);
 }
