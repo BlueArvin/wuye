@@ -43,8 +43,7 @@ public class AssessLogicImpl implements AssessLogic {
 
 	@Override
 	public void doSumMonth() {
-//		assessDao.monthSumPianqu(1);
-
+		assessDao.monthSumPianqu(1);
 		assessDao.monthSumWuye(1);
 
 	}

@@ -447,26 +447,29 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 		return list.size();
 	}
 
+	// 月计算片区排名和平均分，同时判断是否是季度还是年份，进行相关的计算和导入表
 	@Override
 	public int monthSumPianqu(int yenei) {
 		Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
         
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
         c.add(Calendar.MONTH, -1);
         Date m = c.getTime();
+        int datebegin = Integer.parseInt(df.format(m));
+        int dateend   = Integer.parseInt(df.format(new Date()));
+        Date now = new Date();
         
-        List<SortBean> list = new ArrayList<SortBean>();
+        List<JisuanSortBean> list = new ArrayList<JisuanSortBean>();
         
         try {
-            String sql = "SELECT pianquid,SUM(score) as score FROM t_assess ";
+            String sql = "select stateid,streetid,pianquid,AVG(waiscore) as waiscore,AVG(neiscore) as neiscore,AVG(allscore) as allscore from tb_weekpianqu ";
             
-            sql += " where TIMESTAMPDIFF(SECOND, intime,'" + df.format(m) + "')<0 and TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date()) + "')>0 "
-            		+ " and yeneiid = " + yenei 
-            		+ " GROUP BY pianquid ORDER BY SUM(score) ";
+            sql += " where timedup > "+ datebegin +" and timedup < " + dateend
+            		+ " GROUP BY pianquid ORDER BY allscore desc";
             
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
@@ -474,17 +477,20 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             
             int paiming = 1;
             
-            float score = 0;
+            double score = 0;
             
             int index = 0;
             while(rs.next()){
             	index++;
             
-            	SortBean bean = new SortBean();
-            	bean.setDisId(rs.getInt("pianquid"));
-            	bean.setTime(new Date() );
-            	bean.setScore(rs.getFloat("score"));
-            	float ss = rs.getFloat("score");
+            	JisuanSortBean bean = new JisuanSortBean();
+            	bean.setPianquid(rs.getInt("pianquid"));
+            	bean.setStateid(rs.getInt("stateid"));
+            	bean.setStreetid(rs.getInt("streetid"));
+            	bean.addYewai(rs.getDouble("waiscore"));
+            	bean.addYenei(rs.getDouble("neiscore"));
+            	bean.setAllscore(rs.getDouble("allscore"));
+            	float ss = rs.getFloat("allscore");
             	if(ss > score) {
             		score = ss;
             		paiming ++;
@@ -495,7 +501,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             	list.add(bean);
             }
         } catch(Exception e) {
-        	
+        	e.printStackTrace();
         }finally {
             closeConnection(conn, pstmt, rs);
         }
@@ -503,7 +509,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         if(list.size() ==0 ) {return 0; } 
         SimpleDateFormat df2 = new SimpleDateFormat("yyyyMM");
         try {
-            String sql = "replace into tb_monthpianqu(pianquid, atime, score, paiming, yenei) value(?,?,?,?,?)";
+            String sql = "replace into tb_monthpianqu(stateid,streetid,pianquid, timedup, waiscore,neiscore,allscore, paiming) value(?,?,?,?,?,?,?,?)";
             
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
@@ -511,22 +517,209 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             
             int length = list.size();
             for(int i = 0; i< length;i++) {
-	            pstmt.setInt(1, list.get(i).getDisId());
-	            pstmt.setString(2, df2.format(list.get(i).getTime()));
-	            pstmt.setInt(4, list.get(i).getPaiming());
-	            pstmt.setFloat(3, list.get(i).getScore());
-	            pstmt.setFloat(5, yenei);
+	            pstmt.setInt(1, list.get(i).getStateid());
+	            pstmt.setInt(2, list.get(i).getStreetid());
+	            pstmt.setInt(3, list.get(i).getPianquid());
+	            pstmt.setInt(4, Integer.parseInt(df2.format(m)));
+	            pstmt.setDouble(5, list.get(i).getYewai());
+	            pstmt.setDouble(6, list.get(i).getYenei());
+	            pstmt.setDouble(7, list.get(i).getAllscore());
+	            pstmt.setInt(8, list.get(i).getPaiming());
 	            pstmt.execute();
             }
             conn.commit();
             
         } catch(Exception e) {
-        	
+        	e.printStackTrace();
         }finally {
             closeConnection(conn, pstmt, rs);
         }
         
+        // 如果是季度，月份为1月，4月，7月，10月
+        if(now.getMonth() == 0 || now.getMonth() == 3 || now.getMonth() == 6 || now.getMonth() == 9) {
+        	seasonPianqu(now);
+        }
+        
+        // 如果是年度, 月份为一月份
+        if(now.getMonth() == 0) {
+        	yearPianqu(now);
+        }
+        
 		return 0;
+	}
+	
+	private void seasonPianqu(Date date) {
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+		
+		
+		Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.MONTH, -3);  //往前追溯3个月
+        Date datebegin = c.getTime();
+        Date dateend = new Date();
+        
+        List<JisuanSortBean> list = new ArrayList<JisuanSortBean>();
+        
+        try {
+            String sql = "select stateid,streetid,pianquid,AVG(waiscore) as waiscore,AVG(neiscore) as neiscore,AVG(allscore) as allscore from tb_weekpianqu ";
+            
+            sql += " where timedup > "+ Integer.parseInt(df.format(datebegin)) +" and timedup < " + Integer.parseInt(df.format(dateend))
+            		+ " GROUP BY pianquid ORDER BY -allscore";
+            
+            conn = dataSource.getConnection();
+            pstmt = prepareStatement(conn, sql);
+            rs = pstmt.executeQuery();
+            
+            int paiming = 1;
+            
+            double score = 0;
+            
+            int index = 0;
+            while(rs.next()){
+            	index++;
+            
+            	JisuanSortBean bean = new JisuanSortBean();
+            	bean.setPianquid(rs.getInt("pianquid"));
+            	bean.setStateid(rs.getInt("stateid"));
+            	bean.setStreetid(rs.getInt("streetid"));
+            	bean.addYewai(rs.getDouble("waiscore"));
+            	bean.addYenei(rs.getDouble("neiscore"));
+            	bean.setAllscore(rs.getDouble("allscore"));
+            	float ss = rs.getFloat("allscore");
+            	if(ss > score) {
+            		score = ss;
+            		paiming ++;
+            		bean.setPaiming(index);
+            	} else {
+            		bean.setPaiming(paiming);
+            	}
+            	list.add(bean);
+            }
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+        
+        if(list.size() ==0 ) { return ; } 
+        SimpleDateFormat df2 = new SimpleDateFormat("yyyyMM");
+        try {
+            String sql = "replace into tb_seasonpianqu(stateid,streetid,pianquid, timedup, waiscore,neiscore,allscore, paiming) value(?,?,?,?,?,?,?,?)";
+            
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            pstmt = prepareStatement(conn, sql);
+            
+            int length = list.size();
+            for(int i = 0; i< length;i++) {
+	            pstmt.setInt(1, list.get(i).getStateid());
+	            pstmt.setInt(2, list.get(i).getStreetid());
+	            pstmt.setInt(3, list.get(i).getPianquid());
+	            pstmt.setInt(4, Integer.parseInt(df2.format(datebegin)));
+	            pstmt.setDouble(5, list.get(i).getYewai());
+	            pstmt.setDouble(6, list.get(i).getYenei());
+	            pstmt.setDouble(7, list.get(i).getAllscore());
+	            pstmt.setInt(8, list.get(i).getPaiming());
+	            pstmt.execute();
+            }
+            conn.commit();
+            
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+	}
+	
+	private void yearPianqu(Date date) {
+		
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+        
+		Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.MONTH, -12);  //往前追溯12个月
+        Date datebegin = c.getTime();
+        Date dateend = new Date();
+        
+        
+        List<JisuanSortBean> list = new ArrayList<JisuanSortBean>();
+        
+        try {
+            String sql = "select stateid,streetid,pianquid,AVG(waiscore) as waiscore,AVG(neiscore) as neiscore,AVG(allscore) as allscore from tb_weekpianqu ";
+            
+            sql += " where timedup > "+ Integer.parseInt(df.format(datebegin)) +" and timedup < " + Integer.parseInt(df.format(dateend))
+            		+ " GROUP BY pianquid ORDER BY -allscore";
+            
+            conn = dataSource.getConnection();
+            pstmt = prepareStatement(conn, sql);
+            rs = pstmt.executeQuery();
+            
+            int paiming = 1;
+            
+            double score = 0;
+            
+            int index = 0;
+            while(rs.next()){
+            	index++;
+            
+            	JisuanSortBean bean = new JisuanSortBean();
+            	bean.setPianquid(rs.getInt("pianquid"));
+            	bean.setStateid(rs.getInt("stateid"));
+            	bean.setStreetid(rs.getInt("streetid"));
+            	bean.addYewai(rs.getDouble("waiscore"));
+            	bean.addYenei(rs.getDouble("neiscore"));
+            	bean.setAllscore(rs.getDouble("allscore"));
+            	float ss = rs.getFloat("allscore");
+            	if(ss > score) {
+            		score = ss;
+            		paiming ++;
+            		bean.setPaiming(index);
+            	} else {
+            		bean.setPaiming(paiming);
+            	}
+            	list.add(bean);
+            }
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+        
+        if(list.size() ==0 ) { return ; } 
+        SimpleDateFormat df2 = new SimpleDateFormat("yyyy");
+        try {
+            String sql = "replace into tb_yearpianqu(stateid,streetid,pianquid, timedup, waiscore,neiscore,allscore, paiming) value(?,?,?,?,?,?,?,?)";
+            
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            pstmt = prepareStatement(conn, sql);
+            
+            int length = list.size();
+            for(int i = 0; i< length;i++) {
+	            pstmt.setInt(1, list.get(i).getStateid());
+	            pstmt.setInt(2, list.get(i).getStreetid());
+	            pstmt.setInt(3, list.get(i).getPianquid());
+	            pstmt.setInt(4, Integer.parseInt(df2.format(datebegin)));
+	            pstmt.setDouble(5, list.get(i).getYewai());
+	            pstmt.setDouble(6, list.get(i).getYenei());
+	            pstmt.setDouble(7, list.get(i).getAllscore());
+	            pstmt.setInt(8, list.get(i).getPaiming());
+	            pstmt.execute();
+            }
+            conn.commit();
+            
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+        
 	}
 
 	@Override
