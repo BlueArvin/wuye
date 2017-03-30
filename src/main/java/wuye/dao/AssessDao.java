@@ -17,7 +17,7 @@ public interface AssessDao {
 	
 	public int weekjisuanpianqu();
 	
-	public int weekSumWuye(int yenei);
+	public int weekSumWuye();
 	
 	public int weekSumPianqu(int yenei);
 	

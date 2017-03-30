@@ -1,6 +1,8 @@
 package wuye.bean;
 
-public class JisuanSortBean  implements Comparable{
+public class JisuanSortBean  implements Comparable {
+	private int stateid = 0;
+	private int streetid = 0;
 	private int pianquid = 0;
 	private double yenei = 0;
 	private double yewai = 0;
@@ -8,10 +10,37 @@ public class JisuanSortBean  implements Comparable{
 	
 	private int paiming = 0;
 
+	
 	public void setall() {
 		allscore = (100-yenei)*30/100 + ((100-yewai)*70/100);
 	}
 	
+	
+	
+	public int getStateid() {
+		return stateid;
+	}
+
+
+
+	public void setStateid(int stateid) {
+		this.stateid = stateid;
+	}
+
+
+
+	public int getStreetid() {
+		return streetid;
+	}
+
+
+
+	public void setStreetid(int streetid) {
+		this.streetid = streetid;
+	}
+
+
+
 	public int getPianquid() {
 		return pianquid;
 	}
@@ -26,6 +55,10 @@ public class JisuanSortBean  implements Comparable{
 
 	public void addYenei(double yenei) {
 		this.yenei += yenei;
+	}
+	
+	public void addAll(double all) {
+		this.yenei += all;
 	}
 
 	public double getYewai() {

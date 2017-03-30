@@ -209,7 +209,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	}
 
 	@Override
-	public int weekSumWuye(int yenei) {
+	public int weekSumWuye() {
 		Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -220,10 +220,10 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         List<SortBean> list = new ArrayList<SortBean>();
         
         try {
-            String sql = "SELECT wuyeid,SUM(score) as score FROM t_assess ";
+            String sql = "SELECT wuyeid,SUM(subjectscore) from tb_weekassesspianqu ";
             
             sql += "  where TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date(time)) + "')<0 and TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date()) + "')>0 "
-            		+ " and yeneiid = " + yenei 
+//            		+ " and yeneiid = " + yenei 
             		+ "GROUP BY wuyeid ORDER BY SUM(score) ";
             
             conn = dataSource.getConnection();
@@ -261,7 +261,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         if(list.size() ==0 ) {return 0; } 
         SimpleDateFormat df2 = new SimpleDateFormat("yyyyMMdd");
         try {
-            String sql = "replace into tb_weekwuye(wuyeid, atime, score, paiming, yenei) value(?,?,?,?,?)";
+            String sql = "replace into tb_weekwuye(wuyeid, atime, score, paiming) value(?,?,?,?)";
             
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
@@ -270,10 +270,9 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             int length = list.size();
             for(int i = 0; i< length;i++) {
 	            pstmt.setInt(1, list.get(i).getDisId());
-	            pstmt.setString(2, df2.format(list.get(i).getTime()));
+	            pstmt.setInt(2, Integer.parseInt(df2.format(list.get(i).getTime())));
 	            pstmt.setInt(4, list.get(i).getPaiming());
 	            pstmt.setFloat(3, list.get(i).getScore());
-	            pstmt.setFloat(5, yenei);
 	            pstmt.execute();
             }
             conn.commit();
@@ -602,6 +601,8 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             		mpianquid = pianqu;
             		sortbean = new JisuanSortBean();
             		sortbean.setPianquid(pianqu);
+            		sortbean.setStateid(rs.getInt("areaid"));
+            		sortbean.setStreetid(rs.getInt("streetid"));
             	}
             	
             	switch(rs.getInt("yeneiid")) {
@@ -630,7 +631,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         SimpleDateFormat df2 = new SimpleDateFormat("yyyyMMdd");
         try {
             String sql = "replace into tb_weekassesspianqu(intime, timedup,areaid, streetid, yeneiid, pianquid, assessid, "
-            		+ " assessidtop, subjectscore, weekbaifenbi) value(?,?,?,?,?,?,?,?,?,?)";
+            		+ " assessidtop, subjectscore, weekbaifenbi, wuyeid) value(?,?,?,?,?,?,?,?,?,?,?)";
             
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
@@ -648,6 +649,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	            pstmt.setInt(8, list.get(i).getAssessidtop());
 	            pstmt.setDouble(9, list.get(i).getScore());
 	            pstmt.setDouble(10, list.get(i).getBaifenbi());
+	            pstmt.setInt(11, list.get(i).getWuyeid());
 	            pstmt.execute();
             }
             conn.commit();
@@ -661,8 +663,8 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         if(sortlist.size() ==0 ) {return 0; } 
         Collections.sort(sortlist);
         try {
-            String sql = "replace into tb_weekpianqu(timedup, pianquid, waiscore, neiscore, allscore, paiming) "
-            		+ "  value(?,?,?,?,?,?)";
+            String sql = "replace into tb_weekpianqu(timedup, pianquid, waiscore, neiscore, allscore, paiming, stateid, streetid) "
+            		+ "  value(?,?,?,?,?,?, ?,?)";
             
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
@@ -687,6 +689,8 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	            pstmt.setDouble(4, sortlist.get(i).getYenei());
 	            pstmt.setDouble(5, sortlist.get(i).getAllscore());
 	            pstmt.setInt(6, paiming);
+	            pstmt.setInt(7, sortlist.get(i).getStateid());
+	            pstmt.setInt(8, sortlist.get(i).getStreetid());
 	            
 	            pstmt.execute();
 	            index++;
