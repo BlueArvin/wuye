@@ -117,15 +117,14 @@ public class AssessServlet {
     public Object allsort(HttpServletRequest request) {
 		
 		String timetype = request.getParameter("timetype");  // 
-		String time = request.getParameter("time");          // 
+		String time = request.getParameter("time");          //  时间
 		String areaid = request.getParameter("areaid");      //  层次选
-		String level = request.getParameter("level");        // 必选
+		String level = request.getParameter("level");        //  必选级别，这个选项目前没用上
 		
 		try{
-			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
-
-			
-			return assessLogic.getPoint();
+			RetBean jsonRet = new RetBean(0, "");
+			jsonRet.setValue(assessLogic.getPianquSortData(timetype.charAt(0), time, Integer.parseInt(level), areaid));
+			return jsonRet;
 		} catch(Exception e) {
 			return new RetBean(2, "参数错误");
 		}
@@ -153,21 +152,19 @@ public class AssessServlet {
 		}
 	}
 	
-	@RequestMapping("squresort")
+	@RequestMapping("pianqusort")
 	@ResponseBody
-    public Object squresort(HttpServletRequest request) {
-		String start = request.getParameter("start");      // 
-		String end = request.getParameter("end");      // 
-		String areaid = request.getParameter("areaid");
+    public Object pianqusort(HttpServletRequest request) {
+		String timetype = request.getParameter("timetype");  // 
+		String time = request.getParameter("time");          //  时间
+		String areaid = request.getParameter("pianquid");    //  只选片区
 		
 		try{
-			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
-			Date dStart = df.parse(start);
-			
-			Date dEnd = df.parse(end);
-			
-			return assessLogic.getPoint();
+			RetBean jsonRet = new RetBean(0, "");
+			jsonRet.setValue(assessLogic.getPianquSortList(timetype.charAt(0), time, areaid));
+			return jsonRet;
 		} catch(Exception e) {
+			e.printStackTrace();
 			return new RetBean(2, "参数错误");
 		}
 	}
@@ -175,18 +172,16 @@ public class AssessServlet {
 	@RequestMapping("wuyesort")
 	@ResponseBody
     public Object wuyesort(HttpServletRequest request) {
-		String start = request.getParameter("start");      // 
-		String end = request.getParameter("end");          // 
-		String areaid = request.getParameter("areaid");    // 地区
+		String timetype = request.getParameter("timetype");  // 
+		String time = request.getParameter("time");          //  时间
+		String wuyeid = request.getParameter("wuyeid");    //  只选片区
 		
 		try{
-			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
-			Date dStart = df.parse(start);
-			
-			Date dEnd = df.parse(end);
-			
-			return assessLogic.getPoint();
+			RetBean jsonRet = new RetBean(0, "");
+			jsonRet.setValue(assessLogic.getWuyeSortList(timetype.charAt(0), time, wuyeid));
+			return jsonRet;
 		} catch(Exception e) {
+			e.printStackTrace();
 			return new RetBean(2, "参数错误");
 		}
 	}

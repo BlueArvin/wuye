@@ -22,7 +22,9 @@ import wuye.bean.AssessDataBean;
 import wuye.bean.JisuanBean;
 import wuye.bean.JisuanSortBean;
 import wuye.bean.PianquData;
+import wuye.bean.PianquSortListBean;
 import wuye.bean.SortBean;
+import wuye.bean.WuyeSortListBean;
 import wuye.dao.AssessDao;
 import wuye.dao.DaoBasic;
 import wuye.manager.assess.bean.ManAssessBean;
@@ -261,7 +263,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         if(list.size() ==0 ) {return 0; } 
         SimpleDateFormat df2 = new SimpleDateFormat("yyyyMMdd");
         try {
-            String sql = "replace into tb_weekwuye(wuyeid, atime, score, paiming) value(?,?,?,?)";
+            String sql = "replace into tb_weekwuye(wuyeid, timedup, score, paiming) value(?,?,?,?)";
             
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
@@ -366,24 +368,27 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	}
 
 	@Override
-	public int monthSumWuye(int yenei) {
+	public int monthSumWuye() {
 		Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
         
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
         c.add(Calendar.MONTH, -1);
         Date m = c.getTime();
+        int datebegin = Integer.parseInt(df.format(m));
+        int dateend   = Integer.parseInt(df.format(new Date()));
+        Date now = new Date();
         
         List<SortBean> list = new ArrayList<SortBean>();
         
         try {
-            String sql = "SELECT wuyeid,SUM(score) as score FROM t_assess ";
+            String sql = "SELECT wuyeid,SUM(subjectscore) from tb_weekassesspianqu ";
             
             sql += "  where TIMESTAMPDIFF(SECOND, intime,'" + df.format(m) + "')<0 and TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date()) + "')>0 "
-            		+ " and yeneiid = " + yenei 
+//            		+ " and yeneiid = " + yenei 
             		+ "GROUP BY wuyeid ORDER BY SUM(score) ";
             
             conn = dataSource.getConnection();
@@ -400,7 +405,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             
             	SortBean bean = new SortBean();
             	bean.setDisId(rs.getInt("wuyeid"));
-            	bean.setTime(new Date());
+            	bean.setTime(m);
             	bean.setScore(rs.getFloat("score"));
             	float ss = rs.getFloat("score");
             	if(ss > score) {
@@ -421,7 +426,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         if(list.size() ==0 ) {return 0; } 
         SimpleDateFormat df2 = new SimpleDateFormat("yyyyMM");
         try {
-            String sql = "replace into tb_monthwuye(wuyeid, atime, score, paiming, yenei) value(?,?,?,?,?)";
+            String sql = "replace into tb_monthwuye(wuyeid, timedup, score, paiming) value(?,?,?,?)";
             
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
@@ -430,10 +435,9 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             int length = list.size();
             for(int i = 0; i< length;i++) {
 	            pstmt.setInt(1, list.get(i).getDisId());
-	            pstmt.setString(2, df2.format(list.get(i).getTime()));
+	            pstmt.setInt(2, Integer.parseInt(df2.format(list.get(i).getTime())));
 	            pstmt.setInt(4, list.get(i).getPaiming());
 	            pstmt.setFloat(3, list.get(i).getScore());
-	            pstmt.setFloat(5, yenei);
 	            pstmt.execute();
             }
             conn.commit();
@@ -721,25 +725,185 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         }
         
 	}
-
+	
 	@Override
-	public List<PianquData> getPianquSortData(char type, String date, int yenei, String areaid) {
+	public List<PianquSortListBean> getPianquSortList(char type, String date, String pianquid) {
+		List<PianquSortListBean> list = new ArrayList<>();
+		
+		String strwhere = " pianquid=" + pianquid.substring(1) + " ";
+		String strtable = "";
+		
 		switch(type) {
 		case 'w':
+			strtable = " tb_weekpianqu ";
+			strwhere += "and timedup<=" + date + " ";
 			break;
 		case 'm':
+			strtable = " tb_monthpianqu ";
+			strwhere += "and timedup<=" + date + " ";
 			break;
 		case 's':
+			strtable = " tb_seasonpianqu ";
+			strwhere += "and timedup<=" + date + " ";
 			break;
 		case 'y':
+			strtable = " tb_yearpianqu ";
+			strwhere += "and timedup<=" + date + " ";
 			break;
+		default:
+			return list;
 		}
 		
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+		String sql = " select stateid,streetid,pianquid,waiscore,neiscore,allscore,paiming,timedup from" + strtable + "where" + strwhere + " limit 4 ";
+		try {
+			conn = dataSource.getConnection();
+	        pstmt = prepareStatement(conn, sql);
+	        rs = pstmt.executeQuery();
+	        
+	        while(rs.next()){
+	        	PianquSortListBean bean = new PianquSortListBean();
+	        	bean.setDate(rs.getString("timedup"));
+	        	bean.setPaiming(rs.getInt("paiming"));
+	        	bean.setScore(rs.getDouble("allscore"));
+	        	bean.setPianquid(rs.getInt("pianquid"));
+	        	bean.setWaiscore(rs.getDouble("waiscore"));
+	        	bean.setNeiscore(rs.getDouble("neiscore"));
+	        	list.add(bean);
+	        }
+		}catch(Exception e) {
+        	e.printStackTrace();
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
 		
-		
-		return null;
+		return list;
 	}
 
+	// 片区统计查询
+	@Override
+	public List<PianquData> getPianquSortData(char type, String date, int jibie, String areaid) {
+		List<PianquData> list = new ArrayList<>();
+		
+		String strwhere = "";
+		String strtable = "";
+		switch(areaid.charAt(0)) {
+		case 'z': // all
+			strwhere = " 1=1 ";
+			break;
+		case 's': // 大区 
+			strwhere = " stateid=" + areaid.substring(1) + " ";
+			break;
+		case 't': // 街道
+			strwhere = " streetid=" + areaid.substring(1) + " ";
+			break;
+		case 'p': // 片区
+			strwhere = " pianquid=" + areaid.substring(1) + " ";
+			break;
+		default:
+			return list;
+		}
+		
+		switch(type) {
+		case 'w':
+			strtable = " tb_weekpianqu ";
+			strwhere += "and timedup=" + date + " ";
+			break;
+		case 'm':
+			strtable = " tb_monthpianqu ";
+			strwhere += "and timedup=" + date + " ";
+			break;
+		case 's':
+			strtable = " tb_seasonpianqu ";
+			strwhere += "and timedup=" + date + " ";
+			break;
+		case 'y':
+			strtable = " tb_yearpianqu ";
+			strwhere += "and timedup=" + date + " ";
+			break;
+		default:
+			return list;
+		}
+		
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+		String sql = " select stateid,streetid,pianquid,waiscore,neiscore,allscore,paiming from" + strtable + "where" + strwhere;
+		try {
+			conn = dataSource.getConnection();
+	        pstmt = prepareStatement(conn, sql);
+	        rs = pstmt.executeQuery();
+	        
+	        while(rs.next()){
+	        	PianquData bean = new PianquData();
+	        	bean.setAreaid(rs.getInt("stateid"));
+	        	bean.setAreaName(areaLogic.getAreaName(rs.getInt("stateid"), 1));
+	        	bean.setStreetid(rs.getInt("streetid"));
+	        	bean.setStreetName(areaLogic.getAreaName(rs.getInt("streetid"), 2));
+	        	bean.setPaiming(rs.getInt("paiming"));
+	        	bean.setScore(rs.getDouble("allscore"));
+	        	bean.setPianquid(rs.getInt("pianquid"));
+	        	bean.setPianquName(areaLogic.getAreaName(rs.getInt("pianquid"), 3));
+	        	bean.setWaiscore(rs.getDouble("waiscore"));
+	        	bean.setNeiscore(rs.getDouble("neiscore"));
+	        	list.add(bean);
+	        }
+		}catch(Exception e) {
+        	e.printStackTrace();
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+		
+		return list;
+	}
+
+	public List<WuyeSortListBean> getWuyeSortList(char type, String date, String wuyeid) {
+		List<WuyeSortListBean> list = new ArrayList<>();
+		
+		String strwhere = " wuyeid=" + wuyeid.substring(2) + " ";
+		String strtable = "";
+		
+		switch(type) {
+		case 'w':
+			strtable = " tb_weekwuye ";
+			strwhere += "and timedup<=" + date + " ";
+			break;
+		case 'm':
+			strtable = " tb_monthwuye ";
+			strwhere += "and timedup<=" + date + " ";
+			break;
+		default:
+			return list;
+		}
+		
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+		String sql = " select wuyeid,score,paiming,timedup from" + strtable + "where" + strwhere + " limit 4 ";
+		try {
+			conn = dataSource.getConnection();
+	        pstmt = prepareStatement(conn, sql);
+	        rs = pstmt.executeQuery();
+	        
+	        while(rs.next()){
+	        	WuyeSortListBean bean = new WuyeSortListBean();
+	        	bean.setPaiming(rs.getInt("paiming"));
+	        	bean.setScore(rs.getDouble("score"));
+	        	bean.setWuyeid(rs.getInt("wuyeid"));
+	        	bean.setTime(rs.getInt("timedup")+ "");
+	        	list.add(bean);
+	        }
+		}catch(Exception e) {
+        	e.printStackTrace();
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+		
+		return list;
+	}
+	
 	@Override
 	public int weekjisuanpianqu() {
 		Connection conn = null;

@@ -5,6 +5,8 @@ import java.util.List;
 
 import wuye.bean.AssessDataBean;
 import wuye.bean.PianquData;
+import wuye.bean.PianquSortListBean;
+import wuye.bean.WuyeSortListBean;
 
 public interface AssessDao {
 
@@ -21,9 +23,13 @@ public interface AssessDao {
 	
 	public int weekSumPianqu(int yenei);
 	
-	public int monthSumWuye(int yenei);
+	public int monthSumWuye();
 	
 	public int monthSumPianqu(int yenei);
 	
 	public List<PianquData> getPianquSortData(char type, String date, int yenei, String areaid);
+	
+	public List<PianquSortListBean> getPianquSortList(char type, String date, String areaid);
+	
+	public List<WuyeSortListBean> getWuyeSortList(char type, String date, String wuyeid);
 }

@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 import wuye.bean.AssessDataBean;
+import wuye.bean.PianquData;
+import wuye.bean.PianquSortListBean;
+import wuye.bean.WuyeSortListBean;
 import wuye.dao.AssessDao;
 import wuye.logic.AssessLogic;
 
@@ -44,7 +47,25 @@ public class AssessLogicImpl implements AssessLogic {
 	@Override
 	public void doSumMonth() {
 		assessDao.monthSumPianqu(1);
-		assessDao.monthSumWuye(1);
+		assessDao.monthSumWuye();
 
 	}
+
+	@Override
+	public List<PianquData> getPianquSortData(char type, String date, int jibie, String areaid) {
+		return assessDao.getPianquSortData(type, date, jibie, areaid);
+	}
+
+	@Override
+	public List<PianquSortListBean> getPianquSortList(char type, String date, String pianquid) {
+		
+		return assessDao.getPianquSortList(type, date, pianquid);
+	}
+
+	@Override
+	public List<WuyeSortListBean> getWuyeSortList(char type, String date, String wuyeid) {
+		return assessDao.getWuyeSortList(type, date, wuyeid);
+	}
+	
+	
 }

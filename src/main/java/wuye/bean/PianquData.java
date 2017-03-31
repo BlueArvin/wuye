@@ -10,6 +10,22 @@ public class PianquData {
 	private String streetName;
 	private int areaid;
 	private String areaName;
+	private double neiscore;
+	private double waiscore;
+	
+	
+	public double getNeiscore() {
+		return neiscore;
+	}
+	public void setNeiscore(double neiscore) {
+		this.neiscore = neiscore;
+	}
+	public double getWaiscore() {
+		return waiscore;
+	}
+	public void setWaiscore(double waiscore) {
+		this.waiscore = waiscore;
+	}
 	public int getPianquid() {
 		return pianquid;
 	}
