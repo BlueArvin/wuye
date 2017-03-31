@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import wuye.bean.AssessDataBean;
+import wuye.bean.CheckDayItem;
 import wuye.bean.PianquData;
 import wuye.bean.PianquSortListBean;
 import wuye.bean.WuyeSortListBean;
@@ -31,11 +32,16 @@ public class AssessLogicImpl implements AssessLogic {
 	public List<String> getPoint() {
 		return assessDao.getPoint();
 	}
+	
+	public List<CheckDayItem> getCheckDayList(Date dStart, Date dEnd,
+			String pianquid, String checkyenei, int page) {
+		return assessDao.getCheckDayList(dStart, dEnd, pianquid, checkyenei, page);
+	}
 
 	@Override
-	public List<AssessDataBean> getDetailitem(Date dStart, Date dEnd,
-			String areaid, String checkyewai, String checktitle, int page) {
-		return assessDao.getDetailitem(dStart, dEnd, areaid, checkyewai, checktitle, page);
+	public List<AssessDataBean> getDetailitem(Date dStart,
+			String pianquid, String checkyenei, int page) {
+		return assessDao.getDetailitem(dStart, pianquid, checkyenei, page);
 	}
 
 	@Override

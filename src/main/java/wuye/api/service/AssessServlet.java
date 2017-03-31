@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSON;
 
 import wuye.api.bean.RetBean;
 import wuye.bean.AssessDataBean;
+import wuye.bean.CheckDayItem;
 import wuye.logic.AssessLogic;
 
 /**
@@ -186,14 +187,13 @@ public class AssessServlet {
 		}
 	}
 	
-	@RequestMapping("detailitem")
+	@RequestMapping("checkday")
 	@ResponseBody
-    public Object detailitem(HttpServletRequest request) {
+    public Object checkday(HttpServletRequest request) {
 		String start = request.getParameter("start");      // 
 		String end = request.getParameter("end");      		// 
-		String areaid = request.getParameter("areaid");
-		String checkyewai = request.getParameter("checkyewai");      // 这个是业内还是业外
-		String checktitle = request.getParameter("checktitle");       // 大项
+		String areaid = request.getParameter("pianquid");
+		String checkyenei = request.getParameter("checkyenei");      // 这个是业内还是业外
 		String page = request.getParameter("page");    // 当前页
 		
 		try{
@@ -203,7 +203,30 @@ public class AssessServlet {
 			
 			int iPage = Integer.parseInt(page);
 			
-			List<AssessDataBean> ret = assessLogic.getDetailitem(dStart, dEnd, areaid, checkyewai, checktitle.substring(2), iPage);
+			List<CheckDayItem> ret = assessLogic.getCheckDayList(dStart, dEnd, areaid, checkyenei, iPage);
+			RetBean jsonRet = new RetBean(0, "");
+			jsonRet.setValue(ret);
+			return jsonRet;
+		} catch(Exception e) {
+			return new RetBean(2, "参数错误");
+		}
+	}
+	
+	@RequestMapping("detailitem")
+	@ResponseBody
+    public Object detailitem(HttpServletRequest request) {
+		String date = request.getParameter("date");
+		String hutongid = request.getParameter("hutongid");
+		String checkyenei = request.getParameter("checkyenei");      // 这个是业内还是业外
+		String page = request.getParameter("page");    // 当前页
+		
+		try{
+			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+			Date dStart = df.parse(date);
+			
+			int iPage = Integer.parseInt(page);
+			
+			List<AssessDataBean> ret = assessLogic.getDetailitem(dStart, hutongid, checkyenei, iPage);
 			RetBean jsonRet = new RetBean(0, "");
 			jsonRet.setValue(ret);
 			return jsonRet;

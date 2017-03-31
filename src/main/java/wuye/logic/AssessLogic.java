@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import wuye.bean.AssessDataBean;
+import wuye.bean.CheckDayItem;
 import wuye.bean.PianquData;
 import wuye.bean.PianquSortListBean;
 import wuye.bean.WuyeSortListBean;
@@ -14,8 +15,8 @@ public interface AssessLogic {
 	
 	public List<String> getPoint();
 	
-	public List<AssessDataBean> getDetailitem(Date dStart, Date dEnd,
-			String areaid, String checkyewai, String checktitle, int page);
+	public List<AssessDataBean> getDetailitem(Date dStart,
+			String hutongid, String checkyenei, int page);
 	
 	public void doSumWeek();
 	
@@ -26,4 +27,7 @@ public interface AssessLogic {
 	public List<PianquSortListBean> getPianquSortList(char type, String date, String pianquid);
 	
 	public List<WuyeSortListBean> getWuyeSortList(char type, String date, String wuyeid);
+	
+	public List<CheckDayItem> getCheckDayList(Date dStart, Date dEnd,
+			String pianquid, String checkyenei, int page);
 }

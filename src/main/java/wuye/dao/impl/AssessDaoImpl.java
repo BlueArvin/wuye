@@ -19,6 +19,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import wuye.bean.AssessDataBean;
+import wuye.bean.CheckDayItem;
 import wuye.bean.JisuanBean;
 import wuye.bean.JisuanSortBean;
 import wuye.bean.PianquData;
@@ -115,42 +116,65 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         }
 		return ret;
 	}
+	
+	@Override
+	public List<CheckDayItem> getCheckDayList(Date dStart, Date dEnd,
+			String pianquid, String yenei, int page) {
+		List<CheckDayItem> list = new ArrayList<>();
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+		String sql = " SELECT hutongid,date_format(intime, '%Y%m%d') as timedup FROM t_assess "
+				+ " where yeneiid = "+yenei+" and  pianquid = " + pianquid.substring(1)
+				+ " and TIMESTAMPDIFF(SECOND, intime,'" + df.format(dStart) + "')<0 and TIMESTAMPDIFF(SECOND, intime,'" + df.format(dEnd) + "')>0 "
+				+ " GROUP BY timedup,hutongid  ";
+		int curindex = (page-1)*20;
+        sql += " limit "+ curindex +", 20";
+        
+		try {
+			conn = dataSource.getConnection();
+	        pstmt = prepareStatement(conn, sql);
+	        rs = pstmt.executeQuery();
+	        
+	        while(rs.next()) {
+	        	CheckDayItem bean = new CheckDayItem();
+	        	bean.setDay(rs.getString("timedup"));
+	        	bean.setHutong(rs.getInt("hutongid"));
+	        	bean.setHutongName(areaLogic.getAreaName(rs.getInt("hutongid"), 1));
+	        	list.add(bean);
+	        }
+		}catch(Exception e) {
+        	e.printStackTrace();
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+		
+		return list;
+	}
 
 	@Override
-	public List<AssessDataBean> getDetailitem(Date dStart, Date dEnd, String areaid, String checkyewai,
-			String checktitle, int page) {
+	public List<AssessDataBean> getDetailitem(Date dStart, String hutongid, String checkyenei, int page) {
 		// TODO Auto-generated method stub
 		List<AssessDataBean> list = new ArrayList<AssessDataBean>();
 		Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
         try {
             String sql = "select t.aseid,t.id,t.score,t.areaid,t.streetid,t.pianquid,t.hutongid,t.userid,t.wuyeid,"
             		+ "t.assessidtop,t.assessid,t.intime,t.img1,t.img2,t.img3, t.img4, t.yeneiid,t.msg ,u.userName, ct.title_name, cb.sub_name "
             		+ " from t_assess t LEFT JOIN t_user u ON u.id = t.userid LEFT JOIN t_checktitle ct ON  ct.score_id = t.assessidtop"
             		+ " LEFT JOIN t_checksub cb ON cb.subid = t.assessid  where t.del = 0 ";
             
-            sql += " and TIMESTAMPDIFF(SECOND, intime,'" + df.format(dStart) + "')<0 and TIMESTAMPDIFF(SECOND, intime,'" + df.format(dEnd) + "')>0 ";
+            sql += " and date_format(intime, '%Y%m%d') = " + df.format(dStart);
             
-            if(!checkyewai.equals("0")) {
-            	sql += " and yeneiid=" + checkyewai + " ";
+            if(!checkyenei.equals("0")) {
+            	sql += " and yeneiid=" + checkyenei + " ";
             }
             
-            if(!checktitle.equals("0")) {
-            	sql += " and assessidtop=" + checktitle + " ";
-            }
+            sql += " and hutongid=" + hutongid.substring(1) + " ";
             
-            switch(areaid.charAt(0)) {
-            case 's':
-            	sql += " and areaid=" + areaid.substring(1) + " ";
-            case 't':
-            	sql += " and streetid=" + areaid.substring(1) + " ";
-            case 'p':
-            	sql += " and pianquid=" + areaid.substring(1) + " ";
-            case 'h':
-            	sql += " and hutongid=" + areaid.substring(1) + " ";
-            }
             
             int curindex = (page-1)*20;
             sql += " limit "+ curindex +", 20";
