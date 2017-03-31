@@ -134,20 +134,13 @@ public class AssessServlet {
 	@RequestMapping("itemsort")
 	@ResponseBody
     public Object itemsort(HttpServletRequest request) {
-		String start = request.getParameter("start");      // 
-		String end = request.getParameter("end");      // 
-		String checkitem = request.getParameter("checkitem");      // 
-		String areaid = request.getParameter("areaid");
-		String level = request.getParameter("level");
+		String timetype = request.getParameter("timetype");  // 
+		String time = request.getParameter("time");          //  时间
 		
 		
 		try{
-			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
-			Date dStart = df.parse(start);
 			
-			Date dEnd = df.parse(end);
-			
-			return assessLogic.getPoint();
+			return assessLogic.getBadCheck(timetype.charAt(0), time);
 		} catch(Exception e) {
 			return new RetBean(2, "参数错误");
 		}

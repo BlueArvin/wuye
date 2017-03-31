@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import wuye.bean.AssessDataBean;
+import wuye.bean.BadCheckList;
 import wuye.bean.CheckDayItem;
 import wuye.bean.PianquData;
 import wuye.bean.PianquSortListBean;
@@ -71,6 +72,11 @@ public class AssessLogicImpl implements AssessLogic {
 	@Override
 	public List<WuyeSortListBean> getWuyeSortList(char type, String date, String wuyeid) {
 		return assessDao.getWuyeSortList(type, date, wuyeid);
+	}
+
+	@Override
+	public BadCheckList getBadCheck(char type, String date) {
+		return assessDao.getBadCheck(type, date);
 	}
 	
 	

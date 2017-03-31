@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import wuye.bean.AssessDataBean;
+import wuye.bean.BadCheckList;
 import wuye.bean.CheckDayItem;
 import wuye.bean.PianquData;
 import wuye.bean.PianquSortListBean;
@@ -36,4 +37,6 @@ public interface AssessDao {
 	
 	public List<CheckDayItem> getCheckDayList(Date dStart, Date dEnd,
 			String pianquid, String yenei, int page);
+	
+	public BadCheckList getBadCheck(char type, String date);
 }

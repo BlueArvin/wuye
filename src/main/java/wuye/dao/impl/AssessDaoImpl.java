@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,6 +20,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import wuye.bean.AssessDataBean;
+import wuye.bean.BadCheckList;
 import wuye.bean.CheckDayItem;
 import wuye.bean.JisuanBean;
 import wuye.bean.JisuanSortBean;
@@ -1085,6 +1087,139 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         }
         
 		return 0;
+	}
+
+	
+	@Override
+	public BadCheckList getBadCheck(char type, String date) {
+		
+		BadCheckList ret = new BadCheckList();
+		String strwhere = "";
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+		SimpleDateFormat dfm = new SimpleDateFormat("yyyyMM");
+		Date recvDate;
+		Calendar c = Calendar.getInstance();
+		
+		switch(type) {
+		case 'w': // week
+			try {
+				recvDate = df.parse(date);
+			} catch (ParseException e) {
+				return ret;
+			}
+			
+			Date begin = new Date(recvDate.getTime() - 24*3600*1000);
+			Date end = new Date(recvDate.getTime() + 6*24*3600*1000);
+			
+			int ibegin = Integer.parseInt(df.format(begin));
+			int iend = Integer.parseInt(df.format(end));
+			
+			strwhere += " timedup>" + ibegin + " and timedup<=" + iend + " ";
+			break;
+		case 'm': // month
+			try {
+				recvDate = dfm.parse(date);
+			} catch (ParseException e) {
+				return ret;
+			}
+			
+	        c.setTime(recvDate);
+	        c.add(Calendar.MONTH, 1);
+	        Date m = c.getTime();
+	        int datebegin = Integer.parseInt(df.format(recvDate));
+	        int dateend   = Integer.parseInt(df.format(m));
+			
+	        strwhere += " timedup>=" + datebegin + " and timedup<" + dateend + " ";
+			break;
+		case 's': // season
+			try {
+				recvDate = dfm.parse(date);
+			} catch (ParseException e) {
+				return ret;
+			}
+			
+	        c.setTime(recvDate);
+	        c.add(Calendar.MONTH, 3);
+	        Date m2 = c.getTime();
+	        int datebegin2 = Integer.parseInt(df.format(recvDate));
+	        int dateend2   = Integer.parseInt(df.format(m2));
+	        
+	        strwhere += " timedup>=" + datebegin2 + " and timedup<" + dateend2 + " ";
+			break;
+		case 'y': // year
+			int year = Integer.parseInt(date);
+			
+			strwhere += " timedup>=" + year*100 + " and timedup<" + (year+1)*100 + " ";
+			break;
+		default:
+			return ret;
+		}
+		
+		String sql = "SELECT assessid,baifenbi,b.sub_name FROM (SELECT  assessid, AVG(weekbaifenbi) as baifenbi FROM tb_weekassesspianqu where "
+				+ strwhere +"  GROUP BY assessid ) "
+				+ "as ss LEFT JOIN t_checksub b ON ss.assessid = b.subid  WHERE ss.baifenbi>20 ORDER BY ss.baifenbi desc";
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+		try {
+			conn = dataSource.getConnection();
+	        pstmt = prepareStatement(conn, sql);
+	        rs = pstmt.executeQuery();
+	        int index= 1;
+	        while(rs.next()){
+	        	BadCheckList.basic bean = new BadCheckList.basic();
+	        	bean.setBaifenbi(rs.getDouble("baifenbi"));
+	        	bean.setChecksub(rs.getInt("assessid"));
+	        	bean.setChecksunName(rs.getString("sub_name"));
+	        	bean.setIndex(index);
+	        	ret.basiclist.add(bean);
+	        	index++;
+	        }
+		}catch(Exception e) {
+        	e.printStackTrace();
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+		
+		// 查询具体内容
+		int count = ret.basiclist.size();
+		if(count<=0) {return ret;}
+		
+		
+        
+		for(int i=0;i<count;i++) {
+			BadCheckList.basic bean = ret.basiclist.get(i);
+			String sql2 = "SELECT streetid,pianquid,baifenbi FROM (SELECT streetid,pianquid,AVG(weekbaifenbi) as baifenbi FROM tb_weekassesspianqu WHERE assessid = "
+					+ bean.getChecksub() +" and "
+					+ strwhere 
+					+ " GROUP BY pianquid ) "
+					+ " as ss  WHERE ss.baifenbi>20 ORDER BY ss.baifenbi desc";
+			
+			try {
+				
+				conn = dataSource.getConnection();
+		        pstmt = prepareStatement(conn, sql2);
+		        rs = pstmt.executeQuery();
+		        int index= 1;
+		        while(rs.next()){
+		        	BadCheckList.pianqu bean2 = new BadCheckList.pianqu();
+		        	bean2.setIndex(index);
+		        	bean2.setPianquid(rs.getInt("pianquid"));
+		        	bean2.setPianquName(areaLogic.getAreaName(rs.getInt("pianquid"), 3));
+		        	bean2.setStreetid(rs.getInt("streetid"));
+		        	bean2.setStreetName(areaLogic.getAreaName(rs.getInt("streetid"), 2));
+		        	bean2.setBaifenbi(rs.getDouble("baifenbi"));
+		        	bean.pianqulist.add(bean2);
+		        	index++;
+		        }
+			}catch(Exception e) {
+	        	e.printStackTrace();
+	        }finally {
+	            closeConnection(conn, pstmt, rs);
+	        }
+		}
+		
+		return ret;
 	}
 
 }
