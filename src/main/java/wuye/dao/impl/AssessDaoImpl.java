@@ -936,8 +936,18 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dfday = new SimpleDateFormat("yyyy-MM-dd");
         
-        long time = new Date().getTime() - 7*24*3600*1000;
+        long end;
+		try {
+			end = dfday.parse(dfday.format(new Date())).getTime();
+		} catch (ParseException e1) {
+			return -1;
+		}
+        
+        long begin = end - 7*24*3600*1000;
+        
+//        long time = new Date().getTime() - 7*24*3600*1000;
         
         List<JisuanBean> list = new ArrayList<JisuanBean>();
         
@@ -946,7 +956,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         try {
             String sql = "SELECT streetid,areaid,pianquid,yeneiid,assessidtop,assessid,wuyeid,SUM(score)  as score,getMaxScore(assessid) as sss  FROM t_assess ";
             
-            sql += " where TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date(time)) + "')<0 and TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date()) + "')>0 "
+            sql += " where TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date(begin)) + "')<0 and TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date(end)) + "')>0 "
             		+ " and del=0 "
             		+ " GROUP BY pianquid,assessid ";
             
@@ -967,7 +977,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             	bean.setAssessidtop(rs.getInt("assessidtop"));
             	bean.setAssessid(rs.getInt("assessid"));
             	bean.setWuyeid(rs.getInt("wuyeid"));
-            	bean.setTime(new Date());
+            	bean.setTime(new Date(end - 12*3600*1000));
             	double score  = rs.getInt("score");
             	double sss  = rs.getInt("sss");
             	score = (score > sss)? sss: score;
@@ -1066,7 +1076,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             		paiming = index;
             	}
             	
-	            pstmt.setString(1, df2.format(new Date()));
+	            pstmt.setString(1, df2.format(new Date(end - 12*3600*1000)));
 	            pstmt.setInt(2, sortlist.get(i).getPianquid());
 	            pstmt.setDouble(3, sortlist.get(i).getYewai());
 	            pstmt.setDouble(4, sortlist.get(i).getYenei());

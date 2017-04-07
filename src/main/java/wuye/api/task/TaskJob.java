@@ -19,15 +19,15 @@ public class TaskJob {
 	}
 	
 	
-    @Scheduled(cron = "10 1 1 * * ?")
-    public void jobWeek() {   // 每周六的定时任务
+    @Scheduled(cron = "0 10 1 ? * MON")
+    public void jobWeek() {   // 每周一的定时任务， 1点10分
         System.out.println("week任务进行中。。。");
         assessLogic.doSumWeek();
         System.out.println("week任务结束");
     }
     
-    @Scheduled(cron = "10 1 1 * * ?")
-    public void jobMonth() {   // 每月第一天的定时任务
+    @Scheduled(cron = "0 10 3 1 * ?")
+    public void jobMonth() {   // 每月第一天的定时任务 3点10分
         System.out.println("month任务进行中。。。");
         assessLogic.doSumMonth();
         System.out.println("month任务结束");
