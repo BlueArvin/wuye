@@ -17,6 +17,7 @@ import com.alibaba.fastjson.JSON;
 import wuye.api.bean.RetBean;
 import wuye.bean.AssessDataBean;
 import wuye.bean.CheckDayItem;
+import wuye.bean.ListData;
 import wuye.logic.AssessLogic;
 
 /**
@@ -124,7 +125,7 @@ public class AssessServlet {
 		
 		try{
 			RetBean jsonRet = new RetBean(0, "");
-			jsonRet.setValue(assessLogic.getPianquSortData(timetype.charAt(0), time, Integer.parseInt(level), areaid));
+			jsonRet.setValue(new ListData(assessLogic.getPianquSortData(timetype.charAt(0), time, Integer.parseInt(level), areaid)));
 			return jsonRet;
 		} catch(Exception e) {
 			return new RetBean(2, "参数错误");
@@ -139,8 +140,9 @@ public class AssessServlet {
 		
 		
 		try{
-			
-			return assessLogic.getBadCheck(timetype.charAt(0), time);
+			RetBean jsonRet = new RetBean(0, "");
+			jsonRet.setValue(assessLogic.getBadCheck(timetype.charAt(0), time));
+			return jsonRet;
 		} catch(Exception e) {
 			return new RetBean(2, "参数错误");
 		}
@@ -155,7 +157,7 @@ public class AssessServlet {
 		
 		try{
 			RetBean jsonRet = new RetBean(0, "");
-			jsonRet.setValue(assessLogic.getPianquSortList(timetype.charAt(0), time, areaid));
+			jsonRet.setValue(new ListData(assessLogic.getPianquSortList(timetype.charAt(0), time, areaid)));
 			return jsonRet;
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -172,7 +174,7 @@ public class AssessServlet {
 		
 		try{
 			RetBean jsonRet = new RetBean(0, "");
-			jsonRet.setValue(assessLogic.getWuyeSortList(timetype.charAt(0), time, wuyeid));
+			jsonRet.setValue(new ListData(assessLogic.getWuyeSortList(timetype.charAt(0), time, wuyeid)));
 			return jsonRet;
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -198,7 +200,7 @@ public class AssessServlet {
 			
 			List<CheckDayItem> ret = assessLogic.getCheckDayList(dStart, dEnd, areaid, checkyenei, iPage);
 			RetBean jsonRet = new RetBean(0, "");
-			jsonRet.setValue(ret);
+			jsonRet.setValue(new ListData(ret));
 			return jsonRet;
 		} catch(Exception e) {
 			return new RetBean(2, "参数错误");
@@ -221,7 +223,7 @@ public class AssessServlet {
 			
 			List<AssessDataBean> ret = assessLogic.getDetailitem(dStart, hutongid, checkyenei, iPage);
 			RetBean jsonRet = new RetBean(0, "");
-			jsonRet.setValue(ret);
+			jsonRet.setValue(new ListData(ret));
 			return jsonRet;
 		} catch(Exception e) {
 			return new RetBean(2, "参数错误");

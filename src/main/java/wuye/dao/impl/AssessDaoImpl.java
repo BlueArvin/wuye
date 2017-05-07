@@ -59,7 +59,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             		+ " value(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ? ,?,?) ";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
-            pstmt.setTimestamp(1, new Timestamp(data.getTime().getTime()));
+            pstmt.setTimestamp(1, new Timestamp(new Date().getTime()));
             pstmt.setInt(2, data.getStreetid());
             pstmt.setInt(3, data.getAreaid());
             pstmt.setInt(4, data.getPianquid());
@@ -143,7 +143,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	        	CheckDayItem bean = new CheckDayItem();
 	        	bean.setDay(rs.getString("timedup"));
 	        	bean.setHutong(rs.getInt("hutongid"));
-	        	bean.setHutongName(areaLogic.getAreaName(rs.getInt("hutongid"), 1));
+	        	bean.setHutongName(areaLogic.getAreaName(rs.getInt("hutongid"), 4));
 	        	list.add(bean);
 	        }
 		}catch(Exception e) {
@@ -795,8 +795,8 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	        	bean.setPaiming(rs.getInt("paiming"));
 	        	bean.setScore(rs.getDouble("allscore"));
 	        	bean.setPianquid(rs.getInt("pianquid"));
-	        	bean.setWaiscore(rs.getDouble("waiscore"));
-	        	bean.setNeiscore(rs.getDouble("neiscore"));
+	        	bean.setWaiscore(100-rs.getDouble("waiscore"));
+	        	bean.setNeiscore(100-rs.getDouble("neiscore"));
 	        	list.add(bean);
 	        }
 		}catch(Exception e) {
@@ -872,8 +872,8 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	        	bean.setScore(rs.getDouble("allscore"));
 	        	bean.setPianquid(rs.getInt("pianquid"));
 	        	bean.setPianquName(areaLogic.getAreaName(rs.getInt("pianquid"), 3));
-	        	bean.setWaiscore(rs.getDouble("waiscore"));
-	        	bean.setNeiscore(rs.getDouble("neiscore"));
+	        	bean.setWaiscore(100-rs.getDouble("waiscore"));
+	        	bean.setNeiscore(100-rs.getDouble("neiscore"));
 	        	list.add(bean);
 	        }
 		}catch(Exception e) {

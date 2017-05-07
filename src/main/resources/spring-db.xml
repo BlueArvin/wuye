@@ -31,7 +31,7 @@
 		<!-- 获取连接最大等待时间 -->
 		<property name="maxWait" value="${jdbc.max.wait}" />
 
-		<property name="validationQuery" value="${validationQuery}" />
+		<property name="validationQuery" value="select CURRENT_DATE" />
 		<property name="testOnBorrow" value="true" />
 		<property name="testOnReturn" value="false" />
 		<property name="testWhileIdle" value="true" />
