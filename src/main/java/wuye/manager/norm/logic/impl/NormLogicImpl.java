@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import wuye.manager.cache.Cache;
+import wuye.manager.cache.CacheKeyConstant;
+import wuye.manager.cache.CacheManager;
 import wuye.manager.norm.bean.NormCategoryBean;
 import wuye.manager.norm.bean.NormItemBean;
 import wuye.manager.norm.bean.NormLevelBean;
@@ -21,20 +24,59 @@ public class NormLogicImpl implements NormLogic {
 	//--------------------------------考核级别设置--------------------------------
 	
 	public boolean addNormLevel(NormLevelBean normLevelBean){
+		cacheTimeOut();
 		return normDao.addNormLevel(normLevelBean);
 	}
 	
 	public boolean updateNormLevel(NormLevelBean normLevelBean){
+		cacheTimeOut();
 		return normDao.updateNormLevel(normLevelBean);
 	}
 	
 	public void deleteNormLevel(int id){
 		normDao.deleteNormLevel(id);
+		cacheTimeOut();
+	}
+	
+	public void cacheTimeOut(){
+		Cache cache = CacheManager.getCacheInfo(CacheKeyConstant.KEY_AREA);
+		if(cache!=null){
+			cache.setExpired(true);//设置缓存超时
+		}
 	}
 	
 	public List<NormLevelBean> queryNormLevelList(){
-		return normDao.queryNormLevelList();
+		
+		List<NormLevelBean> levelList = null;
+		Cache cache = CacheManager.getCacheInfo(CacheKeyConstant.KEY_LEVEL);
+		if(cache!=null){
+			levelList = (List<NormLevelBean>) cache.getValue();
+		}
+		
+		if(levelList==null){
+			levelList = normDao.queryNormLevelList();
+			cache = new Cache();
+			cache.setKey(CacheKeyConstant.KEY_LEVEL);
+			cache.setValue(levelList);
+			CacheManager.putCache(CacheKeyConstant.KEY_LEVEL, cache);
+		}
+		return levelList;
 	}
+	
+	
+	@Override
+	public String getNormLevelById(int id){
+		List<NormLevelBean> levelList = queryNormLevelList();
+		for(int i=0;i<levelList.size();i++){
+			NormLevelBean bean = levelList.get(i);
+			if(bean.getLevelNo() == id ){
+				return bean.getLevelName();
+			}
+		}
+		return "";
+	}
+	
+	
 	
 	
 	//--------------------------------考核类别设置--------------------------------
@@ -57,8 +99,8 @@ public class NormLogicImpl implements NormLogic {
 		return normDao.queryNormCategoryList(page);
 	}
 	
-	public List<NormCategoryBean> queryNormCategoryList(){
-		return normDao.queryNormCategoryList();
+	public List<NormCategoryBean> queryNormCategoryList(int type){
+		return normDao.queryNormCategoryList(type);
 	}
 	
 	//--------------------------------考核项目设置--------------------------------

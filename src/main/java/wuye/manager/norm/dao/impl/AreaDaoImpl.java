@@ -68,11 +68,12 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         boolean rs = false;
         try {
-            String sql = "insert into t_pianqu (pianqu_name,father_id) values (?,?)";
+            String sql = "insert into t_pianqu (pianqu_name,father_id,level_id) values (?,?,?)";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setString(1, areaBean.getName());
             pstmt.setInt(2, areaBean.getParentId());
+            pstmt.setInt(3, areaBean.getLevelId());
             rs = pstmt.execute();
         }catch(Exception e){
        	 	doCatchException("addPianqu" ,e);
@@ -203,7 +204,7 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select a.id,b.street_name,a.pianqu_name,a.father_id from t_pianqu a left join t_street b on b.id=a.father_id  where a.del = 0 order by a.id desc limit "+page.getStartIndex()+","+page.getPageSize();
+            String sql = "select a.id,b.street_name,a.pianqu_name,a.father_id,a.level_id from t_pianqu a left join t_street b on b.id=a.father_id  where a.del = 0 order by a.id desc limit "+page.getStartIndex()+","+page.getPageSize();
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
@@ -214,6 +215,7 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
             	nb.setName(rs.getString("pianqu_name"));
             	nb.setParentId(rs.getInt("father_id"));
             	nb.setParentName(rs.getString("street_name"));
+            	nb.setLevelId(rs.getInt("level_id"));
             	list.add(nb);
             }
             return list;
@@ -302,12 +304,13 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         boolean rs = false;
         try {
-            String sql = "update t_pianqu set pianqu_name=?,father_id=? where id =?";
+            String sql = "update t_pianqu set pianqu_name=?,father_id=?,level_id=?  where id =?";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             pstmt.setString(1, areaBean.getName());
             pstmt.setInt(2, areaBean.getParentId());
-            pstmt.setInt(3, areaBean.getId());
+            pstmt.setInt(3, areaBean.getLevelId());
+            pstmt.setInt(4, areaBean.getId());
             rs = pstmt.execute();
         }catch(Exception e){
        	 	doCatchException("updatePianqu" ,e);
@@ -414,7 +417,7 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,statename from t_state";
+            String sql = "select id,statename from t_state where del = 0";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
@@ -444,9 +447,9 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,street_name from t_street";
+            String sql = "select id,street_name from t_street where del = 0";
             if(parentId>0){
-            	sql+= " where area_id="+parentId;
+            	sql+= " and area_id="+parentId;
             }
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
@@ -477,9 +480,9 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,pianqu_name from t_pianqu";
+            String sql = "select id,pianqu_name from t_pianqu where del = 0";
             if(parentId>0){
-            	sql+= " where father_id="+parentId;
+            	sql+= " and father_id="+parentId;
             }
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
@@ -506,9 +509,9 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,hutong_name from t_hutong";
+            String sql = "select id,hutong_name from t_hutong where del = 0";
             if(parentId>0){
-            	sql+= " where father_id="+parentId;
+            	sql+= " and father_id="+parentId;
             }
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);

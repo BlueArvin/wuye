@@ -6,6 +6,8 @@ public class AreaBean {
 	private String name;
 	private int parentId;
 	private String parentName;
+	private int levelId;
+	private String levelName;
 	private int type;
 	
 	public int getType() {
@@ -30,6 +32,22 @@ public class AreaBean {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public int getLevelId() {
+		return levelId;
+	}
+
+	public void setLevelId(int levelId) {
+		this.levelId = levelId;
+	}
+
+	public String getLevelName() {
+		return levelName;
+	}
+
+	public void setLevelName(String levelName) {
+		this.levelName = levelName;
 	}
 
 	public int getParentId() {

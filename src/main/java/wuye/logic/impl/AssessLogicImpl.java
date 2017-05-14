@@ -44,8 +44,8 @@ public class AssessLogicImpl implements AssessLogic {
 	}
 
 
-	public List<String> getPoint() {
-		return assessDao.getPoint();
+	public List<String> getPoint(int street,int pianqu,String time) {
+		return assessDao.getPoint(street,pianqu,time);
 	}
 	
 	public List<CheckDayItem> getCheckDayList(Date dStart, Date dEnd,

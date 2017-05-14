@@ -207,12 +207,17 @@ public class NormDaoImpl extends DaoBasic implements NormDao {
 	}
 	
 	@Override
-	public List<NormCategoryBean> queryNormCategoryList(){
+	public List<NormCategoryBean> queryNormCategoryList(int type){
 		Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select * from t_checktitle  where del = 0 order by score_id";
+            String sql = "select * from t_checktitle  where del = 0";
+            if(type>0){
+            	sql+=" and type="+type;
+            }
+            sql+=" order by score_id";
+            
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();

@@ -17,7 +17,7 @@ public interface AssessDao {
 
 	public int submit(AssessDataBean data);
 	
-	public List<String> getPoint();
+	public List<String> getPoint(int street,int pianqu,String time);
 	
 	public List<AssessDataBean> getDetailitem(Date dStart,
 			String hutongid, String checkyenei, int page) ;

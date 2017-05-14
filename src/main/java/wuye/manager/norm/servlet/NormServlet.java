@@ -90,7 +90,7 @@ private static Logger logger = Logger.getLogger("manager");
 		List<NormItemBean> nlb = normLogic.queryNormItemList(page);
 		List<NormLevelBean> levelList = normLogic.queryNormLevelList();
 		
-		List<NormCategoryBean> cateList = normLogic.queryNormCategoryList();
+		List<NormCategoryBean> cateList = normLogic.queryNormCategoryList(0);
 		
 		request.setAttribute("list", nlb);
 		request.setAttribute("levelList", levelList);
@@ -236,7 +236,7 @@ private static Logger logger = Logger.getLogger("manager");
 		page.setPageSize(5);
 		List<NormItemBean> nlb = normLogic.queryNormItemList(page);
 		List<NormLevelBean> levelList = normLogic.queryNormLevelList();
-		List<NormCategoryBean> cateList = normLogic.queryNormCategoryList();
+		List<NormCategoryBean> cateList = normLogic.queryNormCategoryList(0);
 		
 		request.setAttribute("list", nlb);
 		request.setAttribute("levelList", levelList);

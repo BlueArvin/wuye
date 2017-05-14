@@ -35,6 +35,15 @@
 	          <input type="hidden" class="input" id="id" name="id" value=0 style="float:right" />
 	          <input type="text" class="input" id="name" name="name" style="float:right" />
 	        </div>
+	        <div class="form-group">
+	          <label>考核级别：</label>
+	          <select class="input w66" id="levelId" name="levelId" style="float:right" >
+	              <option value=0>请选择考核级别</option>
+	              <c:forEach  varStatus="i" var="normLevelBean" items="${levelList }" > 
+	              	<option value=${normLevelBean.levelNo }>${normLevelBean.levelName }</option>
+	              </c:forEach>
+	            </select>
+	        </div>
 	    </li>
 	    <li><button type="submit"  class="button border-green"  style="float:right" id="addBtn"><span class="icon-check"></span> 确认添加</button></li>
 	  </ul>
@@ -43,7 +52,8 @@
 	      <tr>
 	        <th width="120">序号</th>
 	        <th>片区名称</th>
-	        <th>隶属于</th>       
+	        <th>隶属于</th>   
+	        <th>考核级别</th>   
 	        <th>操作</th>       
 	      </tr>      
 	        <c:forEach  varStatus="i" var="areaBean" items="${list }" > 
@@ -51,9 +61,10 @@
 	          <td>${areaBean.id }</td>
 	          <td>${areaBean.name }</td>
 	          <td>${areaBean.parentName }</td>
+	          <td>${areaBean.levelName }</td>
 	          <td>
 	          	<div class="button-group">
-	           		<a class="button border-red" href="javascript:void(0)" onclick="return update(${areaBean.id },${areaBean.parentId },'${areaBean.name }')"><span class="icon-trash-o"></span> 修改</a> 
+	           		<a class="button border-red" href="javascript:void(0)" onclick="return update(${areaBean.id },${areaBean.parentId },'${areaBean.name }',${areaBean.levelId })"><span class="icon-trash-o"></span> 修改</a> 
 	           		<a class="button border-red" href="javascript:void(0)" onclick="return del(${areaBean.id })"><span class="icon-trash-o"></span> 删除</a>
 	           	</div>
 	           </td>
@@ -116,11 +127,12 @@ function del(id){
 }
 
 
-function update(id,parentId,name){
+function update(id,parentId,name,level){
 	$("#id").val(id);
 	$("#parentId").val(parentId);
 	$("#name").val(name);
 	$("#addBtn").text("确认修改");
+	$("#levelId").val(level);
 }
 
 </script>

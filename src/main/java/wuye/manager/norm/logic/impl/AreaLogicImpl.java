@@ -43,7 +43,10 @@ public class AreaLogicImpl implements AreaLogic {
 			break;
 		}
 		
-		CacheManager.getCacheInfo(CacheKeyConstant.KEY_AREA+areaBean.getType()).setExpired(true);//设置缓存超时
+		Cache cache = CacheManager.getCacheInfo(CacheKeyConstant.KEY_AREA+areaBean.getType());
+		if(cache!=null){
+			cache.setExpired(true);//设置缓存超时
+		}
 		return ret;
 	}
 
@@ -69,7 +72,12 @@ public class AreaLogicImpl implements AreaLogic {
 		default:
 			break;
 		}
-		CacheManager.getCacheInfo(CacheKeyConstant.KEY_AREA+areaBean.getType()).setExpired(true);//设置缓存超时
+		
+		Cache cache = CacheManager.getCacheInfo(CacheKeyConstant.KEY_AREA+areaBean.getType());
+		if(cache!=null){
+			cache.setExpired(true);//设置缓存超时
+		}
+		
 		return ret;
 	}
 
@@ -97,7 +105,10 @@ public class AreaLogicImpl implements AreaLogic {
 		}
 		areaDao.delArea(tableName, id);
 		
-		CacheManager.getCacheInfo(CacheKeyConstant.KEY_AREA+type).setExpired(true);//设置缓存超时
+		Cache cache = CacheManager.getCacheInfo(CacheKeyConstant.KEY_AREA+type);
+		if(cache!=null){
+			cache.setExpired(true);//设置缓存超时
+		}
 	}
 
 	@Override

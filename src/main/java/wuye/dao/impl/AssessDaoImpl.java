@@ -98,19 +98,27 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	}
 
 
-	public List<String> getPoint() {
+	public List<String> getPoint(int street,int pianqu,String time) {
 		List<String> ret = new ArrayList<String>();
 		Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select loc from t_assess";
+            String sql = "select loc,assessidtop from t_assess where streetid=? and pianquid=? and date_format(intime,'%Y-%m-%d') = ?";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
-
+            pstmt.setInt(1, street);
+            pstmt.setInt(2, pianqu);
+            pstmt.setString(3, time);
+            rs = pstmt.executeQuery();
             rs = pstmt.executeQuery();
             while (rs.next()) {
-            	ret.add(rs.getString("loc"));
+            	String loc = rs.getString("loc");
+            	int level = rs.getInt("assessidtop");
+            	if(loc==null){
+            		continue;
+            	}
+            	ret.add(rs.getString("loc")+","+(level%9));
             }
         }catch(Exception e){
        	 	doCatchException("getBlockList" ,e);

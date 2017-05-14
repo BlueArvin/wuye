@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
@@ -110,8 +111,13 @@ public class AssessServlet {
 	
 	@RequestMapping("point")
 	@ResponseBody
-    public Object point(HttpServletRequest request) {
-		return assessLogic.getPoint();
+    public Object point(HttpServletRequest request,@RequestParam(value = "street", required = true)Integer street
+    		,@RequestParam(value = "pianqu", required = true)Integer pianqu
+    		,@RequestParam(value = "time", required = true)String time) {
+		
+		System.out.println(street+"----"+pianqu+"----"+time);
+		
+		return assessLogic.getPoint(street,pianqu,time);
 	}
 	
 	@RequestMapping("allsort")
