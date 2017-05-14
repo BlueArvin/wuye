@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import wuye.manager.norm.bean.AreaBean;
+import wuye.manager.norm.bean.NormLevelBean;
 import wuye.manager.norm.logic.AreaLogic;
+import wuye.manager.norm.logic.NormLogic;
 import wuye.manager.utils.ManagerRetBean;
 import wuye.manager.utils.PageUtil;
 
@@ -24,6 +26,9 @@ public class AreaServlet {
 
 	@Autowired
 	private AreaLogic areaLogic;
+	
+	@Autowired
+	private NormLogic normLogic;
 	
 	/**
 	 * to 考核区域设置页面
@@ -57,9 +62,22 @@ public class AreaServlet {
 			List<AreaBean> areaList = areaLogic.queryAreaList(type-1);
 			request.setAttribute("parentList", areaList);
 		}
-
+		
 		PageUtil page = new PageUtil(pageNum);
 		List<AreaBean> areaList = areaLogic.queryAreaList(type,page);
+		
+		if(type==3){//片区设置
+			List<NormLevelBean> levelList = normLogic.queryNormLevelList();
+			request.setAttribute("levelList", levelList);
+			
+			for(int i=0;i<areaList.size();i++){
+				int levelId = areaList.get(i).getLevelId();
+				String levelName = normLogic.getNormLevelById(levelId);
+				areaList.get(i).setLevelName(levelName);
+			}
+		}
+
+		
 		request.setAttribute("list", areaList);
 		request.setAttribute("page", page);
 		String retPage="qy_set_"+type;

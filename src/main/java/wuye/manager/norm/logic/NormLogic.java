@@ -19,6 +19,7 @@ public interface NormLogic {
 	
 	public List<NormLevelBean> queryNormLevelList();
 	
+	public String getNormLevelById(int id);
 	
 	//--------------------------------考核类别设置--------------------------------
 	
