@@ -22,9 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import wuye.bean.AssessDataBean;
 import wuye.bean.BadCheckList;
 import wuye.bean.CheckDayItem;
+import wuye.bean.CheckTitle;
 import wuye.bean.JisuanBean;
 import wuye.bean.JisuanSortBean;
 import wuye.bean.PianquData;
+import wuye.bean.PianquRelationHead;
 import wuye.bean.PianquSortListBean;
 import wuye.bean.SortBean;
 import wuye.bean.WuyeSortListBean;
@@ -32,6 +34,7 @@ import wuye.dao.AssessDao;
 import wuye.dao.DaoBasic;
 import wuye.manager.assess.bean.ManAssessBean;
 import wuye.manager.norm.logic.AreaLogic;
+import wuye.manager.utils.StringUtil;
 
 public class AssessDaoImpl extends DaoBasic implements AssessDao {
 
@@ -111,7 +114,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             }
         }catch(Exception e){
        	 	doCatchException("getBlockList" ,e);
-	       	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+	       	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//璁剧疆鏃ユ湡鏍煎紡
 	       	return ret;
         } finally {
             closeConnection(conn, pstmt, null);
@@ -190,10 +193,11 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             	ad.setScore(rs.getInt("score"));
             	ad.setYeneiid(rs.getInt("yeneiid"));
             	
-            	ad.setImg1("" + rs.getString("img1"));
-            	ad.setImg2("" + rs.getString("img2"));
-            	ad.setImg3("" + rs.getString("img3"));
-            	ad.setImg4("" + rs.getString("img4"));
+            	ad.setImg1(StringUtil.getImg(rs.getString("img1")));
+            	ad.setImg2(StringUtil.getImg(rs.getString("img2")));
+            	ad.setImg3(StringUtil.getImg(rs.getString("img3")));
+            	ad.setImg4(StringUtil.getImg(rs.getString("img4")));
+            	
             	ad.setSerailID(rs.getString("aseid"));
             	
             	
@@ -477,7 +481,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 		return list.size();
 	}
 
-	// 月计算片区排名和平均分，同时判断是否是季度还是年份，进行相关的计算和导入表
+	// 鏈堣绠楃墖鍖烘帓鍚嶅拰骞冲潎鍒嗭紝鍚屾椂鍒ゆ柇鏄惁鏄搴﹁繕鏄勾浠斤紝杩涜鐩稿叧鐨勮绠楀拰瀵煎叆琛�
 	@Override
 	public int monthSumPianqu(int yenei) {
 		Connection conn = null;
@@ -565,12 +569,12 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             closeConnection(conn, pstmt, rs);
         }
         
-        // 如果是季度，月份为1月，4月，7月，10月
+        // 濡傛灉鏄搴︼紝鏈堜唤涓�1鏈堬紝4鏈堬紝7鏈堬紝10鏈�
         if(now.getMonth() == 0 || now.getMonth() == 3 || now.getMonth() == 6 || now.getMonth() == 9) {
         	seasonPianqu(now);
         }
         
-        // 如果是年度, 月份为一月份
+        // 濡傛灉鏄勾搴�, 鏈堜唤涓轰竴鏈堜唤
         if(now.getMonth() == 0) {
         	yearPianqu(now);
         }
@@ -587,7 +591,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 		
 		Calendar c = Calendar.getInstance();
         c.setTime(date);
-        c.add(Calendar.MONTH, -3);  //往前追溯3个月
+        c.add(Calendar.MONTH, -3);  //寰�鍓嶈拷婧�3涓湀
         Date datebegin = c.getTime();
         Date dateend = new Date();
         
@@ -673,7 +677,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         
 		Calendar c = Calendar.getInstance();
         c.setTime(date);
-        c.add(Calendar.MONTH, -12);  //往前追溯12个月
+        c.add(Calendar.MONTH, -12);  //寰�鍓嶈拷婧�12涓湀
         Date datebegin = c.getTime();
         Date dateend = new Date();
         
@@ -808,7 +812,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 		return list;
 	}
 
-	// 片区统计查询
+	// 鐗囧尯缁熻鏌ヨ
 	@Override
 	public List<PianquData> getPianquSortData(char type, String date, int jibie, String areaid) {
 		List<PianquData> list = new ArrayList<>();
@@ -819,13 +823,13 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 		case 'z': // all
 			strwhere = " 1=1 ";
 			break;
-		case 's': // 大区 
+		case 's': // 澶у尯 
 			strwhere = " stateid=" + areaid.substring(1) + " ";
 			break;
-		case 't': // 街道
+		case 't': // 琛楅亾
 			strwhere = " streetid=" + areaid.substring(1) + " ";
 			break;
-		case 'p': // 片区
+		case 'p': // 鐗囧尯
 			strwhere = " pianquid=" + areaid.substring(1) + " ";
 			break;
 		default:
@@ -1191,7 +1195,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             closeConnection(conn, pstmt, rs);
         }
 		
-		// 查询具体内容
+		// 鏌ヨ鍏蜂綋鍐呭
 		int count = ret.basiclist.size();
 		if(count<=0) {return ret;}
 		
@@ -1230,6 +1234,132 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 		}
 		
 		return ret;
+	}
+
+	@Override
+	public List<PianquData> getPianquWeekData(int data) {
+		List<PianquData> list=new ArrayList<PianquData>();
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+		String sql = " select stateid,streetid, pianquid, waiscore,neiscore,allscore from tb_weekpianqu where timedup = " + data;
+		try {
+			conn = dataSource.getConnection();
+	        pstmt = prepareStatement(conn, sql);
+	        rs = pstmt.executeQuery();
+	        
+	        while(rs.next()){
+	        	PianquData bean = new PianquData();
+	        	bean.setAreaid(rs.getInt("stateid"));
+	        	bean.setAreaName(areaLogic.getAreaName(rs.getInt("stateid"), 1));
+	        	bean.setStreetid(rs.getInt("streetid"));
+	        	bean.setStreetName(areaLogic.getAreaName(rs.getInt("streetid"), 2));
+	        	bean.setScore(rs.getDouble("allscore"));
+	        	bean.setPianquid(rs.getInt("pianquid"));
+	        	bean.setPianquName(areaLogic.getAreaName(rs.getInt("pianquid"), 3));
+	        	bean.setWaiscore(rs.getDouble("waiscore"));
+	        	bean.setNeiscore(rs.getDouble("neiscore"));
+	        	list.add(bean);
+	        }
+		}catch(Exception e) {
+        	e.printStackTrace();
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+		
+		return list;
+	}
+
+	@Override
+	public List<CheckTitle> getCheckTitle(int type) {
+		List<CheckTitle> list=new ArrayList<CheckTitle>();
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+		String sql = " SELECT a.subid, a.titleid, a.sub_name,a.score, b.title_name FROM t_checksub a LEFT JOIN t_checktitle b ON a.titleid = b.score_id WHERE b.type = "+type+" AND a.del = 0 ORDER BY titleid";
+		try {
+			conn = dataSource.getConnection();
+	        pstmt = prepareStatement(conn, sql);
+	        rs = pstmt.executeQuery();
+	        int k = 0;
+	        CheckTitle item = null;
+	        while(rs.next()){
+	        	int id = rs.getInt("titleid");
+	        	if(id != k) {
+	        		if(item != null) {
+	        			list.add(item);
+	        		}
+	        		item = new CheckTitle(id, rs.getString("title_name"));
+	        		k = id;
+	        	}
+	        	item.addSub(rs.getInt("subid"), rs.getString("sub_name"), rs.getDouble("score"));
+	        }
+	        if(item!=null) list.add(item);
+		}catch(Exception e) {
+        	e.printStackTrace();
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+		
+		return list;
+	}
+
+	@Override
+	public List<PianquRelationHead> getRelationPainqu() {
+		List<PianquRelationHead> list=new ArrayList<PianquRelationHead>();
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+		String sql = "SELECT a.id, a.pianqu_name, a.father_id, b.street_name FROM t_pianqu a LEFT JOIN t_street b ON a.father_id = b.id WHERE a.del = 0 ORDER BY father_id";
+		try {
+			conn = dataSource.getConnection();
+	        pstmt = prepareStatement(conn, sql);
+	        rs = pstmt.executeQuery();
+	        int k = 0;
+	        PianquRelationHead item = null;
+	        while(rs.next()){
+	        	int id = rs.getInt("father_id");
+	        	if(id != k) {
+	        		if(item != null) {
+	        			list.add(item);
+	        		}
+	        		item = new PianquRelationHead(id, rs.getString("street_name"));
+	        		k = id;
+	        	}
+	        	item.addSub(rs.getInt("id"), rs.getString("pianqu_name"));
+	        }
+	        if(item!=null) list.add(item);
+		}catch(Exception e) {
+        	e.printStackTrace();
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+		
+		return list;
+	}
+
+	@Override
+	public Map<String, Integer> getScore(int date) {
+		Map<String, Integer> list=new HashMap<>();
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+		String sql = "SELECT pianquid,assessid,subjectscore FROM tb_weekassesspianqu WHERE timedup = " + date + " and yeneiid = 2;";
+		try {
+			conn = dataSource.getConnection();
+	        pstmt = prepareStatement(conn, sql);
+	        rs = pstmt.executeQuery();
+	        while(rs.next()){
+	        	list.put(rs.getInt("pianquid") + "|" + rs.getInt("assessid"), rs.getInt("subjectscore"));
+	        }
+	        
+		}catch(Exception e) {
+        	e.printStackTrace();
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+		
+		return list;
 	}
 
 }

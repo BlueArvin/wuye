@@ -33,4 +33,6 @@ public interface AssessLogic {
 			String pianquid, String checkyenei, int page);
 	
 	public BadCheckList getBadCheck(char type, String date);
+	
+	public int getPianquWeekData(int data);
 }

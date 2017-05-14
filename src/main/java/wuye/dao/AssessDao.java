@@ -2,11 +2,14 @@ package wuye.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import wuye.bean.AssessDataBean;
 import wuye.bean.BadCheckList;
 import wuye.bean.CheckDayItem;
+import wuye.bean.CheckTitle;
 import wuye.bean.PianquData;
+import wuye.bean.PianquRelationHead;
 import wuye.bean.PianquSortListBean;
 import wuye.bean.WuyeSortListBean;
 
@@ -39,4 +42,12 @@ public interface AssessDao {
 			String pianquid, String yenei, int page);
 	
 	public BadCheckList getBadCheck(char type, String date);
+	
+	public List<PianquData> getPianquWeekData(int data);
+	
+	public List<CheckTitle> getCheckTitle(int type);  // 2, waiye, 1 neiye
+	
+	public List<PianquRelationHead> getRelationPainqu();
+	
+	public Map<String, Integer> getScore(int date);
 }

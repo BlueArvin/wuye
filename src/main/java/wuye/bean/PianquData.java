@@ -12,19 +12,29 @@ public class PianquData {
 	private String areaName;
 	private double neiscore;
 	private double waiscore;
+	private double neidel;
+	private double waidel;
 	
 	
+	public double getNeidel() {
+		return neidel;
+	}
+	public double getWaidel() {
+		return waidel;
+	}
 	public double getNeiscore() {
 		return neiscore;
 	}
 	public void setNeiscore(double neiscore) {
-		this.neiscore = neiscore;
+		this.neiscore = 100 - neiscore;
+		this.neidel = neiscore;
 	}
 	public double getWaiscore() {
 		return waiscore;
 	}
 	public void setWaiscore(double waiscore) {
-		this.waiscore = waiscore;
+		this.waiscore = 100-waiscore;
+		this.waidel = waiscore;
 	}
 	public int getPianquid() {
 		return pianquid;

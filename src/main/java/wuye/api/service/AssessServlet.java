@@ -229,4 +229,18 @@ public class AssessServlet {
 			return new RetBean(2, "参数错误");
 		}
 	}
+	
+	@RequestMapping("dumpfile")
+	@ResponseBody
+    public Object dumpfile(HttpServletRequest request) {
+		String date = request.getParameter("date");
+		
+//		try{
+			
+			int ret = assessLogic.getPianquWeekData(Integer.parseInt(date));
+			RetBean jsonRet = new RetBean(ret, "");
+			jsonRet.setValue(new ListData(ret));
+			return jsonRet;
+		
+	}
 }
