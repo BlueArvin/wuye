@@ -99,8 +99,8 @@ public class NormLogicImpl implements NormLogic {
 		return normDao.queryNormCategoryList(page);
 	}
 	
-	public List<NormCategoryBean> queryNormCategoryList(){
-		return normDao.queryNormCategoryList();
+	public List<NormCategoryBean> queryNormCategoryList(int type){
+		return normDao.queryNormCategoryList(type);
 	}
 	
 	//--------------------------------考核项目设置--------------------------------

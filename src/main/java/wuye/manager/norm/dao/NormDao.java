@@ -32,7 +32,7 @@ public interface NormDao {
 	
 	public List<NormCategoryBean> queryNormCategoryList(PageUtil page);
 	
-	public List<NormCategoryBean> queryNormCategoryList();
+	public List<NormCategoryBean> queryNormCategoryList(int type);
 	
 	public int getNormCategoryTotal();
 	//--------------------------------考核项目设置--------------------------------

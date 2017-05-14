@@ -145,7 +145,6 @@ function queryAll(){
 	var areaid = $("#areaid").val();
 	var streetid = $("#streetid").val();
 	var userName = $("#userName").val();
-	alert(time+"--"+areaid+"--"+streetid+"--"+userName);
 	var url = "/manager/toAssess.aspx?pageNum=1";
 	
 	var param = "";

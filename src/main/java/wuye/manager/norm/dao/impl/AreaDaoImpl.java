@@ -417,7 +417,7 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,statename from t_state";
+            String sql = "select id,statename from t_state where del = 0";
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
             rs = pstmt.executeQuery();
@@ -447,9 +447,9 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,street_name from t_street";
+            String sql = "select id,street_name from t_street where del = 0";
             if(parentId>0){
-            	sql+= " where area_id="+parentId;
+            	sql+= " and area_id="+parentId;
             }
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
@@ -480,9 +480,9 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,pianqu_name from t_pianqu";
+            String sql = "select id,pianqu_name from t_pianqu where del = 0";
             if(parentId>0){
-            	sql+= " where father_id="+parentId;
+            	sql+= " and father_id="+parentId;
             }
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
@@ -509,9 +509,9 @@ public class AreaDaoImpl extends DaoBasic implements AreaDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select id,hutong_name from t_hutong";
+            String sql = "select id,hutong_name from t_hutong where del = 0";
             if(parentId>0){
-            	sql+= " where father_id="+parentId;
+            	sql+= " and father_id="+parentId;
             }
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);
