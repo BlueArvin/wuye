@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -44,8 +45,8 @@ public class AssessLogicImpl implements AssessLogic {
 	}
 
 
-	public List<String> getPoint(int street,int pianqu,String time) {
-		return assessDao.getPoint(street,pianqu,time);
+	public List<String> getPoint() {
+		return assessDao.getPoint();
 	}
 	
 	public List<CheckDayItem> getCheckDayList(Date dStart, Date dEnd,
@@ -113,6 +114,9 @@ public class AssessLogicImpl implements AssessLogic {
 		
 		HSSFCellStyle stylesimpleLeft = wb.createCellStyle();  
 		stylesimpleLeft.setFont(font2);
+		
+		HSSFCellStyle styleblackbaifenbi =wb.createCellStyle();  
+		styleblackbaifenbi.setDataFormat(HSSFDataFormat.getBuiltinFormat("0.00%"));
 		
 		// sheet 1
         HSSFSheet sheet = wb.createSheet("基础数据");  
@@ -183,13 +187,13 @@ public class AssessLogicImpl implements AssessLogic {
             cell.setCellValue(stu.getNeidel());
             cell.setCellStyle(stylesimple);
             cell = row.createCell(7);
-            cell.setCellValue(stu.getNeiscore());
+            cell.setCellValue(stu.getNeiscore()*0.3);
             cell.setCellStyle(stylesimple);
             cell = row.createCell(8);
             cell.setCellValue(stu.getWaidel());
             cell.setCellStyle(stylesimple);
             cell = row.createCell(9);
-            cell.setCellValue(stu.getWaiscore());
+            cell.setCellValue(stu.getWaiscore()*0.7);
             cell.setCellStyle(stylesimple);
             cell = row.createCell(10);
             cell.setCellValue(stu.getScore());
@@ -342,8 +346,8 @@ public class AssessLogicImpl implements AssessLogic {
         			celltemp.setCellStyle(styleblack);
         			rowtemp = rowMap.getRow(titleindex + sizexiangmu + 1);
         			celltemp = rowtemp.createCell(titleindexx + j);
-        			celltemp.setCellFormula(String.format("ROUND(%c%d/D%d,4)", charx, endy + 1, endy + 1)); 
-        			celltemp.setCellStyle(styleblack);
+        			celltemp.setCellFormula(String.format("ROUND(%c%d/D%d,4)", charx, endy + 1, endy + 1));
+        			celltemp.setCellStyle(styleblackbaifenbi);
         			
                 	titleindex += (sizexiangmu + 2);
         		}
