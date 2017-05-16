@@ -15,17 +15,19 @@
 <link rel="stylesheet" href="/wuye/css/admin.css">
 <script src="/wuye/js/jquery.js"></script>
 <script src="/wuye/js/pintuer.js"></script>
+<script type="text/javascript">
+</script>
 <style>
-ul.a {list-style-type:circle;}
-ul li {width:30%; float:left}
+li {line-height:35px;}
 </style>
 </head>
 <body>
-<div class="padding border-bottom">
-	<ul class="search">
+    <div class="panel-head"><strong class="icon-reorder"> 文件下载：</strong></div>
+<div id="filesDic" style="height:500px;width:50%;overflow-y:auto;border:0.5px solid ">
+	<ul>
 		<c:forEach varStatus="i" var="fileBean" items="${fileList }">
 		<c:if test="${fileBean.type==1}">
-			<li><a href="/${fileBean.name }">${fileBean.name }</a></li> 
+			<li><a href="/${fileBean.name }" target="_blank">${fileBean.name }</a></li> 
 		</c:if>
 	</c:forEach>
 </ul>
