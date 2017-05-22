@@ -35,4 +35,6 @@ public interface AssessLogic {
 	public BadCheckList getBadCheck(char type, String date);
 	
 	public int getPianquWeekData(int data);
+	
+	public int delAssess(String serialid);
 }

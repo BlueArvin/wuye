@@ -240,12 +240,25 @@ public class AssessServlet {
 	@ResponseBody
     public Object dumpfile(HttpServletRequest request) {
 		String date = request.getParameter("date");
-		
-//		try{
 			
 			int ret = assessLogic.getPianquWeekData(Integer.parseInt(date));
 			RetBean jsonRet = new RetBean(ret, "");
 			jsonRet.setValue(new ListData(ret));
+			return jsonRet;
+		
+	}
+	
+	@RequestMapping("deleteitem")
+	@ResponseBody
+    public Object deleteitem(HttpServletRequest request) {
+		String serailID = request.getParameter("serailid");  // 需要删除的id
+
+		if(serailID == null) {
+			RetBean jsonRet = new RetBean(1, "");
+			return jsonRet;
+		}
+			int ret = assessLogic.delAssess(serailID);
+			RetBean jsonRet = new RetBean(ret, "");
 			return jsonRet;
 		
 	}

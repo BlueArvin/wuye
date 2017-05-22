@@ -45,8 +45,8 @@ public class AssessLogicImpl implements AssessLogic {
 	}
 
 
-	public List<String> getPoint() {
-		return assessDao.getPoint();
+	public List<String> getPoint(int street,int pianqu,String time) {
+		return assessDao.getPoint(street, pianqu, time);
 	}
 	
 	public List<CheckDayItem> getCheckDayList(Date dStart, Date dEnd,
@@ -259,7 +259,17 @@ public class AssessLogicImpl implements AssessLogic {
         	
         	titleindexx += size;
         }
-        
+        // 统计项
+        rowtemp = rowMap.getRow(0);
+        celltemp = rowtemp.createCell(titleindexx);
+		celltemp.setCellValue("单项合计");
+		celltemp.setCellStyle(styleblack);
+		celltemp = rowtemp.createCell(titleindexx + 1);
+		celltemp.setCellValue("单项总分");
+		celltemp.setCellStyle(styleblack);
+		celltemp = rowtemp.createCell(titleindexx + 2);
+		celltemp.setCellValue("占比");
+		celltemp.setCellStyle(styleblack);
         
         
     	// 行表头
@@ -356,12 +366,29 @@ public class AssessLogicImpl implements AssessLogic {
         	titleindexx += size;
         }
         
-        
+        int countx = titleindexx - 3;
+        titleindex = 4;
+        for(int i=0, length = list2.size(); i<length; i++) {
+        	CheckTitle title = list2.get(i);
+        	int size = title.getCount();
+        	for(int j = 0;j<=size;j++) {
+        		rowtemp = rowMap.getRow(titleindex + j);
+        		celltemp = rowtemp.createCell(titleindexx);
+            	celltemp.setCellFormula(String.format("SUM(E%d:%c%d)", titleindex + j +1 , titleindexx + 'A' - 1, titleindex + j+1 ));
+            	celltemp = rowtemp.createCell(titleindexx + 1);
+            	celltemp.setCellFormula(String.format("D%d*%d", titleindex + j +1 , countx));
+            	celltemp = rowtemp.createCell(titleindexx + 2);
+            	celltemp.setCellFormula(String.format("ROUND(%c%d/%c%d,4)", titleindexx + 'A', titleindex + j +1 , titleindexx+ 1 + 'A', titleindex + j +1 ));
+            	celltemp.setCellStyle(styleblackbaifenbi);
+        	}
+        	titleindex += (size+2);
+        }
         
         // last step xiewenjian
         try  
         {
-            FileOutputStream fout = new FileOutputStream("E:/22/bigData"+new SimpleDateFormat("yyyy-mm-dd").format(new Date())+".xls");  
+        	FileOutputStream fout = new FileOutputStream("E:/22/"+new SimpleDateFormat("yyyy-mm-dd").format(new Date())+".xls");
+           // FileOutputStream fout = new FileOutputStream("/home/htdocs/doc/"+new SimpleDateFormat("yyyy-mm-dd").format(new Date())+".xls");  
             wb.write(fout);
             fout.close();  
         }  
@@ -376,7 +403,7 @@ public class AssessLogicImpl implements AssessLogic {
 		return 0;
 	}
 	
-	public class Row {
+	private class Row {
 		HashMap<Integer,HSSFRow> bb = new HashMap<>();
 		private HSSFSheet sheet;
 		
@@ -392,6 +419,11 @@ public class AssessLogicImpl implements AssessLogic {
 			return row;
 		}
 		
+	}
+
+	@Override
+	public int delAssess(String serialid) {
+		return assessDao.delAssess(serialid);
 	}
 
 }

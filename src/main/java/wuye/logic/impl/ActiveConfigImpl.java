@@ -1,5 +1,7 @@
 package wuye.logic.impl;
 
+import java.util.concurrent.Executors;
+
 import wuye.bean.CheckConfigBean;
 import wuye.bean.ConfigData;
 import wuye.dao.ConfigDao;

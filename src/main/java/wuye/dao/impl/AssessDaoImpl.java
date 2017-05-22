@@ -1370,4 +1370,24 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 		return list;
 	}
 
+	@Override
+	public int delAssess(String serialid) {
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+//        ResultSet rs = null;
+		String sql = "delete from t_assess where aseid = " + serialid;
+		try {
+			conn = dataSource.getConnection();
+	        pstmt = prepareStatement(conn, sql);
+	        boolean ret = pstmt.execute();
+	        return 0;
+	        
+		}catch(Exception e) {
+        	e.printStackTrace();
+        }finally {
+            closeConnection(conn, pstmt, null);
+        }
+		return 0;
+	}
+
 }

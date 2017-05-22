@@ -50,4 +50,6 @@ public interface AssessDao {
 	public List<PianquRelationHead> getRelationPainqu();
 	
 	public Map<String, Integer> getScore(int date);
+	
+	public int delAssess(String serialid);
 }
