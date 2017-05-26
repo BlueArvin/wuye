@@ -27,7 +27,7 @@ li {line-height:35px;}
 	<ul>
 		<c:forEach varStatus="i" var="fileBean" items="${fileList }">
 		<c:if test="${fileBean.type==1}">
-			<li><a href="/${fileBean.name }" target="_blank">${fileBean.name }</a></li> 
+			<li><a href="/doc/${fileBean.name }" target="_blank">${fileBean.name }</a></li> 
 		</c:if>
 	</c:forEach>
 </ul>

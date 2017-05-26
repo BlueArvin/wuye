@@ -77,7 +77,7 @@ public class AssessServlet {
 		data.setYeneiid(Integer.parseInt(temp[6]));
 		data.setAssessidtop(Integer.parseInt(temp[7].substring(2)));
 		data.setAssessid(Integer.parseInt(temp[8].substring(2)));
-		data.setScore(Integer.parseInt(temp[9]));
+		data.setScore((int)(Double.parseDouble(temp[9])*10));
 		data.setLoc(loc);
 		
 		data.setUserid(Integer.parseInt(uid));
@@ -241,7 +241,8 @@ public class AssessServlet {
     public Object dumpfile(HttpServletRequest request) {
 		String date = request.getParameter("date");
 			
-			int ret = assessLogic.getPianquWeekData(Integer.parseInt(date));
+			//int ret = assessLogic.getPianquWeekData(Integer.parseInt(date));
+			int ret = assessLogic.doneWordData(Integer.parseInt(date));
 			RetBean jsonRet = new RetBean(ret, "");
 			jsonRet.setValue(new ListData(ret));
 			return jsonRet;

@@ -1,5 +1,9 @@
 package wuye.api.task;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +27,24 @@ public class TaskJob {
     public void jobWeek() {   // 每周一的定时任务， 1点10分
         System.out.println("week任务进行中。。。");
         assessLogic.doSumWeek();
+        
+        System.out.println("week任务（文件）开始");
+        //SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dfday = new SimpleDateFormat("yyyyMMdd");
+        
+        long end;
+		try {
+			end = dfday.parse(dfday.format(new Date())).getTime();
+		} catch (ParseException e1) {
+			return;
+		}
+		long begin = end - 24*3600*1000;
+		Date day = new Date(begin);
+		
+		int date = Integer.parseInt(dfday.format(day));
+		// 文件逻辑
+        assessLogic.doneWordData(date);
+        assessLogic.getPianquWeekData(date);
         System.out.println("week任务结束");
     }
     

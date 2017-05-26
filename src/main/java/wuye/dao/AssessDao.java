@@ -11,6 +11,7 @@ import wuye.bean.CheckTitle;
 import wuye.bean.PianquData;
 import wuye.bean.PianquRelationHead;
 import wuye.bean.PianquSortListBean;
+import wuye.bean.PicBean;
 import wuye.bean.WuyeSortListBean;
 
 public interface AssessDao {
@@ -49,7 +50,11 @@ public interface AssessDao {
 	
 	public List<PianquRelationHead> getRelationPainqu();
 	
-	public Map<String, Integer> getScore(int date);
+	public Map<String, Integer> getScore(int date, int yenei);
 	
 	public int delAssess(String serialid);
+	
+	public List<PicBean> getPicList(int pianqu, int date);
+	
+	public Map<Integer, String> getAssessid();
 }

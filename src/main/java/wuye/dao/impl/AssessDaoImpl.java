@@ -28,6 +28,7 @@ import wuye.bean.JisuanSortBean;
 import wuye.bean.PianquData;
 import wuye.bean.PianquRelationHead;
 import wuye.bean.PianquSortListBean;
+import wuye.bean.PicBean;
 import wuye.bean.SortBean;
 import wuye.bean.WuyeSortListBean;
 import wuye.dao.AssessDao;
@@ -56,32 +57,90 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         PreparedStatement pstmt = null;
         boolean rs = false;
         try {
-            String sql = "insert into t_assess(intime, streetid, areaid, pianquid, hutongid, wuyeid, assessid,assessidtop,"
-            		+ " yeneiid, jibieid, "
-            		+ " score, userid, img1, img2, img3, img4, aseid, loc, msg) "
-            		+ " value(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ? ,?,?) ";
-            conn = dataSource.getConnection();
-            pstmt = prepareStatement(conn, sql);
-            pstmt.setTimestamp(1, new Timestamp(new Date().getTime()));
-            pstmt.setInt(2, data.getStreetid());
-            pstmt.setInt(3, data.getAreaid());
-            pstmt.setInt(4, data.getPianquid());
-            pstmt.setInt(5, data.getHutongid());
-            pstmt.setInt(6, data.getWuyeid());
-            pstmt.setInt(7, data.getAssessid());
-            pstmt.setInt(8, data.getAssessidtop());
-            pstmt.setInt(9, data.getYeneiid());
-            pstmt.setInt(10, data.getJibieid());
-            pstmt.setInt(11, data.getScore());
-            pstmt.setInt(12, data.getUserid());
-            pstmt.setString(13, data.getImg1());
-            pstmt.setString(14, data.getImg2());
-            pstmt.setString(15, data.getImg3());
-            pstmt.setString(16, data.getImg4());
-            pstmt.setString(17, data.getSerailID());
-            pstmt.setString(18, data.getLoc());
-            pstmt.setString(19, data.getMsg());
-            rs = pstmt.execute();
+        	int score = data.getScore();
+        	if(score == -1000) {  //正常扣分
+	            String sql = "insert into t_assess(intime, streetid, areaid, pianquid, hutongid, wuyeid, assessid,assessidtop,"
+	            		+ " yeneiid, jibieid, "
+	            		+ " score, userid, img1, img2, img3, img4, aseid, loc, msg) "
+	            		+ " value(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getCurScore(?,?), ?, ?, ?, ?,?, ? ,?,?) ";
+	            conn = dataSource.getConnection();
+	            pstmt = prepareStatement(conn, sql);
+	            pstmt.setTimestamp(1, new Timestamp(new Date().getTime()));
+	            pstmt.setInt(2, data.getStreetid());
+	            pstmt.setInt(3, data.getAreaid());
+	            pstmt.setInt(4, data.getPianquid());
+	            pstmt.setInt(5, data.getHutongid());
+	            pstmt.setInt(6, data.getWuyeid());
+	            pstmt.setInt(7, data.getAssessid());
+	            pstmt.setInt(8, data.getAssessidtop());
+	            pstmt.setInt(9, data.getYeneiid());
+	            pstmt.setInt(10, data.getJibieid());
+	            pstmt.setInt(11, data.getAssessid());
+	            pstmt.setInt(12, data.getPianquid());
+	            pstmt.setInt(13, data.getUserid());
+	            pstmt.setString(14, data.getImg1());
+	            pstmt.setString(15, data.getImg2());
+	            pstmt.setString(16, data.getImg3());
+	            pstmt.setString(17, data.getImg4());
+	            pstmt.setString(18, data.getSerailID());
+	            pstmt.setString(19, data.getLoc());
+	            pstmt.setString(20, data.getMsg());
+	            rs = pstmt.execute();
+        	}else if(score == -2000) { // 扣完
+        		String sql = "insert into t_assess(intime, streetid, areaid, pianquid, hutongid, wuyeid, assessid,assessidtop,"
+	            		+ " yeneiid, jibieid, "
+	            		+ " score, userid, img1, img2, img3, img4, aseid, loc, msg) "
+	            		+ " value(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getMaxScore(?), ?, ?, ?, ?,?, ? ,?,?) ";
+	            conn = dataSource.getConnection();
+	            pstmt = prepareStatement(conn, sql);
+	            pstmt.setTimestamp(1, new Timestamp(new Date().getTime()));
+	            pstmt.setInt(2, data.getStreetid());
+	            pstmt.setInt(3, data.getAreaid());
+	            pstmt.setInt(4, data.getPianquid());
+	            pstmt.setInt(5, data.getHutongid());
+	            pstmt.setInt(6, data.getWuyeid());
+	            pstmt.setInt(7, data.getAssessid());
+	            pstmt.setInt(8, data.getAssessidtop());
+	            pstmt.setInt(9, data.getYeneiid());
+	            pstmt.setInt(10, data.getJibieid());
+	            pstmt.setInt(11, data.getAssessid());
+	            pstmt.setInt(12, data.getUserid());
+	            pstmt.setString(13, data.getImg1());
+	            pstmt.setString(14, data.getImg2());
+	            pstmt.setString(15, data.getImg3());
+	            pstmt.setString(16, data.getImg4());
+	            pstmt.setString(17, data.getSerailID());
+	            pstmt.setString(18, data.getLoc());
+	            pstmt.setString(19, data.getMsg());
+	            rs = pstmt.execute();
+        	} else {     // 分数扣分
+        		String sql = "insert into t_assess(intime, streetid, areaid, pianquid, hutongid, wuyeid, assessid,assessidtop,"
+	            		+ " yeneiid, jibieid, "
+	            		+ " score, userid, img1, img2, img3, img4, aseid, loc, msg) "
+	            		+ " value(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ? ,?,?) ";
+	            conn = dataSource.getConnection();
+	            pstmt = prepareStatement(conn, sql);
+	            pstmt.setTimestamp(1, new Timestamp(new Date().getTime()));
+	            pstmt.setInt(2, data.getStreetid());
+	            pstmt.setInt(3, data.getAreaid());
+	            pstmt.setInt(4, data.getPianquid());
+	            pstmt.setInt(5, data.getHutongid());
+	            pstmt.setInt(6, data.getWuyeid());
+	            pstmt.setInt(7, data.getAssessid());
+	            pstmt.setInt(8, data.getAssessidtop());
+	            pstmt.setInt(9, data.getYeneiid());
+	            pstmt.setInt(10, data.getJibieid());
+	            pstmt.setDouble(11, ((double)data.getScore())/10);
+	            pstmt.setInt(12, data.getUserid());
+	            pstmt.setString(13, data.getImg1());
+	            pstmt.setString(14, data.getImg2());
+	            pstmt.setString(15, data.getImg3());
+	            pstmt.setString(16, data.getImg4());
+	            pstmt.setString(17, data.getSerailID());
+	            pstmt.setString(18, data.getLoc());
+	            pstmt.setString(19, data.getMsg());
+	            rs = pstmt.execute();
+        	}
             
             return 0;
         }catch(SQLException e) {
@@ -1347,12 +1406,12 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	}
 
 	@Override
-	public Map<String, Integer> getScore(int date) {
+	public Map<String, Integer> getScore(int date, int yenei) {
 		Map<String, Integer> list=new HashMap<>();
 		Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-		String sql = "SELECT pianquid,assessid,subjectscore FROM tb_weekassesspianqu WHERE timedup = " + date + " and yeneiid = 2;";
+		String sql = "SELECT pianquid,assessid,subjectscore FROM tb_weekassesspianqu WHERE timedup = " + date + " and yeneiid = "+ yenei+";";
 		try {
 			conn = dataSource.getConnection();
 	        pstmt = prepareStatement(conn, sql);
@@ -1388,6 +1447,108 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             closeConnection(conn, pstmt, null);
         }
 		return 0;
+	}
+
+	@Override
+	public List<PicBean> getPicList(int pianqu, int date) {
+		List<PicBean> ret = new ArrayList<>(30);
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+		Date timeend = new Date();
+		try {
+			timeend = df.parse(String.valueOf(date));
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	        
+	    long time = timeend.getTime() - 7*24*3600*1000;
+
+		
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+		String sql = "SELECT hutongid,streetid,pianquid,assessid,msg,score,img1,img2,img3,img4 FROM t_assess WHERE pianquid = "+ pianqu +
+				" and  TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date(time)) + "')<0 "
+				+ "and TIMESTAMPDIFF(SECOND, intime,'" + df.format(timeend) + "')>0   ORDER BY assessidtop,assessid ";
+		try {
+			conn = dataSource.getConnection();
+	        pstmt = prepareStatement(conn, sql);
+	        rs = pstmt.executeQuery();
+	        PicBean bean = null;
+	        int assessidtemp = 0;
+	        while(rs.next()){
+	        	int hutongid = rs.getInt("hutongid");
+	        	int streetid = rs.getInt("streetid");
+	        	int pianquid = rs.getInt("pianquid");
+	        	int assessid = rs.getInt("assessid");
+	        	String msg = rs.getString("msg");
+	        	double score = rs.getDouble("score");
+	        	String img1 = rs.getString("img1");
+	        	String img2 = rs.getString("img2");
+	        	String img3 = rs.getString("img3");
+	        	String img4 = rs.getString("img4");
+	        	
+	        	if(assessidtemp != assessid) {
+	        		if(bean != null) {
+	        			ret.add(bean);
+	        		}
+	        		bean = new PicBean();
+	        		assessidtemp = assessid;
+	        	}
+	        	bean.setAssessid(assessid);
+	        	bean.setScore(score);
+	        	bean.addCount();
+	        	bean.addMsg(msg);
+	        	bean.setHutong(hutongid);
+	        	bean.setHutongName(areaLogic.getAreaName(hutongid, 4));
+	        	if(img1 != null && img1.length() >0) {
+	        		bean.addList(img1);
+	        	}
+	        	if(img2 != null && img2.length() >0) {
+	        		bean.addList(img2);
+	        	}
+	        	if(img3 != null && img3.length() >0) {
+	        		bean.addList(img3);
+	        	}
+	        	if(img4 != null && img4.length() >0) {
+	        		bean.addList(img4);
+	        	}
+	        }
+	        ret.add(bean);
+	        
+		}catch(Exception e) {
+        	e.printStackTrace();
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+		
+		return ret;
+	}
+
+	@Override
+	public Map<Integer, String> getAssessid() {
+		Map<Integer, String> map = new HashMap<>();
+		Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+		String sql = "SELECT subid,sub_name from t_checksub WHERE del = 0 ";
+		try {
+			conn = dataSource.getConnection();
+	        pstmt = prepareStatement(conn, sql);
+	        rs = pstmt.executeQuery();
+	        while(rs.next()){
+	        	
+	        	map.put(rs.getInt("subid"), rs.getString("sub_name"));
+	        }
+	        
+		}catch(Exception e) {
+        	e.printStackTrace();
+        }finally {
+            closeConnection(conn, pstmt, rs);
+        }
+		return map;
 	}
 
 }

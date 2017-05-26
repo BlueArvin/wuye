@@ -1,7 +1,10 @@
 package wuye.logic.impl;
 
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +18,10 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.xhtmlrenderer.pdf.ITextFontResolver;
+import org.xhtmlrenderer.pdf.ITextRenderer;
+
+import com.lowagie.text.pdf.BaseFont;
 
 import wuye.bean.AssessDataBean;
 import wuye.bean.BadCheckList;
@@ -23,6 +30,8 @@ import wuye.bean.CheckTitle;
 import wuye.bean.PianquData;
 import wuye.bean.PianquRelationHead;
 import wuye.bean.PianquSortListBean;
+import wuye.bean.PicBean;
+import wuye.bean.StaticString;
 import wuye.bean.WuyeSortListBean;
 import wuye.dao.AssessDao;
 import wuye.logic.AssessLogic;
@@ -30,6 +39,12 @@ import wuye.logic.AssessLogic;
 public class AssessLogicImpl implements AssessLogic {
 
 	private AssessDao assessDao;
+	
+	
+	HSSFCellStyle styleblack;
+	HSSFCellStyle stylesimple;
+	HSSFCellStyle stylesimpleLeft;
+	HSSFCellStyle styleblackbaifenbi;
 	
 	public AssessDao getAssessDao() {
 		return assessDao;
@@ -93,12 +108,68 @@ public class AssessLogicImpl implements AssessLogic {
 	public BadCheckList getBadCheck(char type, String date) {
 		return assessDao.getBadCheck(type, date);
 	}
+	
+	@Override
+	public int doneWordData(int date) {
+		Map<Integer, String> title =  assessDao.getAssessid();
+		List<PianquData> list = assessDao.getPianquWeekData(date);
+		List<String> fileList = new ArrayList<String>(50);
+		for(int i=0,len=list.size(); i< len;i++) {
+			String name = String.valueOf(date) + list.get(i).getPianquName() + ".html";
+			fileList.add(name);
+			File file = new File("/home/htdocs/doc/" + name);
+			try {
+				FileOutputStream out = new FileOutputStream(file); 
+				List<PicBean>  detailList = assessDao.getPicList(list.get(i).getPianquid(), date);
+				out.write(StaticString.s1.getBytes());
+				out.write(String.format("<h1>%s</h1>得分:%f<br/>检查人:%s<br/>胡同:%s <ul>", 
+						list.get(i).getPianquName(), 
+						list.get(i).getScore(), 
+						"",
+						detailList.get(0).getHutongName()).getBytes("UTF-8"));
+				
+				if(detailList != null) {
+					for(int j=0,len2 = detailList.size(); j<len2; j++) {
+						out.write(String.format("<h2>%s(%d)</h2>扣分: %f<br/>扣分处：%d处<br/>说明：%s<br/> picture:<ul>", 
+								title.get(detailList.get(j).getAssessid()),
+								detailList.get(j).getAssessid(),
+								detailList.get(j).getScore(),
+								detailList.get(j).getNum(),
+								detailList.get(j).getMsg()
+								).getBytes("UTF-8"));
+						for(int z=0,len3=detailList.get(j).getPiclist().size(); z<len3;z++) {
+							out.write(String.format("<li><img src=\"%s\" height=\"120\" width=\"200\"/></li>","/home/htdocs/pic/"+detailList.get(j).getPiclist().get(z)).getBytes("UTF-8"));
+						}
+						out.write("</ul>".getBytes());
+					}
+				}
+				out.write("</ul></body></html> ".getBytes());
+				out.flush();
+				out.close();
+			}catch(Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		
+		// to pdf
+		for(int i=0,len=fileList.size(); i< len;i++) {
+			try {
+				convertHtmlToPdf("/home/htdocs/doc/"+fileList.get(i),"/home/htdocs/doc/"+ fileList.get(i).replace("html", "pdf"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return 0;
+	}
 
 	@Override
 	public int getPianquWeekData(int date) {
 		HSSFWorkbook wb = new HSSFWorkbook();
 		
-		HSSFCellStyle styleblack = wb.createCellStyle();  
+		styleblack = wb.createCellStyle();  
 		styleblack.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
 		HSSFFont font = wb.createFont();    
 		font.setFontName("黑体");    
@@ -106,16 +177,16 @@ public class AssessLogicImpl implements AssessLogic {
 		font.setBoldweight((short)4);
 		styleblack.setFont(font);
 		
-		HSSFCellStyle stylesimple = wb.createCellStyle();  
+		stylesimple = wb.createCellStyle();  
 		stylesimple.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
 		HSSFFont font2 = wb.createFont();        
 		font2.setFontHeightInPoints((short) 13);//设置字体大小  
 		stylesimple.setFont(font2);
 		
-		HSSFCellStyle stylesimpleLeft = wb.createCellStyle();  
+		stylesimpleLeft = wb.createCellStyle();  
 		stylesimpleLeft.setFont(font2);
 		
-		HSSFCellStyle styleblackbaifenbi =wb.createCellStyle();  
+		styleblackbaifenbi =wb.createCellStyle();  
 		styleblackbaifenbi.setDataFormat(HSSFDataFormat.getBuiltinFormat("0.00%"));
 		
 		// sheet 1
@@ -201,13 +272,32 @@ public class AssessLogicImpl implements AssessLogic {
         }
         
         // sheet 2
+        doSheet(wb, "外业-扣分汇总-%", 2, date);
+        
+        // sheet 3
+        doSheet(wb, "内业-扣分汇总-%", 1, date);
         
         
-    	
-        HSSFSheet sheet2 = wb.createSheet("表五-外页-扣分汇总-%");
+        // last step xiewenjian
+        try  
+        {
+        	//FileOutputStream fout = new FileOutputStream("E:/22/"+new SimpleDateFormat("yyyy-mm-dd").format(new Date())+".xls");
+           FileOutputStream fout = new FileOutputStream("/home/htdocs/doc/"+new SimpleDateFormat("yyyy-mm-dd").format(new Date())+".xls");  
+            wb.write(fout);
+            fout.close();  
+        }  
+        catch (Exception e)  
+        {  
+            e.printStackTrace();
+        } 
+		
+		return 0;
+	}
+	
+	private void doSheet(HSSFWorkbook wb, String name, int yenei, int date) {
+		HSSFSheet sheet2 = wb.createSheet(name);
         
         sheet2.setDefaultColumnWidth(12);
-//        sheet2.setDefaultRowHeight((short)12);
         sheet2.setColumnWidth(2, 1200*18);
         sheet2.addMergedRegion(new CellRangeAddress(0, 3, 0, 0)); 
         sheet2.addMergedRegion(new CellRangeAddress(0, 3, 1, 1)); 
@@ -273,8 +363,8 @@ public class AssessLogicImpl implements AssessLogic {
         
         
     	// 行表头
-        List<CheckTitle> list2 =  assessDao.getCheckTitle(2);
-        Map<String, Integer> scoremap = assessDao.getScore(date);
+        List<CheckTitle> list2 =  assessDao.getCheckTitle(yenei);
+        Map<String, Integer> scoremap = assessDao.getScore(date, yenei);
         
         int titleindex = 4;
         for(int i=0, length = list2.size(); i<length; i++) {
@@ -383,25 +473,29 @@ public class AssessLogicImpl implements AssessLogic {
         	}
         	titleindex += (size+2);
         }
-        
-        // last step xiewenjian
-        try  
-        {
-        	FileOutputStream fout = new FileOutputStream("E:/22/"+new SimpleDateFormat("yyyy-mm-dd").format(new Date())+".xls");
-           // FileOutputStream fout = new FileOutputStream("/home/htdocs/doc/"+new SimpleDateFormat("yyyy-mm-dd").format(new Date())+".xls");  
-            wb.write(fout);
-            fout.close();  
-        }  
-        catch (Exception e)  
-        {  
-            e.printStackTrace();  
-        } 
-		
-		
-		
-		
-		return 0;
 	}
+	
+	private boolean convertHtmlToPdf(String inputFile, String outputFile)  throws Exception {  
+		          
+		        OutputStream os = new FileOutputStream(outputFile);       
+		        ITextRenderer renderer = new ITextRenderer();       
+		        String url = new File(inputFile).toURI().toURL().toString();   
+		         
+		        renderer.setDocument(url);     
+		          
+		        // 解决中文支持问题       
+		        ITextFontResolver fontResolver = renderer.getFontResolver();      
+		        //fontResolver.addFont("C:/Windows/Fonts/ARIALUNI.TTF", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);   
+		        fontResolver.addFont("/home/htdocs/wuye/arialuni.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);  
+		        //解决图片的相对路径问题  
+		        //renderer.getSharedContext().setBaseURL("file:/D:/");  
+		        renderer.layout();      
+		        renderer.createPDF(os);    
+		          
+		        os.flush();  
+		        os.close();  
+		        return true;  
+	}  
 	
 	private class Row {
 		HashMap<Integer,HSSFRow> bb = new HashMap<>();

@@ -36,5 +36,7 @@ public interface AssessLogic {
 	
 	public int getPianquWeekData(int data);
 	
+	public int doneWordData(int data);
+	
 	public int delAssess(String serialid);
 }
