@@ -246,13 +246,13 @@ public class AssessLogicImpl implements AssessLogic {
             cell.setCellValue(stu.getPianquName());
             cell.setCellStyle(stylesimple);
             cell = row.createCell(3);  
-            cell.setCellValue("None");
+            cell.setCellValue(stu.getLevelName());
             cell.setCellStyle(stylesimple);
             cell = row.createCell(4); 
-            cell.setCellValue("None");
+            cell.setCellValue(stu.getWuyeName());
             cell.setCellStyle(stylesimple);
             cell = row.createCell(5);
-            cell.setCellValue("None");
+            cell.setCellValue(stu.getHutongName());
             cell.setCellStyle(stylesimple);
             cell = row.createCell(6);  
             cell.setCellValue(stu.getNeidel());
@@ -282,7 +282,7 @@ public class AssessLogicImpl implements AssessLogic {
         try  
         {
         	//FileOutputStream fout = new FileOutputStream("E:/22/"+new SimpleDateFormat("yyyy-mm-dd").format(new Date())+".xls");
-           FileOutputStream fout = new FileOutputStream("/home/htdocs/doc/"+new SimpleDateFormat("yyyy-mm-dd").format(new Date())+".xls");  
+           FileOutputStream fout = new FileOutputStream("/home/htdocs/doc/"+new SimpleDateFormat("yyyy-MM-dd").format(new Date())+".xls");  
             wb.write(fout);
             fout.close();  
         }  

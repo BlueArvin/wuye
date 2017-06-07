@@ -1001,6 +1001,9 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 		return list;
 	}
 	
+	/**
+	 * @return
+	 */
 	@Override
 	public int weekjisuanpianqu() {
 		Connection conn = null;
@@ -1025,7 +1028,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         List<JisuanSortBean> sortlist = new ArrayList<>();
         
         try {
-            String sql = "SELECT streetid,areaid,pianquid,yeneiid,assessidtop,assessid,wuyeid,SUM(score)  as score,getMaxScore(assessid) as sss  FROM t_assess ";
+            String sql = "SELECT streetid,areaid,pianquid,yeneiid,assessidtop,assessid,hutongid,wuyeid,SUM(score)  as score,getMaxScore(assessid) as sss  FROM t_assess ";
             
             sql += " where TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date(begin)) + "')<0 and TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date(end)) + "')>0 "
             		+ " and del=0 "
@@ -1043,6 +1046,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             	JisuanBean bean = new JisuanBean();
             	bean.setAreaid(rs.getInt("areaid"));
             	bean.setStreetid(rs.getInt("streetid"));
+            	bean.setHutongid(rs.getInt("hutongid"));
             	bean.setPianquid(pianqu);
             	bean.setYeneiid(rs.getInt("yeneiid"));
             	bean.setAssessidtop(rs.getInt("assessidtop"));
@@ -1067,6 +1071,8 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             		sortbean.setPianquid(pianqu);
             		sortbean.setStateid(rs.getInt("areaid"));
             		sortbean.setStreetid(rs.getInt("streetid"));
+            		sortbean.setHutongid(rs.getInt("hutongid"));
+            		sortbean.setWuyeid(rs.getInt("wuyeid"));
             	}
             	
             	switch(rs.getInt("yeneiid")) {
@@ -1095,7 +1101,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         SimpleDateFormat df2 = new SimpleDateFormat("yyyyMMdd");
         try {
             String sql = "replace into tb_weekassesspianqu(intime, timedup,areaid, streetid, yeneiid, pianquid, assessid, "
-            		+ " assessidtop, subjectscore, weekbaifenbi, wuyeid) value(?,?,?,?,?,?,?,?,?,?,?)";
+            		+ " assessidtop, subjectscore, weekbaifenbi, wuyeid, hutongid) value(?,?,?,?,?,?,?,?,?,?,?,?)";
             
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
@@ -1114,6 +1120,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	            pstmt.setDouble(9, list.get(i).getScore());
 	            pstmt.setDouble(10, list.get(i).getBaifenbi());
 	            pstmt.setInt(11, list.get(i).getWuyeid());
+	            pstmt.setInt(12, list.get(i).getHutongid());
 	            pstmt.execute();
             }
             conn.commit();
@@ -1127,8 +1134,8 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         if(sortlist.size() ==0 ) {return 0; } 
         Collections.sort(sortlist);
         try {
-            String sql = "replace into tb_weekpianqu(timedup, pianquid, waiscore, neiscore, allscore, paiming, stateid, streetid) "
-            		+ "  value(?,?,?,?,?,?, ?,?)";
+            String sql = "replace into tb_weekpianqu(timedup, pianquid, waiscore, neiscore, allscore, paiming, stateid, streetid, wuyeid,hutongid) "
+            		+ "  value(?,?,?,?,?,?, ?,?,?,?)";
             
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
@@ -1155,6 +1162,8 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	            pstmt.setInt(6, paiming);
 	            pstmt.setInt(7, sortlist.get(i).getStateid());
 	            pstmt.setInt(8, sortlist.get(i).getStreetid());
+	            pstmt.setInt(9, sortlist.get(i).getWuyeid());
+	            pstmt.setInt(10, sortlist.get(i).getHutongid());
 	            
 	            pstmt.execute();
 	            index++;
@@ -1309,7 +1318,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 		Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-		String sql = " select stateid,streetid, pianquid, waiscore,neiscore,allscore from tb_weekpianqu where timedup = " + data;
+		String sql = "  select stateid,streetid, pianquid,hutongid, waiscore,neiscore,allscore,getWuyeName(wuyeid) as wuye, getLevelName(b.level_id) as level from tb_weekpianqu a  LEFT JOIN t_pianqu b ON a.pianquid = b.id where a.timedup = " + data;
 		try {
 			conn = dataSource.getConnection();
 	        pstmt = prepareStatement(conn, sql);
@@ -1324,6 +1333,10 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	        	bean.setScore(rs.getDouble("allscore"));
 	        	bean.setPianquid(rs.getInt("pianquid"));
 	        	bean.setPianquName(areaLogic.getAreaName(rs.getInt("pianquid"), 3));
+	        	bean.setHutongid(rs.getInt("hutongid"));
+	        	bean.setHutongName(areaLogic.getAreaName(rs.getInt("hutongid"), 4));
+	        	bean.setWuyeName(rs.getString("wuye"));
+	        	bean.setLevelName(rs.getString("level"));
 	        	bean.setWaiscore(rs.getDouble("waiscore"));
 	        	bean.setNeiscore(rs.getDouble("neiscore"));
 	        	list.add(bean);

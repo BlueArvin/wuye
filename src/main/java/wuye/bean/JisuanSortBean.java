@@ -7,6 +7,8 @@ public class JisuanSortBean  implements Comparable {
 	private double yenei = 0;
 	private double yewai = 0;
 	private double allscore = 0;
+	private int hutongid = 0;
+	private int wuyeid = 0;
 	
 	private int paiming = 0;
 
@@ -17,6 +19,30 @@ public class JisuanSortBean  implements Comparable {
 	
 	
 	
+	public int getHutongid() {
+		return hutongid;
+	}
+
+
+
+	public void setHutongid(int hutongid) {
+		this.hutongid = hutongid;
+	}
+
+
+
+	public int getWuyeid() {
+		return wuyeid;
+	}
+
+
+
+	public void setWuyeid(int wuyeid) {
+		this.wuyeid = wuyeid;
+	}
+
+
+
 	public int getStateid() {
 		return stateid;
 	}
