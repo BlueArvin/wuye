@@ -55,10 +55,9 @@ public class ManAssessServlet {
 		request.setAttribute("page", page);
 		request.setAttribute("list", nlb);
 		
-		//城区列表
-		List<AreaBean> areaList = areaLogic.queryAreaList(1);
+		//街道列表
+		List<AreaBean> areaList = areaLogic.queryAreaList(2);
 		request.setAttribute("areaList", areaList);
-		
 		return "question";
 	}
 

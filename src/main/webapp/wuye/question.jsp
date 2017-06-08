@@ -26,13 +26,6 @@
 	        <div style="float:left">
 	          <label  style="float:left" >检查日期：</label>
 	          <input type="date" class="input w66"  id="time" name="time" style="float:left" />
-	          <label  style="float:left" >&nbsp;&nbsp;&nbsp;&nbsp;城区名称：</label>
-	          <select name="areaid" id="areaid" class="input w66"  style="float:left" >
-	              <option value=0>请选择城区</option>
-	              <c:forEach varStatus="i" var="areaBean" items="${areaList }" > 
-	              	<option value=${areaBean.id }>${areaBean.name }</option>
-	              </c:forEach>
-	            </select>
 	        </div>
         </li>
         <li style="padding-top: 5px">
@@ -40,9 +33,29 @@
 	          <label  style="float:left" >街道名称：</label>
 	          <select name="streetid" id="streetid" class="input w66"  style="float:left" >
 	              <option value=0>请选择街道</option>
+	              <c:forEach varStatus="i" var="areaBean" items="${areaList }" > 
+	              	<option value=${areaBean.id }>${areaBean.name }</option>
+	              </c:forEach>
 	            </select>
-	          <label  style="float:left" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;检查人：</label>
-	          <input type="text" class="input w66"  id="userName" name="userName" style="float:left" />
+	            
+	            <label  style="float:left" >&nbsp;&nbsp;&nbsp;&nbsp;片区名称：</label>
+	          <select name="pianquid" id="pianquid" class="input w66"  style="float:left" >
+	              <option value=0>请选择片区</option>
+	            </select>
+	         </div>
+            <div>
+            
+            <label  style="float:left" >考核业态：</label>
+	          <select name="yeneiid" id="yeneiid" class="input w66"  style="float:left" >
+	              <option value=0>请选择业态</option>
+	              <option value=1>内业</option>
+	              <option value=2>外业</option>
+	            </select>
+	            
+	            <label  style="float:left" >考核类别：</label>
+	          <select name="assessidtop" id="assessidtop" class="input w66"  style="float:left" >
+	              <option value=0>请选择类别</option>
+	            </select>
 	            &nbsp;&nbsp;&nbsp;
 	          <button type="button"  class="button border-green" onclick="queryAll()" ><span class="icon-check"></span> 查询</button>
 	        </div>
@@ -52,23 +65,21 @@
     <table class="table table-hover text-center">
       <tr>
         <th width="120">日期</th>
-        <th>城区</th>       
-        <th>街道</th>
-        <th>片区</th>
-        <th>胡同</th>
-        <th>物业</th>
-        <th>评分</th>
+        <th>类别</th>       
+        <th>内容</th>
+        <th>原因</th>
+        <th>问题图片</th>
+        <th>扣分值</th>
         <th>检查人</th>
         <th>操作</th>       
       </tr>     
       <c:forEach  varStatus="i" var="assessBean" items="${list }" > 
 	      <tr>
 	          <td>${assessBean.timeStr }</td>
-	          <td>${assessBean.areaName }</td>
-	          <td>${assessBean.streetName }</td>
-	          <td>${assessBean.pianquName }</td>
-	          <td>${assessBean.hutongName }</td>
-	          <td>${assessBean.wuyeName }</td>
+	          <td>${assessBean.assessName }</td>
+	          <td>${assessBean.assesstopName }</td>
+	          <td>${assessBean.msg }</td>
+	          <td><img src="${assessBean.img1 }" /><img src="${assessBean.img2 }" /><img src="${assessBean.img3 }" /><img src="${assessBean.img4 }" /></td>
 	          <td align="center"><span id="score_span_${assessBean.id}">${assessBean.score }</span><input type="number" class="input" style="width:80px;display:none;" id="score_input_${assessBean.id }" value="${assessBean.score }" /></td>
 	          <td>${assessBean.userName }</td>
 	          <td>
@@ -107,10 +118,10 @@ $(function(){
 	}
 	
 	
-	$("#areaid").change(function(){
+	$("#streetid").change(function(){
 		var areaId = $(this).val();
-		$("#streetid").val(0);
-		$("#streetid option:not(:first)").remove();
+		$("#pianquid").val(0);
+		$("#pianquid option:not(:first)").remove();
 		if(areaId==0){
 			return;
 		}
@@ -130,7 +141,40 @@ $(function(){
 						var name = info.name;
 						options+="<option value="+id+">"+name+"</option>";
 					 })
-					$("#streetid").append(options);
+					$("#pianquid").append(options);
+				}
+			},
+			error : function() {
+				alert("请求异常！");
+			}
+		});
+	});
+	
+	
+	$("#yeneiid").change(function(){
+		var yeneiid = $(this).val();
+		$("#assessidtop").val(0);
+		$("#assessidtop option:not(:first)").remove();
+		if(yeneiid==0){
+			return;
+		}
+		$.ajax({
+			url : "/manager/queryKhCate.aspx",
+			data : {type:yeneiid},
+			type : 'post',
+			async : true,
+			cache : false,
+			dataType : 'json',
+			success : function(data) {
+				console.log(data);
+				if(data.ret==0){
+					var options = "";
+					$.each(data.data, function (index, info) {
+						var id = info.categoryNo;
+						var name = info.categoryName;
+						options+="<option value="+id+">"+name+"</option>";
+					 })
+					$("#assessidtop").append(options);
 				}
 			},
 			error : function() {
@@ -142,24 +186,31 @@ $(function(){
 
 function queryAll(){
 	var time = $("#time").val();
-	var areaid = $("#areaid").val();
+	var pianquid = $("#pianquid").val();
 	var streetid = $("#streetid").val();
-	var userName = $("#userName").val();
+	var yeneiid = $("#yeneiid").val();
+	var assessidtop = $("#assessidtop").val();
+	
 	var url = "/manager/toAssess.aspx?pageNum=1";
 	
 	var param = "";
 	if(time != null&&time!=""){
 		param+="&timeStr="+time;
 	}
-	if(areaid != 0){
-		param+="&areaid="+areaid;
-	}
 	if(streetid != 0){
 		param+="&streetid="+streetid;
 	}
-	if(userName.trim() != ""){
-		param+="&userName="+userName.trim();
+	if(pianquid != 0){
+		param+="&pianquid="+pianquid;
 	}
+	
+	if(yeneiid != 0){
+		param+="&yeneiid="+yeneiid;
+	}
+	if(assessidtop != 0){
+		param+="&assessidtop="+assessidtop;
+	}
+	
 	localStorage.setItem("questionParam",param);
 	location.href=url+param;
 }

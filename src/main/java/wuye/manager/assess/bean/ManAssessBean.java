@@ -1,8 +1,5 @@
 package wuye.manager.assess.bean;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 import wuye.bean.AssessDataBean;
 import wuye.manager.utils.DateUtil;
 

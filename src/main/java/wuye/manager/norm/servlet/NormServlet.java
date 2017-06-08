@@ -178,6 +178,26 @@ private static Logger logger = Logger.getLogger("manager");
 	}
 	
 	/**
+	 * 查询考核类别
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/queryKhCate.aspx")
+	@ResponseBody
+	public Object queryKhCate(HttpServletRequest request,HttpServletResponse response
+			,@RequestParam(value = "type", required = false)Integer type){
+		System.out.println("type============="+type);
+		
+		List<NormCategoryBean> nlb = normLogic.queryNormCategoryList(type);
+		ManagerRetBean ret = new ManagerRetBean();
+		ret.setRet(0);
+		ret.setMsg("查询成功");
+		ret.setData(nlb);
+		return ret;
+	}
+	
+	/**
 	 * 删除考核级别
 	 * @param request
 	 * @param response

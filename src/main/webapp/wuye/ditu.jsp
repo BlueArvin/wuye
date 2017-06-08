@@ -58,7 +58,7 @@
 		</div>
 		
 		<c:forEach varStatus="i" var="cateBean" items="${cateList }">
-			<span><image style="height:30px" src="/wuye/images/map/${cateBean.categoryNo%9 }.png" />${cateBean.categoryName }&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			<span><image style="height:30px" src="/wuye/images/map/${cateBean.categoryNo%9 }-1.png" />${cateBean.categoryName }&nbsp;&nbsp;&nbsp;&nbsp;</span>
 		</c:forEach>
 		<div id="container"></div>
 </body>
@@ -159,14 +159,14 @@ $(function(){
 
 	function dot(v1, v2, iconId) {
 		var point = new window.BMap.Point(v1, v2); //循环生成新的地图点
-		var icon = "/wuye/images/map/"+iconId+".png";
+		var icon = "/wuye/images/map/"+iconId+"-1.png";
 		var myIcon = new BMap.Icon(icon,
-				new BMap.Size(39, 56), {
+				new BMap.Size(24, 30), {
 			       // 指定定位位置。     
 			       // 当标注显示在地图上时，其所指向的地理位置距离图标左上      
 			       // 角各偏移7像素和25像素。您可以看到在本例中该位置即是     
 			       // 图标中央下端的尖角位置。      
-			       anchor: new BMap.Size(19.5, 58),        
+			       anchor: new BMap.Size(12, 32),        
 			      }); 
 		
 		var marker = new BMap.Marker(point,{icon: myIcon});  // (point, {icon: myIcon})

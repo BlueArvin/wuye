@@ -32,6 +32,77 @@ public class ManAssessDaoImpl extends DaoBasic implements ManAssessDao{
 	@Autowired
 	private AreaLogic areaLogic;
 	
+//	@Override
+//	public List<ManAssessBean> queryList(ManAssessBean manAssessBean,
+//			PageUtil page) {
+//		Connection conn = null;
+//        PreparedStatement pstmt = null;
+//        ResultSet rs = null;
+//        try {
+//            String sql = "select t.id,t.score,t.areaid,t.streetid,t.pianquid,t.hutongid,t.userid,t.wuyeid,t.assessidtop,t.assessid,t.intime from t_assess t where del = 0 ";
+//            
+//            if(manAssessBean.getAreaid()!=0){
+//            	sql+=" and t.areaid = "+ manAssessBean.getAreaid();
+//            }
+//            
+//            if(manAssessBean.getStreetid()!=0){
+//            	sql+=" and t.streetid = "+ manAssessBean.getStreetid();
+//            }
+//            
+//            if(manAssessBean.getUserid()!=0){
+//            	sql+=" and t.userid = "+ manAssessBean.getUserid();
+//            }
+//
+//            if(manAssessBean.getTime()!=null){
+//            	sql+=" and DATEDIFF(t.intime,DATE('"+manAssessBean.getTimeStr()+"'))=0 ";
+//            }
+//            
+//            sql+=" limit "+page.getStartIndex()+","+page.getPageSize();
+//            conn = dataSource.getConnection();
+//            pstmt = prepareStatement(conn, sql);
+//            rs = pstmt.executeQuery();
+//            List<ManAssessBean> list = new ArrayList<ManAssessBean>();
+//            while(rs.next()){
+//            	ManAssessBean nb = new ManAssessBean();
+//            	nb.setId(String.valueOf(rs.getInt("id")));
+//            	
+//            	int areaid = rs.getInt("areaid");
+//            	nb.setAreaid(areaid);
+//            	nb.setAreaName(areaLogic.getAreaName(areaid, 1));
+//            	
+//            	int steetid = rs.getInt("streetid");
+//            	nb.setStreetid(steetid);
+//            	nb.setStreetName(areaLogic.getAreaName(steetid, 2));
+//            	
+//            	int pianquid = rs.getInt("pianquid");
+//            	nb.setPianquid(pianquid);
+//            	nb.setPianquName(areaLogic.getAreaName(pianquid,3));
+//            	
+//            	int hutongid = rs.getInt("hutongid");
+//            	nb.setHutongid(hutongid);
+//            	nb.setHutongName(areaLogic.getAreaName(hutongid,4));
+//            	
+//            	int wuyeid = rs.getInt("wuyeid");
+//            	nb.setWuyeid(wuyeid);
+//            	nb.setWuyeName(areaLogic.getAreaName(wuyeid,5));
+//            	
+//            	nb.setUserid(rs.getInt("userid"));
+//            	nb.setAssessid(rs.getInt("assessid"));
+//            	nb.setAssessidtop(rs.getInt("assessidtop"));
+//            	nb.setScore(rs.getInt("score"));
+//            	nb.setTime(rs.getDate("intime"));
+//            	list.add(nb);
+//            }
+//            return list;
+//        }catch(Exception e){
+//       	 	doCatchException("queryStateList" ,e);
+//        } finally {
+//            closeConnection(conn, pstmt, null);
+//        }
+//		return null;
+//	}
+	
+	
 	@Override
 	public List<ManAssessBean> queryList(ManAssessBean manAssessBean,
 			PageUtil page) {
@@ -39,22 +110,34 @@ public class ManAssessDaoImpl extends DaoBasic implements ManAssessDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select t.id,t.score,t.areaid,t.streetid,t.pianquid,t.hutongid,t.userid,t.wuyeid,t.assessidtop,t.assessid,t.intime from t_assess t where del = 0 ";
+            String sql = "SELECT a.id,a.assessidtop,b.title_name,a.assessid,c.sub_name,a.userid,a.msg,a.img1,a.img2,a.img3,a.img4,a.score,a.intime,d.userName from t_assess a LEFT JOIN t_checktitle b on a.assessidtop = b.score_id LEFT JOIN t_user d on a.userid = d.id , t_checksub c where a.assessid = c.subid and a.del = 0 ";
             
             if(manAssessBean.getAreaid()!=0){
-            	sql+=" and t.areaid = "+ manAssessBean.getAreaid();
+            	sql+=" and a.areaid = "+ manAssessBean.getAreaid();
             }
             
             if(manAssessBean.getStreetid()!=0){
-            	sql+=" and t.streetid = "+ manAssessBean.getStreetid();
+            	sql+=" and a.streetid = "+ manAssessBean.getStreetid();
+            }
+            
+            if(manAssessBean.getPianquid()!=0){
+            	sql+=" and a.pianquid = "+ manAssessBean.getPianquid();
+            }
+            
+            if(manAssessBean.getYeneiid()!=0){
+            	sql+=" and a.yeneiid = "+ manAssessBean.getYeneiid();
+            }
+            
+            if(manAssessBean.getAssessidtop()!=0){
+            	sql+=" and a.assessidtop = "+ manAssessBean.getAssessidtop();
             }
             
             if(manAssessBean.getUserid()!=0){
-            	sql+=" and t.userid = "+ manAssessBean.getUserid();
+            	sql+=" and a.userid = "+ manAssessBean.getUserid();
             }
 
             if(manAssessBean.getTime()!=null){
-            	sql+=" and DATEDIFF(t.intime,DATE('"+manAssessBean.getTimeStr()+"'))=0 ";
+            	sql+=" and DATEDIFF(a.intime,DATE('"+manAssessBean.getTimeStr()+"'))=0 ";
             }
             
             sql+=" limit "+page.getStartIndex()+","+page.getPageSize();
@@ -66,30 +149,21 @@ public class ManAssessDaoImpl extends DaoBasic implements ManAssessDao{
             	ManAssessBean nb = new ManAssessBean();
             	nb.setId(String.valueOf(rs.getInt("id")));
             	
-            	int areaid = rs.getInt("areaid");
-            	nb.setAreaid(areaid);
-            	nb.setAreaName(areaLogic.getAreaName(areaid, 1));
+            	String assessidtopName = rs.getString("title_name");//类别
+            	String assessidName = rs.getString("sub_name");//内容
             	
-            	int steetid = rs.getInt("streetid");
-            	nb.setStreetid(steetid);
-            	nb.setStreetName(areaLogic.getAreaName(steetid, 2));
-            	
-            	int pianquid = rs.getInt("pianquid");
-            	nb.setPianquid(pianquid);
-            	nb.setPianquName(areaLogic.getAreaName(pianquid,3));
-            	
-            	int hutongid = rs.getInt("hutongid");
-            	nb.setHutongid(hutongid);
-            	nb.setHutongName(areaLogic.getAreaName(hutongid,4));
-            	
-            	int wuyeid = rs.getInt("wuyeid");
-            	nb.setWuyeid(wuyeid);
-            	nb.setWuyeName(areaLogic.getAreaName(wuyeid,5));
-            	
-            	nb.setUserid(rs.getInt("userid"));
             	nb.setAssessid(rs.getInt("assessid"));
             	nb.setAssessidtop(rs.getInt("assessidtop"));
+            	nb.setAssessName(assessidName);
+            	nb.setAssesstopName(assessidtopName);
+            	nb.setUserid(rs.getInt("userid"));
+            	nb.setUserName(rs.getString("userName"));
             	nb.setScore(rs.getInt("score"));
+            	nb.setMsg(rs.getString("msg"));
+            	nb.setImg1(rs.getString("img1"));
+            	nb.setImg2(rs.getString("img2"));
+            	nb.setImg3(rs.getString("img3"));
+            	nb.setImg4(rs.getString("img4"));
             	nb.setTime(rs.getDate("intime"));
             	list.add(nb);
             }
