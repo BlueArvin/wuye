@@ -10,12 +10,40 @@ public class PianquData {
 	private String streetName;
 	private int areaid;
 	private String areaName;
+	private int hutongid;
+	private String hutongName;
+	private String levelName;
+	private String wuyeName;
 	private double neiscore;
 	private double waiscore;
 	private double neidel;
 	private double waidel;
 	
 	
+	public String getWuyeName() {
+		return wuyeName;
+	}
+	public void setWuyeName(String wuyeName) {
+		this.wuyeName = wuyeName;
+	}
+	public String getLevelName() {
+		return levelName;
+	}
+	public void setLevelName(String levelName) {
+		this.levelName = levelName;
+	}
+	public int getHutongid() {
+		return hutongid;
+	}
+	public void setHutongid(int hutongid) {
+		this.hutongid = hutongid;
+	}
+	public String getHutongName() {
+		return hutongName;
+	}
+	public void setHutongName(String hutongName) {
+		this.hutongName = hutongName;
+	}
 	public double getNeidel() {
 		return neidel;
 	}

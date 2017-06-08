@@ -17,8 +17,17 @@ public class JisuanBean {
 	private int assessidtop;
 	private int assessid;
 	private int wuyeid;
+	private int hutongid;
 	private double score;
 	private double baifenbi;
+	
+	
+	public int getHutongid() {
+		return hutongid;
+	}
+	public void setHutongid(int hutongid) {
+		this.hutongid = hutongid;
+	}
 	public int getStreetid() {
 		return streetid;
 	}
