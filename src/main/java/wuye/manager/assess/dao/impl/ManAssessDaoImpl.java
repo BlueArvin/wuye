@@ -182,23 +182,37 @@ public class ManAssessDaoImpl extends DaoBasic implements ManAssessDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            String sql = "select count(id) as con from t_assess t where del = 0 ";
+            String sql = "select count(id) as con from t_assess a where del = 0 ";
             
+
             if(manAssessBean.getAreaid()!=0){
-            	sql+=" and t.areaid = "+ manAssessBean.getAreaid();
+            	sql+=" and a.areaid = "+ manAssessBean.getAreaid();
             }
             
             if(manAssessBean.getStreetid()!=0){
-            	sql+=" and t.streetid = "+ manAssessBean.getStreetid();
+            	sql+=" and a.streetid = "+ manAssessBean.getStreetid();
+            }
+            
+            if(manAssessBean.getPianquid()!=0){
+            	sql+=" and a.pianquid = "+ manAssessBean.getPianquid();
+            }
+            
+            if(manAssessBean.getYeneiid()!=0){
+            	sql+=" and a.yeneiid = "+ manAssessBean.getYeneiid();
+            }
+            
+            if(manAssessBean.getAssessidtop()!=0){
+            	sql+=" and a.assessidtop = "+ manAssessBean.getAssessidtop();
             }
             
             if(manAssessBean.getUserid()!=0){
-            	sql+=" and t.userid = "+ manAssessBean.getUserid();
+            	sql+=" and a.userid = "+ manAssessBean.getUserid();
             }
 
             if(manAssessBean.getTime()!=null){
-            	sql+=" and DATEDIFF(t.intime,DATE('"+manAssessBean.getTimeStr()+"'))=0 ";
+            	sql+=" and DATEDIFF(a.intime,DATE('"+manAssessBean.getTimeStr()+"'))=0 ";
             }
+            
             System.out.println(sql);
             conn = dataSource.getConnection();
             pstmt = prepareStatement(conn, sql);

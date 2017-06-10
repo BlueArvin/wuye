@@ -36,7 +36,6 @@ public class ManAssessServlet {
 	@Autowired
 	private NormLogic normLogic;
 	
-	
 	/**
 	 * to 问题修改
 	 * @param request
@@ -44,7 +43,29 @@ public class ManAssessServlet {
 	 * @return
 	 */
 	@RequestMapping("/toAssess.aspx")
-	public String toAssess(HttpServletRequest request,HttpServletResponse response,
+	public String toAssess(HttpServletRequest request,HttpServletResponse response){
+//		if(pageNum==null){
+//			pageNum=1;
+//		}
+//		PageUtil page = new PageUtil(pageNum);
+//		List<ManAssessBean> nlb = manAssessLogic.queryList(manAssessBean,page);
+//		request.setAttribute("page", page);
+//		request.setAttribute("list", nlb);
+//		
+		//街道列表
+		List<AreaBean> areaList = areaLogic.queryAreaList(2);
+		request.setAttribute("areaList", areaList);
+		return "question1";
+	}
+	
+	/**
+	 * to 问题修改
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/toAssessInfo.aspx")
+	public String toAssessInfo(HttpServletRequest request,HttpServletResponse response,
 		@RequestParam(value = "pageNum", required = false)Integer pageNum
 		,@Validated( { ManAssessBean.class }) ManAssessBean manAssessBean){
 		if(pageNum==null){
@@ -55,9 +76,9 @@ public class ManAssessServlet {
 		request.setAttribute("page", page);
 		request.setAttribute("list", nlb);
 		
-		//街道列表
-		List<AreaBean> areaList = areaLogic.queryAreaList(2);
-		request.setAttribute("areaList", areaList);
+//		//街道列表
+//		List<AreaBean> areaList = areaLogic.queryAreaList(2);
+//		request.setAttribute("areaList", areaList);
 		return "question";
 	}
 
@@ -68,7 +89,7 @@ public class ManAssessServlet {
 	 * @return
 	 */
 	@RequestMapping("/toDitu.aspx")
-	public String toAssess(HttpServletRequest request,HttpServletResponse response){
+	public String toDitu(HttpServletRequest request,HttpServletResponse response){
 		//街道列表
 		List<AreaBean> areaList = areaLogic.queryAreaList(2);
 		request.setAttribute("areaList", areaList);

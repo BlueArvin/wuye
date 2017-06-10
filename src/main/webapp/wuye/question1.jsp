@@ -20,86 +20,66 @@
 <body>
 	<form method="post" action="">
 		<div class="panel admin-panel">
-			<table class="table table-hover text-center">
-				<tr>
-					<th width="120">日期</th>
-					<th>类别</th>
-					<th>内容</th>
-					<th>原因</th>
-					<th>问题图片</th>
-					<th>扣分值</th>
-					<th>检查人</th>
-					<th>操作</th>
-				</tr>
-				<c:forEach varStatus="i" var="assessBean" items="${list }">
-					<tr>
-						<td>${assessBean.timeStr }</td>
-						<td>${assessBean.assessName }</td>
-						<td>${assessBean.assesstopName }</td>
-						<td>${assessBean.msg }</td>
-						<td>
-						<c:if test="${assessBean.img1!=null }">
-							<img src="${assessBean.img1 }" width="150px" />
-						</c:if>
-						<c:if test="${assessBean.img2!=null }">
-							<img src="${assessBean.img2 }" width="150px" />
-						</c:if>
-						<c:if test="${assessBean.img3!=null }">
-							<img src="${assessBean.img3 }" width="150px" />
-						</c:if>
-						<c:if test="${assessBean.img4!=null }">
-							<img src="${assessBean.img4 }" width="150px" />
-						</c:if>
-						</td>
-						<td align="center"><span id="score_span_${assessBean.id}">${assessBean.score }</span><input
-							type="number" class="input" style="width: 80px; display: none;"
-							id="score_input_${assessBean.id }" value="${assessBean.score }" /></td>
-						<td>${assessBean.userName }</td>
-						<td>
-							<div class="button-group">
-								<a class="button border-red" href="javascript:void(0)"
-									onclick="return update(${assessBean.id },this)"><span
-									class="icon-trash-o"></span> 修改</a> <a class="button border-green"
-									style="display: none;" href="javascript:void(0)"
-									onclick="return save(${assessBean.id },this)"><span
-									class="icon-trash-o"></span> 完成</a> <a class="button border-red"
-									href="javascript:void(0)"
-									onclick="return del(${assessBean.id })"><span
-									class="icon-trash-o"></span> 删除</a>
-							</div>
-						</td>
-					</tr>
-				</c:forEach>
-				<tr>
-					<td colspan="8">
-						<div class="pagelist">
-							<a href="javascript:load(${page.page-1 })">上一页</a> <a
-								num="${page.page-2 }" href="javascript:load(${page.page-2 })">${page.page-2 }</a>
-							<a num="${page.page-1 }" href="javascript:load(${page.page-1 })">${page.page-1 }</a>
-							<span class="current">${page.page }</span> <a
-								num="${page.countPage - page.page }"
-								href="javascript:load(${page.page+1 })">${page.page+1 }</a> <a
-								num="${page.countPage - page.page - 1 }"
-								href="javascript:load(${page.page+2 })">${page.page+2 }</a> <a
-								href="javascript:load(${page.page+1 })">下一页</a> <a
-								href="javascript:load(${page.countPage })">尾页</a>
+			<div class="panel-head">
+				<strong class="icon-reorder"> 问题修改</strong>
+			</div>
+			<div class="padding border-bottom">
+				<ul class="search">
+					<li style="padding-top: 5px">
+						<div style="float: left">
+							<label style="float: left">检查日期：</label> <input type="date"
+								class="input w66" id="time" name="time" style="float: left" />
 						</div>
-					</td>
-				</tr>
-			</table>
+					</li>
+					<li style="padding-top: 5px">
+						<div style="float: left">
+							<label style="float: left">街道名称：</label> <select name="streetid"
+								id="streetid" class="input w66" style="float: left">
+								<option value=0>请选择街道</option>
+								<c:forEach varStatus="i" var="areaBean" items="${areaList }">
+									<option value=${areaBean.id }>${areaBean.name }</option>
+								</c:forEach>
+							</select> <label style="float: left">&nbsp;&nbsp;&nbsp;&nbsp;片区名称：</label>
+							<select name="pianquid" id="pianquid" class="input w66"
+								style="float: left">
+								<option value=0>请选择片区</option>
+							</select>
+						</div>
+					</li>
+					<li style="padding-top: 5px">
+						<div>
+							<label style="float: left">考核业态：</label> <select name="yeneiid"
+								id="yeneiid" class="input w66" style="float: left">
+								<option value=0>请选择业态</option>
+								<option value=1>内业</option>
+								<option value=2>外业</option>
+							</select> <label style="float: left">&nbsp;&nbsp;&nbsp;&nbsp;考核类别：</label>
+							<select name="assessidtop" id="assessidtop" class="input w66"
+								style="float: left">
+								<option value=0>请选择类别</option>
+							</select> &nbsp;&nbsp;&nbsp;
+							<button type="button" class="button border-green"
+								onclick="queryAll()">
+								<span class="icon-check"></span> 查询
+							</button>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<iframe name="Info1" id="Info1" src="/manager/toAssessInfo.aspx?pageNum=1" onload="this.height=Info1.document.body.scrollHeight" width="100%" scrolling="no" frameborder="0"></iframe>
 		</div>
 	</form>
 	<script type="text/javascript">
 
 $(function(){
-	$("a[num=0],a[num=-1],a[num=-2]").hide();
+	/* $("a[num=0],a[num=-1]").hide();
 	var retMsg="${msg }";
 	if(retMsg!=null&&retMsg!=""){
 		alert(retMsg);
-	}
+	} */
 	
 	
-	/* $("#streetid").change(function(){
+	$("#streetid").change(function(){
 		var areaId = $(this).val();
 		$("#pianquid").val(0);
 		$("#pianquid option:not(:first)").remove();
@@ -162,10 +142,10 @@ $(function(){
 				alert("请求异常！");
 			}
 		});
-	}); */
+	});
 })
 
-/* function queryAll(){
+function queryAll(){
 	var time = $("#time").val();
 	var pianquid = $("#pianquid").val();
 	var streetid = $("#streetid").val();
@@ -177,33 +157,53 @@ $(function(){
 	var param = "";
 	if(time != null&&time!=""){
 		param+="&timeStr="+time;
+	}else{
+		alert("请选择日期");
+		return;
 	}
+	
 	if(streetid != 0){
 		param+="&streetid="+streetid;
+	}else{
+		alert("请选择街道");
+		return;
 	}
 	if(pianquid != 0){
 		param+="&pianquid="+pianquid;
+	}else{
+		alert("请选择片区");
+		return;
 	}
 	
 	if(yeneiid != 0){
 		param+="&yeneiid="+yeneiid;
+	}else{
+		alert("请选择考核业内");
+		return;
 	}
 	if(assessidtop != 0){
 		param+="&assessidtop="+assessidtop;
+	}else{
+		alert("请选考核类别");
+		return;
 	}
 	
-	//localStorage.setItem("questionParam",param);
-	location.href=url+param;
-} */
-
-function load(pageNum){
+	localStorage.setItem("questionParam",param);
+	
+	$('#Info1').attr('src', url+param);
+	//$("#Info1").load(url+param);
+	//document.getElementById("Info1").document.location=url+param;
+	//document.frames("Info1").document.location=url+param;//ok
+}
+localStorage.setItem("questionParam","");
+/* function load(pageNum){
 	var count = ${page.countPage };
 	var now = ${page.page };
 	if(pageNum<=0||pageNum>count){
 		return;
 	}
 	var param = localStorage.getItem("questionParam");
-	location.href="/manager/toAssessInfo.aspx?pageNum="+pageNum+param;
+	location.href="/manager/toAssess.aspx?pageNum="+pageNum+param;
 }
 
 function del(id){
@@ -218,15 +218,15 @@ function del(id){
 			success : function(data) {
 				console.log(data);
 				alert(data.msg);
-				location.href="/manager/toAssessInfo.aspx?pageNum=1";
+				location.href="/manager/toAssess.aspx?pageNum=1";
 			},
 			error : function() {
 				alert("请求异常！");
 			}
 		});
 	}
-}
-
+} */
+/* 
 function update(id,obj){
 	$(obj).hide();
 	$(obj).next("a").show();
@@ -258,8 +258,7 @@ function save(id,obj){
 		}
 	});
 	
-}
-
+} */
 
 </script>
 </body>
