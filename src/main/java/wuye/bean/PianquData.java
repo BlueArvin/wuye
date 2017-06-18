@@ -19,6 +19,10 @@ public class PianquData {
 	private double neidel;
 	private double waidel;
 	
+	public String getAreaWholeName() {
+		return streetName + "-" + areaName + "-" + hutongName;
+	}
+	
 	
 	public String getWuyeName() {
 		return wuyeName;

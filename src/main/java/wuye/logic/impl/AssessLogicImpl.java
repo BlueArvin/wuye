@@ -122,17 +122,17 @@ public class AssessLogicImpl implements AssessLogic {
 				FileOutputStream out = new FileOutputStream(file); 
 				List<PicBean>  detailList = assessDao.getPicList(list.get(i).getPianquid(), date);
 				out.write(StaticString.s1.getBytes());
-				out.write(String.format("<h1>%s</h1>得分:%f<br/>检查人:%s<br/>胡同:%s <ul>", 
+				out.write(String.format("<h1>%s</h1>检查时间:%s<br/>检查区域:%s<br/>得分:%.2f<br/>检查人员:%s <ul>", 
 						list.get(i).getPianquName(), 
-						list.get(i).getScore(), 
 						"",
-						detailList.get(0).getHutongName()).getBytes("UTF-8"));
+						list.get(i).getAreaWholeName(),
+						list.get(i).getScore()*0.7, 
+						"").getBytes("UTF-8"));
 				
 				if(detailList != null) {
 					for(int j=0,len2 = detailList.size(); j<len2; j++) {
-						out.write(String.format("<h2>%s(%d)</h2>扣分: %f<br/>扣分处：%d处<br/>说明：%s<br/> picture:<ul>", 
+						out.write(String.format("<h2>%s</h2>扣分值: %.1f<br/>扣分处：%d处<br/>扣分原因：%s<br/> 照片:<ul>", 
 								title.get(detailList.get(j).getAssessid()),
-								detailList.get(j).getAssessid(),
 								detailList.get(j).getScore(),
 								detailList.get(j).getNum(),
 								detailList.get(j).getMsg()

@@ -67,6 +67,10 @@ public class PicBean {
 	public void setScore(double score) {
 		this.score = score;
 	}
+	
+	public void addScore(double score) {
+		this.score += score;
+	}
 
 	public List<String> getPiclist() {
 		return piclist;

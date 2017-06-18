@@ -1511,7 +1511,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	        		assessidtemp = assessid;
 	        	}
 	        	bean.setAssessid(assessid);
-	        	bean.setScore(score);
+	        	bean.addScore(score);
 	        	bean.addCount();
 	        	bean.addMsg(msg);
 	        	bean.setHutong(hutongid);
