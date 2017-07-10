@@ -1419,8 +1419,8 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	}
 
 	@Override
-	public Map<String, Integer> getScore(int date, int yenei) {
-		Map<String, Integer> list=new HashMap<>();
+	public Map<String, Float> getScore(int date, int yenei) {
+		Map<String, Float> list=new HashMap<>();
 		Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -1430,7 +1430,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	        pstmt = prepareStatement(conn, sql);
 	        rs = pstmt.executeQuery();
 	        while(rs.next()){
-	        	list.put(rs.getInt("pianquid") + "|" + rs.getInt("assessid"), rs.getInt("subjectscore"));
+	        	list.put(rs.getInt("pianquid") + "|" + rs.getInt("assessid"), rs.getFloat("subjectscore"));
 	        }
 	        
 		}catch(Exception e) {

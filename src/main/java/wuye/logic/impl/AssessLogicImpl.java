@@ -364,7 +364,7 @@ public class AssessLogicImpl implements AssessLogic {
         
     	// 行表头
         List<CheckTitle> list2 =  assessDao.getCheckTitle(yenei);
-        Map<String, Integer> scoremap = assessDao.getScore(date, yenei);
+        Map<String, Float> scoremap = assessDao.getScore(date, yenei);
         
         int titleindex = 4;
         for(int i=0, length = list2.size(); i<length; i++) {
@@ -427,11 +427,12 @@ public class AssessLogicImpl implements AssessLogic {
                 	for(int l = 0;l<sizexiangmu;l++) {
                 		int assessid = titlexiangmu.getSub().get(l).getId();
                 		
-                		Integer value = scoremap.get(pianquid+"|"+assessid);
+                		Float value = scoremap.get(pianquid+"|"+assessid);
                 		if(value != null) {
                 			rowtemp = rowMap.getRow(titleindex + l);
                 			celltemp = rowtemp.createCell(titleindexx + j);
-                			celltemp.setCellValue(value);
+                			//celltemp.setCellValue(value);
+                			celltemp.setCellFormula(String.format("ROUND(%f,1)", value));
                 			celltemp.setCellStyle(stylesimple);
                 		}
                 	}
