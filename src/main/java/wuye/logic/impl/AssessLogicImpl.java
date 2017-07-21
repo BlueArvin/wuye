@@ -131,16 +131,18 @@ public class AssessLogicImpl implements AssessLogic {
 				
 				if(detailList != null) {
 					for(int j=0,len2 = detailList.size(); j<len2; j++) {
-						out.write(String.format("<h2>%s</h2>扣分值: %.1f<br/>扣分处：%d处<br/>扣分原因：%s<br/> 照片:<ul>", 
-								title.get(detailList.get(j).getAssessid()),
-								detailList.get(j).getScore(),
-								detailList.get(j).getNum(),
-								detailList.get(j).getMsg()
-								).getBytes("UTF-8"));
-						for(int z=0,len3=detailList.get(j).getPiclist().size(); z<len3;z++) {
-							out.write(String.format("<li><img src=\"%s\" height=\"120\" width=\"200\"/></li>","/home/htdocs/pic/"+detailList.get(j).getPiclist().get(z)).getBytes("UTF-8"));
+						if(detailList.get(j) != null) {
+							out.write(String.format("<h2>%s</h2>扣分值: %.1f<br/>扣分处：%d处<br/>扣分原因：%s<br/> 照片:<ul>", 
+									title.get(detailList.get(j).getAssessid()),
+									detailList.get(j).getScore(),
+									detailList.get(j).getNum(),
+									detailList.get(j).getMsg()
+									).getBytes("UTF-8"));
+							for(int z=0,len3=detailList.get(j).getPiclist().size(); z<len3;z++) {
+								out.write(String.format("<li><img src=\"%s\" height=\"120\" width=\"200\"/></li>","/home/htdocs/pic/"+detailList.get(j).getPiclist().get(z)).getBytes("UTF-8"));
+							}
+							out.write("</ul>".getBytes());
 						}
-						out.write("</ul>".getBytes());
 					}
 				}
 				out.write("</ul></body></html> ".getBytes());

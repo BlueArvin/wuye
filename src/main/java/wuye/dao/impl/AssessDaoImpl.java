@@ -1053,8 +1053,8 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             	bean.setAssessid(rs.getInt("assessid"));
             	bean.setWuyeid(rs.getInt("wuyeid"));
             	bean.setTime(new Date(end - 12*3600*1000));
-            	double score  = rs.getInt("score");
-            	double sss  = rs.getInt("sss");
+            	double score  = rs.getDouble("score");
+            	double sss  = rs.getDouble("sss");
             	score = (score > sss)? sss: score;
             	bean.setScore((double)score);
             	bean.setBaifenbi((double)score*100.0/sss);
@@ -1529,7 +1529,8 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	        		bean.addList(img4);
 	        	}
 	        }
-	        ret.add(bean);
+	        if(bean != null) 
+	        	ret.add(bean);
 	        
 		}catch(Exception e) {
         	e.printStackTrace();
