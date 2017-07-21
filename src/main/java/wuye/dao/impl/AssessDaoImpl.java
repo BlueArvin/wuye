@@ -1461,6 +1461,17 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         }
 		return 0;
 	}
+	
+	public static String getName(String ss) {
+		if(ss==null) {
+			return "";
+		}
+		String[] sp = ss.split("/");
+		if(sp.length == 5) {
+			return sp[4];
+		}
+		return ss;
+	}
 
 	@Override
 	public List<PicBean> getPicList(int pianqu, int date) {
@@ -1517,16 +1528,16 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	        	bean.setHutong(hutongid);
 	        	bean.setHutongName(areaLogic.getAreaName(hutongid, 4));
 	        	if(img1 != null && img1.length() >0) {
-	        		bean.addList(img1);
+	        		bean.addList(getName(img1));
 	        	}
 	        	if(img2 != null && img2.length() >0) {
-	        		bean.addList(img2);
+	        		bean.addList(getName(img2));
 	        	}
 	        	if(img3 != null && img3.length() >0) {
-	        		bean.addList(img3);
+	        		bean.addList(getName(img3));
 	        	}
 	        	if(img4 != null && img4.length() >0) {
-	        		bean.addList(img4);
+	        		bean.addList(getName(img4));
 	        	}
 	        }
 	        if(bean != null) 
