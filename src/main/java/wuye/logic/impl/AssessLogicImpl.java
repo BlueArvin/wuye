@@ -224,7 +224,7 @@ public class AssessLogicImpl implements AssessLogic {
         cell.setCellValue("内业");  
         cell.setCellStyle(styleblack);  
         cell = row.createCell(8);  
-        cell.setCellValue("外页");  
+        cell.setCellValue("外业");  
         cell.setCellStyle(styleblack);  
         cell = row.createCell(10);  
         cell.setCellValue("总分");  

@@ -1337,8 +1337,8 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	        	bean.setHutongName(areaLogic.getAreaName(rs.getInt("hutongid"), 4));
 	        	bean.setWuyeName(rs.getString("wuye"));
 	        	bean.setLevelName(rs.getString("level"));
-	        	bean.setWaiscore(rs.getDouble("waiscore"));
-	        	bean.setNeiscore(rs.getDouble("neiscore"));
+	        	bean.setNeiscore(rs.getDouble("waiscore"));  // 数据库中的数据给分析反了，这里就通过读取数据的时候把数据取回来
+	        	bean.setWaiscore(rs.getDouble("neiscore"));  // 这里也是，外业
 	        	list.add(bean);
 	        }
 		}catch(Exception e) {
