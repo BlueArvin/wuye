@@ -9,10 +9,23 @@ public class JisuanSortBean  implements Comparable {
 	private double allscore = 0;
 	private int hutongid = 0;
 	private int wuyeid = 0;
+	private int userid = 0;
 	
 	private int paiming = 0;
 
 	
+	public int getUserid() {
+		return userid;
+	}
+
+
+
+	public void setUserid(int userid) {
+		this.userid = userid;
+	}
+
+
+
 	public void setall() {
 		allscore = (100-yenei)*30/100 + ((100-yewai)*70/100);
 	}
@@ -83,9 +96,9 @@ public class JisuanSortBean  implements Comparable {
 		this.yenei += yenei;
 	}
 	
-	public void addAll(double all) {
-		this.yenei += all;
-	}
+//	public void addAll(double all) {
+//		this.allscore += all;
+//	}
 
 	public double getYewai() {
 		return yewai;

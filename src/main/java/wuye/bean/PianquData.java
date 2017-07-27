@@ -18,7 +18,20 @@ public class PianquData {
 	private double waiscore;
 	private double neidel;
 	private double waidel;
+	private String username;
 	
+	
+	
+	public String getUsername() {
+		return username;
+	}
+
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+
 	public String getAreaWholeName() {
 		return streetName + "-" + areaName + "-" + hutongName;
 	}

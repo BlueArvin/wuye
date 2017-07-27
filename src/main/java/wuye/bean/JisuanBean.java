@@ -20,8 +20,15 @@ public class JisuanBean {
 	private int hutongid;
 	private double score;
 	private double baifenbi;
+	private int userid;
 	
 	
+	public int getUserid() {
+		return userid;
+	}
+	public void setUserid(int userid) {
+		this.userid = userid;
+	}
 	public int getHutongid() {
 		return hutongid;
 	}

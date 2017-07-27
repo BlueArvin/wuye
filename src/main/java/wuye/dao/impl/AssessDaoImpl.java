@@ -1004,6 +1004,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	/**
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public int weekjisuanpianqu() {
 		Connection conn = null;
@@ -1028,7 +1029,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         List<JisuanSortBean> sortlist = new ArrayList<>();
         
         try {
-            String sql = "SELECT streetid,areaid,pianquid,yeneiid,assessidtop,assessid,hutongid,wuyeid,SUM(score)  as score,getMaxScore(assessid) as sss  FROM t_assess ";
+            String sql = "SELECT userid,streetid,areaid,pianquid,yeneiid,assessidtop,assessid,hutongid,wuyeid,SUM(score)  as score,getMaxScore(assessid) as sss  FROM t_assess ";
             
             sql += " where TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date(begin)) + "')<0 and TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date(end)) + "')>0 "
             		+ " and del=0 "
@@ -1053,6 +1054,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             	bean.setAssessid(rs.getInt("assessid"));
             	bean.setWuyeid(rs.getInt("wuyeid"));
             	bean.setTime(new Date(end - 12*3600*1000));
+            	bean.setUserid(rs.getInt("userid"));
             	double score  = rs.getDouble("score");
             	double sss  = rs.getDouble("sss");
             	score = (score > sss)? sss: score;
@@ -1073,6 +1075,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             		sortbean.setStreetid(rs.getInt("streetid"));
             		sortbean.setHutongid(rs.getInt("hutongid"));
             		sortbean.setWuyeid(rs.getInt("wuyeid"));
+            		sortbean.setUserid(rs.getInt("userid"));
             	}
             	
             	switch(rs.getInt("yeneiid")) {
@@ -1134,8 +1137,8 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         if(sortlist.size() ==0 ) {return 0; } 
         Collections.sort(sortlist);
         try {
-            String sql = "replace into tb_weekpianqu(timedup, pianquid, waiscore, neiscore, allscore, paiming, stateid, streetid, wuyeid,hutongid) "
-            		+ "  value(?,?,?,?,?,?, ?,?,?,?)";
+            String sql = "replace into tb_weekpianqu(timedup, pianquid, waiscore, neiscore, allscore, paiming, stateid, streetid, wuyeid,hutongid,userid) "
+            		+ "  value(?,?,?,?,?,?, ?,?,?,?,?)";
             
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
@@ -1164,7 +1167,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	            pstmt.setInt(8, sortlist.get(i).getStreetid());
 	            pstmt.setInt(9, sortlist.get(i).getWuyeid());
 	            pstmt.setInt(10, sortlist.get(i).getHutongid());
-	            
+	            pstmt.setInt(11, sortlist.get(i).getUserid());
 	            pstmt.execute();
 	            index++;
             }
@@ -1318,7 +1321,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 		Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-		String sql = "  select stateid,streetid, pianquid,hutongid, waiscore,neiscore,allscore,getWuyeName(wuyeid) as wuye, getLevelName(b.level_id) as level from tb_weekpianqu a  LEFT JOIN t_pianqu b ON a.pianquid = b.id where a.timedup = " + data;
+		String sql = "  select stateid,streetid, pianquid,hutongid, waiscore,neiscore,allscore,getWuyeName(wuyeid) as wuye, getLevelName(b.level_id) as level, c.userName as name from tb_weekpianqu a  LEFT JOIN t_pianqu b ON a.pianquid = b.id left join t_user c on a.userid=c.id where a.timedup = " + data;
 		try {
 			conn = dataSource.getConnection();
 	        pstmt = prepareStatement(conn, sql);
@@ -1339,6 +1342,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	        	bean.setLevelName(rs.getString("level"));
 	        	bean.setNeiscore(rs.getDouble("waiscore"));  // 数据库中的数据给分析反了，这里就通过读取数据的时候把数据取回来
 	        	bean.setWaiscore(rs.getDouble("neiscore"));  // 这里也是，外业
+	        	bean.setUsername(rs.getString("name"));
 	        	list.add(bean);
 	        }
 		}catch(Exception e) {

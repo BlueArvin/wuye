@@ -29,7 +29,6 @@ public class TaskJob {
         assessLogic.doSumWeek();
         
         System.out.println("week任务（文件）开始");
-        //SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat dfday = new SimpleDateFormat("yyyyMMdd");
         
         long end;

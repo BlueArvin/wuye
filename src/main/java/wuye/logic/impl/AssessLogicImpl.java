@@ -3,6 +3,8 @@ package wuye.logic.impl;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -111,6 +113,16 @@ public class AssessLogicImpl implements AssessLogic {
 	
 	@Override
 	public int doneWordData(int date) {
+		SimpleDateFormat dfday = new SimpleDateFormat("yyyyMMdd");
+		Date theDay = null;
+		try {
+			theDay = dfday.parse(String.valueOf(date));
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		long begin = theDay.getTime() - 24*3600*1000*6;
+		
 		Map<Integer, String> title =  assessDao.getAssessid();
 		List<PianquData> list = assessDao.getPianquWeekData(date);
 		List<String> fileList = new ArrayList<String>(50);
@@ -124,10 +136,10 @@ public class AssessLogicImpl implements AssessLogic {
 				out.write(StaticString.s1.getBytes());
 				out.write(String.format("<h1>%s</h1>检查时间:%s<br/>检查区域:%s<br/>得分:%.2f<br/>检查人员:%s <ul>", 
 						list.get(i).getPianquName(), 
-						"",
+						dfday.format(begin) + " ~ " + date,
 						list.get(i).getAreaWholeName(),
-						list.get(i).getScore()*0.7, 
-						"").getBytes("UTF-8"));
+						BigDecimal.valueOf(list.get(i).getWaiscore()*70/100).setScale(2).toPlainString(), 
+						list.get(i).getUsername()).getBytes("UTF-8"));
 				
 				if(detailList != null) {
 					for(int j=0,len2 = detailList.size(); j<len2; j++) {
@@ -139,7 +151,7 @@ public class AssessLogicImpl implements AssessLogic {
 									detailList.get(j).getMsg()
 									).getBytes("UTF-8"));
 							for(int z=0,len3=detailList.get(j).getPiclist().size(); z<len3;z++) {
-								out.write(String.format("<li><img src=\"%s\" height=\"120\" width=\"200\"/></li>","/home/htdocs/pic/"+detailList.get(j).getPiclist().get(z)).getBytes("UTF-8"));
+								out.write(String.format("<li><img src=\"%s\" height=\"180\" width=\"300\"/></li>","/home/htdocs/pic/"+detailList.get(j).getPiclist().get(z)).getBytes("UTF-8"));
 							}
 							out.write("</ul>".getBytes());
 						}
@@ -260,13 +272,13 @@ public class AssessLogicImpl implements AssessLogic {
             cell.setCellValue(stu.getNeidel());
             cell.setCellStyle(stylesimple);
             cell = row.createCell(7);
-            cell.setCellValue(stu.getNeiscore()*0.3);
+            cell.setCellValue(((double)100 - stu.getNeiscore())*30/100);
             cell.setCellStyle(stylesimple);
             cell = row.createCell(8);
             cell.setCellValue(stu.getWaidel());
             cell.setCellStyle(stylesimple);
             cell = row.createCell(9);
-            cell.setCellValue(stu.getWaiscore()*0.7);
+            cell.setCellValue(((double)100 - stu.getWaiscore())*70/100);
             cell.setCellStyle(stylesimple);
             cell = row.createCell(10);
             cell.setCellValue(stu.getScore());

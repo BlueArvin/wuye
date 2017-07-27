@@ -34,7 +34,11 @@ public class PicBean {
 	}
 
 	public void addMsg(String msg1) {
-		msg += msg1;
+		if("".equals(msg.trim())) {
+			msg += msg1.trim();
+		} else {
+			msg += "；" + msg1.trim();
+		}
 	}
 	public PicBean() {
 		piclist = new ArrayList<>(30);
