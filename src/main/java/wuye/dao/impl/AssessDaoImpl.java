@@ -1029,9 +1029,11 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         List<JisuanSortBean> sortlist = new ArrayList<>();
         
         try {
-            String sql = "SELECT userid,streetid,areaid,pianquid,yeneiid,assessidtop,assessid,hutongid,wuyeid,SUM(score)  as score,getMaxScore(assessid) as sss  FROM t_assess ";
+            String sql = "SELECT userid,streetid,areaid,pianquid,yeneiid,assessidtop,assessid,hutongid," +
+					"wuyeid,SUM(score)  as score,getMaxScore(assessid) as sss  FROM t_assess ";
             
-            sql += " where TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date(begin)) + "')<0 and TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date(end)) + "')>0 "
+            sql += " where TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date(begin)) + "')<0 " +
+					"and TIMESTAMPDIFF(SECOND, intime,'" + df.format(new Date(end)) + "')>0 "
             		+ " and del=0 "
             		+ " GROUP BY pianquid,assessid ";
             
@@ -1079,10 +1081,10 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             	}
             	
             	switch(rs.getInt("yeneiid")) {
-    			case 1:
+    			case 2:
     				sortbean.addYewai(score);
     				break;
-    			case 2:
+    			case 1:
     				sortbean.addYenei(score);
     				break;
         		}
@@ -1340,8 +1342,8 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	        	bean.setHutongName(areaLogic.getAreaName(rs.getInt("hutongid"), 4));
 	        	bean.setWuyeName(rs.getString("wuye"));
 	        	bean.setLevelName(rs.getString("level"));
-	        	bean.setNeiscore(rs.getDouble("waiscore"));  // 数据库中的数据给分析反了，这里就通过读取数据的时候把数据取回来
-	        	bean.setWaiscore(rs.getDouble("neiscore"));  // 这里也是，外业
+	        	bean.setNeiscore(rs.getDouble("neiscore"));
+	        	bean.setWaiscore(rs.getDouble("waiscore"));
 	        	bean.setUsername(rs.getString("name"));
 	        	list.add(bean);
 	        }

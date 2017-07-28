@@ -20,6 +20,7 @@ import wuye.bean.AssessDataBean;
 import wuye.bean.CheckDayItem;
 import wuye.bean.ListData;
 import wuye.logic.AssessLogic;
+import wuye.manager.utils.TimeUtil;
 
 /**
  * 
@@ -128,10 +129,13 @@ public class AssessServlet {
 		String time = request.getParameter("time");          //  时间
 		String areaid = request.getParameter("areaid");      //  层次选
 		String level = request.getParameter("level");        //  必选级别，这个选项目前没用上
-		
+
+		String realTime = TimeUtil.getDayAddStr(time, 6);
+
+		logger.info("allsort:" + timetype +"," + time + ","+ areaid + "," + level + "," +realTime);
 		try{
 			RetBean jsonRet = new RetBean(0, "");
-			jsonRet.setValue(new ListData(assessLogic.getPianquSortData(timetype.charAt(0), time, Integer.parseInt(level), areaid)));
+			jsonRet.setValue(new ListData(assessLogic.getPianquSortData(timetype.charAt(0), realTime, Integer.parseInt(level), areaid)));
 			return jsonRet;
 		} catch(Exception e) {
 			return new RetBean(2, "参数错误");
@@ -143,7 +147,8 @@ public class AssessServlet {
     public Object itemsort(HttpServletRequest request) {
 		String timetype = request.getParameter("timetype");  // 
 		String time = request.getParameter("time");          //  时间
-		
+
+		logger.info("itemsort:" + timetype + "," + time) ;
 		
 		try{
 			RetBean jsonRet = new RetBean(0, "");
@@ -160,10 +165,14 @@ public class AssessServlet {
 		String timetype = request.getParameter("timetype");  // 
 		String time = request.getParameter("time");          //  时间
 		String areaid = request.getParameter("pianquid");    //  只选片区
+
+		String realTime = TimeUtil.getDayAddStr(time, 6);
+
+		logger.info("pianqusort" + timetype + "," + time +","+areaid+ "," + realTime);
 		
 		try{
 			RetBean jsonRet = new RetBean(0, "");
-			jsonRet.setValue(new ListData(assessLogic.getPianquSortList(timetype.charAt(0), time, areaid)));
+			jsonRet.setValue(new ListData(assessLogic.getPianquSortList(timetype.charAt(0), realTime, areaid)));
 			return jsonRet;
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -177,10 +186,14 @@ public class AssessServlet {
 		String timetype = request.getParameter("timetype");  // 
 		String time = request.getParameter("time");          //  时间
 		String wuyeid = request.getParameter("wuyeid");    //  只选片区
+
+		String realTime = TimeUtil.getDayAddStr(time, 6);
+
+		logger.info("wuyesort:" + timetype+ "," + time + "," + wuyeid +"," + realTime);
 		
 		try{
 			RetBean jsonRet = new RetBean(0, "");
-			jsonRet.setValue(new ListData(assessLogic.getWuyeSortList(timetype.charAt(0), time, wuyeid)));
+			jsonRet.setValue(new ListData(assessLogic.getWuyeSortList(timetype.charAt(0), realTime, wuyeid)));
 			return jsonRet;
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -196,7 +209,9 @@ public class AssessServlet {
 		String areaid = request.getParameter("pianquid");
 		String checkyenei = request.getParameter("checkyenei");      // 这个是业内还是业外
 		String page = request.getParameter("page");    // 当前页
-		
+
+		logger.info("checkday:" + start+ "," + end +"," + areaid + "," + checkyenei + "," + page);
+
 		try{
 			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
 			Date dStart = df.parse(start);
@@ -220,6 +235,8 @@ public class AssessServlet {
 		String hutongid = request.getParameter("hutongid");
 		String checkyenei = request.getParameter("checkyenei");      // 这个是业内还是业外
 		String page = request.getParameter("page");    // 当前页
+
+		logger.info("detailitem:" + date + "," + hutongid + "," + checkyenei + "," + page);
 		
 		try{
 			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
@@ -253,6 +270,8 @@ public class AssessServlet {
 	@ResponseBody
     public Object deleteitem(HttpServletRequest request) {
 		String serailID = request.getParameter("serailid");  // 需要删除的id
+
+		logger.info("deleteitem: " + serailID);
 
 		if(serailID == null) {
 			RetBean jsonRet = new RetBean(1, "");

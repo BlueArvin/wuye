@@ -138,7 +138,7 @@ public class AssessLogicImpl implements AssessLogic {
 						list.get(i).getPianquName(), 
 						dfday.format(begin) + " ~ " + date,
 						list.get(i).getAreaWholeName(),
-						BigDecimal.valueOf(list.get(i).getWaiscore()*70/100).setScale(2).toPlainString(), 
+						list.get(i).getWaiscore()*70/100, 
 						list.get(i).getUsername()).getBytes("UTF-8"));
 				
 				if(detailList != null) {
@@ -272,13 +272,13 @@ public class AssessLogicImpl implements AssessLogic {
             cell.setCellValue(stu.getNeidel());
             cell.setCellStyle(stylesimple);
             cell = row.createCell(7);
-            cell.setCellValue(((double)100 - stu.getNeiscore())*30/100);
+            cell.setCellValue(((double)100 - stu.getNeidel())*30/100);
             cell.setCellStyle(stylesimple);
             cell = row.createCell(8);
             cell.setCellValue(stu.getWaidel());
             cell.setCellStyle(stylesimple);
             cell = row.createCell(9);
-            cell.setCellValue(((double)100 - stu.getWaiscore())*70/100);
+            cell.setCellValue(((double)100 - stu.getWaidel())*70/100);
             cell.setCellStyle(stylesimple);
             cell = row.createCell(10);
             cell.setCellValue(stu.getScore());
