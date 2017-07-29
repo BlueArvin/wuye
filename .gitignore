@@ -4,3 +4,8 @@
 *.jar
 *.class
 *.class
+
+.idea/
+.settings/
+out/
+target/

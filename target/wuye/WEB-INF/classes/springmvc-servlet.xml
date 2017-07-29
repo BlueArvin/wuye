@@ -1,17 +1,143 @@
-<?xml version="1.0" encoding="UTF-8"?>  
-<beans xmlns="http://www.springframework.org/schema/beans"  
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"  
-    xmlns:mvc="http://www.springframework.org/schema/mvc"  
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd  
-        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">  
+<?xml version="1.0" encoding="GBK"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">                    
+
+	<!-- ����ע�� -->
+	<context:component-scan base-package="wuye.manager.*"/>
+	<context:component-scan base-package="wuye.api.*"/>
+	
+	<!-- ��ע�뷽ʽ��ȡbean���� getBean("") -->
+	<bean class="wuye.manager.utils.SpringContextHolder" lazy-init="false" />
+	
+    <!-- scan the package and the sub package -->
+     
+ 
+    <!-- don't handle the static resource -->
+    <mvc:default-servlet-handler />
+ 	<task:annotation-driven/>
+	<!-- ����ע�� -->
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json;charset=UTF-8</value>
+						<value>application/x-www-form-urlencoded;charset=UTF-8</value>
+					</list>
+				</property>
+				<property name="objectMapper">
+					<bean class="wuye.manager.utils.CustomJacksonObjectMapper" />
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	
+     
+    <!-- configure the InternalResourceViewResolver -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+            id="internalResourceViewResolver">
+        <!-- ǰ׺ -->
+        <property name="prefix" value="/wuye/" />
+        <!-- ��׺ -->
+        <property name="suffix" value=".jsp" />
+    </bean>
+    
+    <bean id = "multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize">
+		<value>5120000</value>
+		</property>
+		<property name="maxInMemorySize"> 
+		<value>1024</value> 
+		</property> 
+	</bean>
+    
+    <!-- ����jdbc.properties��·�� -->  
+    <bean id="propertyConfigurer"  
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
+        <property name="locations">  
+            <list>  
+                <value>classpath:jdbc.properties</value>  
+            </list>  
+        </property>  
+    </bean>
   
-  	<mvc:annotation-driven />
-    <!--配置自动解析的包 -->  
-    <context:component-scan base-package="wuye.api.service"/> 
-    <!-- 完成请求和注解POJO的映射 -->
-    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
-　　
-    <!-- 对转向页面的路径解析。prefix：前缀， suffix：后缀 -->
-    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" p:prefix="/jsp/" p:suffix=".jsp" />
-</beans>  
+  
+    <!-- ����dbcp -->  
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"   
+        destroy-method="close">   
+        <property name="driverClassName" value="${jdbc.driverClassName}" />   
+        <property name="url" value="${jdbc.url}" />   
+        <property name="username" value="${jdbc.username}" />   
+        <property name="password" value="${jdbc.password}"/>   
+        <property name="maxActive" value="30" />   
+        <property name="maxIdle" value="10" />   
+        <property name="maxWait" value="1000" />   
+        <property name="defaultAutoCommit" value="true" /> 
+    </bean>
+    
+    <bean id="userDao" class="wuye.dao.impl.UserDaoImpl">
+        <property name="dataSource">
+            <ref bean="dataSource"/>
+        </property>
+    </bean>
+    <bean id="configDao" class="wuye.dao.impl.ConfigDaoImpl">
+        <property name="dataSource">
+            <ref bean="dataSource"/>
+        </property>
+    </bean>
+    <bean id="assessDao" class="wuye.dao.impl.AssessDaoImpl">
+        <property name="dataSource">
+            <ref bean="dataSource"/>
+        </property>
+    </bean>
+    
+    <bean id="userLogic" class="wuye.logic.impl.UserLogicImpl">
+        <property name="userDao">
+            <ref bean="userDao"/>
+        </property>
+    </bean>
+    <bean id="activeConfigLogic" class="wuye.logic.impl.ActiveConfigImpl">
+        <property name="configDao">
+            <ref bean="configDao"/>
+        </property>
+    </bean>
+    <bean id="assessLogic" class="wuye.logic.impl.AssessLogicImpl">
+        <property name="assessDao">
+            <ref bean="assessDao"/>
+        </property>
+    </bean>
+    
+    
+    <bean id="userServlet" class="wuye.api.service.UserServlet">
+        <property name="userLogic">
+            <ref bean="userLogic"/>
+        </property>
+    </bean>
+    <bean id="activeConfig" class="wuye.api.service.ActiveConfig">
+        <property name="activeConfigLogic">
+            <ref bean="activeConfigLogic"/>
+        </property>
+    </bean>
+    <bean id="fileUploadServlet" class="wuye.api.service.FileUploadServlet">
+        <property name="dir" value="/home/htdocs/pic/">
+        </property>
+    </bean>
+    <bean id="assessServlet" class="wuye.api.service.AssessServlet">
+        <property name="assessLogic">
+            <ref bean="assessLogic"/>
+        </property>
+    </bean>
+    
+    <bean id="taskJob" class="wuye.api.task.TaskJob">
+        <property name="assessLogic">
+            <ref bean="assessLogic"/>
+        </property>
+    </bean>
+</beans>
