@@ -1,5 +1,7 @@
 package wuye.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -130,8 +132,8 @@ public class AssessDataBean {
 	public String getImg4(){
 		return img4;
 	}
-	
 
+	@JsonIgnore
 	public String getImg4s() {
 		if(img4==null||img4.equals("")){
 			return null;
@@ -220,6 +222,8 @@ public class AssessDataBean {
 	public void setScore(int score) {
 		this.score = score;
 	}
+
+	@JsonIgnore
 	public String getImg1s() {
 		if(img1==null||img1.equals("")){
 			return null;
@@ -237,6 +241,8 @@ public class AssessDataBean {
 	public String getImg2() {
 		return img2;
 	}
+
+	@JsonIgnore
 	public String getImg2s() {
 		if(img2==null||img2.equals("")){
 			return null;
@@ -250,6 +256,8 @@ public class AssessDataBean {
 	public String getImg3 () {
 		return img3;
 	}
+
+	@JsonIgnore
 	public String getImg3s() {
 		if(img3==null||img3.equals("")){
 			return null;
