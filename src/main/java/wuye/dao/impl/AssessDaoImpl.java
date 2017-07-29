@@ -33,7 +33,6 @@ import wuye.bean.SortBean;
 import wuye.bean.WuyeSortListBean;
 import wuye.dao.AssessDao;
 import wuye.dao.DaoBasic;
-import wuye.manager.assess.bean.ManAssessBean;
 import wuye.manager.norm.logic.AreaLogic;
 import wuye.manager.utils.StringUtil;
 
@@ -78,10 +77,10 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	            pstmt.setInt(11, data.getAssessid());
 	            pstmt.setInt(12, data.getPianquid());
 	            pstmt.setInt(13, data.getUserid());
-	            pstmt.setString(14, data.getImg1());
-	            pstmt.setString(15, data.getImg2());
-	            pstmt.setString(16, data.getImg3());
-	            pstmt.setString(17, data.getImg4());
+	            pstmt.setString(14, data.getImg1s());
+	            pstmt.setString(15, data.getImg2s());
+	            pstmt.setString(16, data.getImg3s());
+	            pstmt.setString(17, data.getImg4s());
 	            pstmt.setString(18, data.getSerailID());
 	            pstmt.setString(19, data.getLoc());
 	            pstmt.setString(20, data.getMsg());
@@ -105,10 +104,10 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	            pstmt.setInt(10, data.getJibieid());
 	            pstmt.setInt(11, data.getAssessid());
 	            pstmt.setInt(12, data.getUserid());
-	            pstmt.setString(13, data.getImg1());
-	            pstmt.setString(14, data.getImg2());
-	            pstmt.setString(15, data.getImg3());
-	            pstmt.setString(16, data.getImg4());
+	            pstmt.setString(13, data.getImg1s());
+	            pstmt.setString(14, data.getImg2s());
+	            pstmt.setString(15, data.getImg3s());
+	            pstmt.setString(16, data.getImg4s());
 	            pstmt.setString(17, data.getSerailID());
 	            pstmt.setString(18, data.getLoc());
 	            pstmt.setString(19, data.getMsg());
@@ -132,10 +131,10 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 	            pstmt.setInt(10, data.getJibieid());
 	            pstmt.setDouble(11, ((double)data.getScore())/10);
 	            pstmt.setInt(12, data.getUserid());
-	            pstmt.setString(13, data.getImg1());
-	            pstmt.setString(14, data.getImg2());
-	            pstmt.setString(15, data.getImg3());
-	            pstmt.setString(16, data.getImg4());
+	            pstmt.setString(13, data.getImg1s());
+	            pstmt.setString(14, data.getImg2s());
+	            pstmt.setString(15, data.getImg3s());
+	            pstmt.setString(16, data.getImg4s());
 	            pstmt.setString(17, data.getSerailID());
 	            pstmt.setString(18, data.getLoc());
 	            pstmt.setString(19, data.getMsg());
@@ -260,10 +259,10 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             	ad.setScore(rs.getInt("score"));
             	ad.setYeneiid(rs.getInt("yeneiid"));
             	
-            	ad.setImg1(StringUtil.getImg(rs.getString("img1")));
-            	ad.setImg2(StringUtil.getImg(rs.getString("img2")));
-            	ad.setImg3(StringUtil.getImg(rs.getString("img3")));
-            	ad.setImg4(StringUtil.getImg(rs.getString("img4")));
+            	ad.setImg1(StringUtil.getImg(getName(rs.getString("img1"))));
+            	ad.setImg2(StringUtil.getImg(getName(rs.getString("img2"))));
+            	ad.setImg3(StringUtil.getImg(getName(rs.getString("img3"))));
+            	ad.setImg4(StringUtil.getImg(getName(rs.getString("img4"))));
             	
             	ad.setSerailID(rs.getString("aseid"));
             	
