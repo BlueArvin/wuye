@@ -18,7 +18,7 @@ public class BadCheckList {
 		public double baifenbi;
 		
 		public List<pianqu> pianqulist;
-		
+
 		public basic() {
 			pianqulist = new ArrayList<>();
 		}
@@ -73,7 +73,7 @@ public class BadCheckList {
 		public int pianquid;
 		public String pianquName;
 		public double baifenbi;
-		
+
 		public double getBaifenbi() {
 			return baifenbi;
 		}

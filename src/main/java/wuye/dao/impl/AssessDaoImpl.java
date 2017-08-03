@@ -1248,10 +1248,15 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 		default:
 			return ret;
 		}
+
+		int countPianqu = getPianquNum();
+		if(countPianqu == 0) {
+			return null;
+		}
 		
-		String sql = "SELECT assessid,baifenbi,b.sub_name FROM (SELECT  assessid, AVG(weekbaifenbi) as baifenbi FROM tb_weekassesspianqu where "
+		String sql = "SELECT assessid,truncate(ss.subjectscore*100/maxscore,2) as baifenbi,b.sub_name FROM (SELECT  assessid, sum(subjectscore) as subjectscore, getMaxScore(assessid)*"+countPianqu+" as maxscore FROM tb_weekassesspianqu where "
 				+ strwhere +"  GROUP BY assessid ) "
-				+ "as ss LEFT JOIN t_checksub b ON ss.assessid = b.subid  WHERE ss.baifenbi>20 ORDER BY ss.baifenbi desc";
+				+ "as ss LEFT JOIN t_checksub b ON ss.assessid = b.subid  WHERE subjectscore*100/maxscore>20 ORDER BY baifenbi desc";
 		Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -1283,7 +1288,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
         
 		for(int i=0;i<count;i++) {
 			BadCheckList.basic bean = ret.basiclist.get(i);
-			String sql2 = "SELECT streetid,pianquid,baifenbi FROM (SELECT streetid,pianquid,AVG(weekbaifenbi) as baifenbi FROM tb_weekassesspianqu WHERE assessid = "
+			String sql2 = "SELECT streetid,pianquid,truncate(baifenbi,2) as baifenbi1 FROM (SELECT streetid,pianquid,AVG(weekbaifenbi) as baifenbi FROM tb_weekassesspianqu WHERE assessid = "
 					+ bean.getChecksub() +" and "
 					+ strwhere 
 					+ " GROUP BY pianquid ) "
@@ -1302,7 +1307,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 		        	bean2.setPianquName(areaLogic.getAreaName(rs.getInt("pianquid"), 3));
 		        	bean2.setStreetid(rs.getInt("streetid"));
 		        	bean2.setStreetName(areaLogic.getAreaName(rs.getInt("streetid"), 2));
-		        	bean2.setBaifenbi(rs.getDouble("baifenbi"));
+		        	bean2.setBaifenbi(rs.getDouble("baifenbi1"));
 		        	bean.pianqulist.add(bean2);
 		        	index++;
 		        }
@@ -1579,6 +1584,28 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
             closeConnection(conn, pstmt, rs);
         }
 		return map;
+	}
+
+	@Override
+	public int getPianquNum() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int count = 0;
+		String sql = "SELECT count(1) as num from t_pianqu WHERE del = 0 ";
+		try {
+			conn = dataSource.getConnection();
+			pstmt = prepareStatement(conn, sql);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				count = rs.getInt("num");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			closeConnection(conn, pstmt, rs);
+			return count;
+		}
 	}
 
 }

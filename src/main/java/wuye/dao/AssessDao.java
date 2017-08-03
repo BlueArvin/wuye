@@ -57,4 +57,6 @@ public interface AssessDao {
 	public List<PicBean> getPicList(int pianqu, int date);
 	
 	public Map<Integer, String> getAssessid();
+
+	public int getPianquNum();
 }
