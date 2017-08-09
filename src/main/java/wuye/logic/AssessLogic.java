@@ -39,4 +39,6 @@ public interface AssessLogic {
 	public int doneWordData(int data);
 	
 	public int delAssess(String serialid);
+
+	public int delDoWeek(int data);
 }

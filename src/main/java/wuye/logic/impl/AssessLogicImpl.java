@@ -535,4 +535,9 @@ public class AssessLogicImpl implements AssessLogic {
 		return assessDao.delAssess(serialid);
 	}
 
+
+	@Override
+	public int delDoWeek(int dateId) {
+		return assessDao.delDoWeek(dateId);
+	}
 }

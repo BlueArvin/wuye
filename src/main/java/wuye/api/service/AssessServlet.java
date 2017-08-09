@@ -275,7 +275,7 @@ public class AssessServlet {
 		String date = request.getParameter("date");
 		int dateId = Integer.parseInt(date);
 		// clear
-		
+		assessLogic.delDoWeek(dateId);
 
 		// jisuan new
 		assessLogic.doSumWeek(dateId);

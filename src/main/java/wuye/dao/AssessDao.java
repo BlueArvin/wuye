@@ -59,4 +59,6 @@ public interface AssessDao {
 	public Map<Integer, String> getAssessid();
 
 	public int getPianquNum();
+
+	public int delDoWeek(int dateId);
 }

@@ -1598,4 +1598,25 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 		}
 	}
 
+	@Override
+	public int delDoWeek(int dateId) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int count = 0;
+		String sql = "delete from `tb_weekassesspianqu` where timedup = "+ dateId +";" +
+				"delete from `tb_weekwuye` where timedup = "+ dateId +";" +
+				"delete from `tb_weekpianqu` where timedup = "+ dateId +"; ";
+		try {
+			conn = dataSource.getConnection();
+			pstmt = prepareStatement(conn, sql);
+			pstmt.execute();
+
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			closeConnection(conn, pstmt, rs);
+			return count;
+		}
+	}
 }
