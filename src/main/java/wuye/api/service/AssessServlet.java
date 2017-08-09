@@ -120,6 +120,8 @@ public class AssessServlet {
 		
 		return assessLogic.getPoint(street,pianqu,time);
 	}
+
+
 	
 	@RequestMapping("allsort")
 	@ResponseBody
@@ -264,6 +266,23 @@ public class AssessServlet {
 			jsonRet.setValue(new ListData(ret));
 			return jsonRet;
 		
+	}
+
+	@RequestMapping("redoWeek")
+	@ResponseBody
+	public Object point(HttpServletRequest request) {
+
+		String date = request.getParameter("date");
+		int dateId = Integer.parseInt(date);
+		// clear
+		
+
+		// jisuan new
+		assessLogic.doSumWeek(dateId);
+
+		RetBean jsonRet = new RetBean(0, "");
+		jsonRet.setValue(new ListData(0));
+		return jsonRet;
 	}
 	
 	@RequestMapping("deleteitem")

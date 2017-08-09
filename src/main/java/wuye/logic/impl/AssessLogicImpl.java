@@ -78,15 +78,15 @@ public class AssessLogicImpl implements AssessLogic {
 	}
 
 	@Override
-	public void doSumWeek() {
+	public void doSumWeek(int timeid) {
 		assessDao.weekjisuanpianqu(); // 
-		assessDao.weekSumWuye();      // 
+		assessDao.weekSumWuye(timeid);      //
 	}
 
 	@Override
-	public void doSumMonth() {
+	public void doSumMonth(int timeid) {
 		assessDao.monthSumPianqu(1);
-		assessDao.monthSumWuye();
+		assessDao.monthSumWuye(timeid);
 
 	}
 

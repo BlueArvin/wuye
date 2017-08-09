@@ -25,11 +25,11 @@ public interface AssessDao {
 	
 	public int weekjisuanpianqu();
 	
-	public int weekSumWuye();
+	public int weekSumWuye(int timeid);
 	
-	public int weekSumPianqu(int yenei);
+//	public int weekSumPianqu(int yenei);
 	
-	public int monthSumWuye();
+	public int monthSumWuye(int timeid);
 	
 	public int monthSumPianqu(int yenei);
 	

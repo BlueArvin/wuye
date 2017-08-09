@@ -19,9 +19,9 @@ public interface AssessLogic {
 	public List<AssessDataBean> getDetailitem(Date dStart,
 			String hutongid, String checkyenei, int page);
 	
-	public void doSumWeek();
+	public void doSumWeek(int timeid);
 	
-	public void doSumMonth();
+	public void doSumMonth(int timeid);
 	
 	public List<PianquData> getPianquSortData(char type, String date, int jibie, String areaid);
 	

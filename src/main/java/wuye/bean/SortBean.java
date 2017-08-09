@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class SortBean {
 	public int disId = 0;
-	public Date time ;
+	public int timedup ;
 	public float score;
 	public int paiming;
 	public int getDisId() {
@@ -13,12 +13,15 @@ public class SortBean {
 	public void setDisId(int disId) {
 		this.disId = disId;
 	}
-	public Date getTime() {
-		return time;
+
+	public int getTimedup() {
+		return timedup;
 	}
-	public void setTime(Date time) {
-		this.time = time;
+
+	public void setTimedup(int timedup) {
+		this.timedup = timedup;
 	}
+
 	public float getScore() {
 		return score;
 	}
