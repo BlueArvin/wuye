@@ -23,7 +23,7 @@ public interface AssessDao {
 	public List<AssessDataBean> getDetailitem(Date dStart,
 			String hutongid, String checkyenei, int page) ;
 	
-	public int weekjisuanpianqu();
+	public int weekjisuanpianqu(int timeId);
 	
 	public int weekSumWuye(int timeid);
 	

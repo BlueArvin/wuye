@@ -1,6 +1,7 @@
 package wuye.manager.utils;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class TimeUtil {
@@ -18,6 +19,31 @@ public class TimeUtil {
             return day;
         }
     }
+
+    public static int getMonthDec(int day) {
+
+        int index = day % 100;
+        int year = day/100;
+
+        if(index > 1) {
+            return day - 1;
+        } else {
+            return (year-1)*100 + 12;
+        }
+    }
+
+    public static int getSeasonDec(int day) {
+        int index = day % 100;
+        int year = day/100;
+
+        if(index > 1) {
+            return day - 1;
+        } else {
+            return (year-1)*100 + 4;
+        }
+    }
+
+
 
     public static String getDayAddStr(String day,int n) {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");

@@ -79,7 +79,7 @@ public class AssessLogicImpl implements AssessLogic {
 
 	@Override
 	public void doSumWeek(int timeid) {
-		assessDao.weekjisuanpianqu(); // 
+		assessDao.weekjisuanpianqu(timeid); //
 		assessDao.weekSumWuye(timeid);      //
 	}
 
