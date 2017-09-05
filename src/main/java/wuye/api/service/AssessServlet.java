@@ -262,6 +262,7 @@ public class AssessServlet {
 			
 			//int ret = assessLogic.getPianquWeekData(Integer.parseInt(date));
 			int ret = assessLogic.doneWordData(Integer.parseInt(date));
+				assessLogic.getPianquWeekData(Integer.parseInt(date));
 			RetBean jsonRet = new RetBean(ret, "");
 			jsonRet.setValue(new ListData(ret));
 			return jsonRet;

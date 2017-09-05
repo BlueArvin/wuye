@@ -29,18 +29,20 @@ public class TaskJob {
     public void jobWeek() {   // 每周一的定时任务， 1点10分
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         String time = format.format(new Date());
-        String realTime = TimeUtil.getDayAddStr(time, -1);
-
+        String realTime = TimeUtil.getDayAddStr(time, -7);
         int dateId = Integer.parseInt(realTime);
-
         System.out.println("week任务进行中。。。");
         assessLogic.doSumWeek(dateId);
-        
+
+
+
         System.out.println("week任务（文件）开始");
 
 		// 文件逻辑
-        assessLogic.doneWordData(dateId);
-        assessLogic.getPianquWeekData(dateId);
+        String realTime2 = TimeUtil.getDayAddStr(time, -1);
+        int dateId2 = Integer.parseInt(realTime2);
+        assessLogic.doneWordData(dateId2);
+        assessLogic.getPianquWeekData(dateId2);
         System.out.println("week任务结束");
     }
     

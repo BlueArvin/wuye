@@ -1412,7 +1412,7 @@ public class AssessDaoImpl extends DaoBasic implements AssessDao {
 		Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-		String sql = "  select stateid,streetid, pianquid,hutongid, waiscore,neiscore,allscore,getWuyeName(wuyeid) as wuye, getLevelName(b.level_id) as level, c.userName as name from tb_weekpianqu a  LEFT JOIN t_pianqu b ON a.pianquid = b.id left join t_user c on a.userid=c.id where a.timedup = " + data;
+		String sql = "  select stateid,streetid, pianquid,hutongid, waiscore,neiscore,allscore,getWuyeName(a.wuyeid) as wuye, getLevelName(b.level_id) as level, c.userName as name from tb_weekpianqu a  LEFT JOIN t_pianqu b ON a.pianquid = b.id left join t_user c on a.userid=c.id where a.timedup = " + data;
 		try {
 			conn = dataSource.getConnection();
 	        pstmt = prepareStatement(conn, sql);

@@ -296,7 +296,7 @@ public class AssessLogicImpl implements AssessLogic {
         try  
         {
         	//FileOutputStream fout = new FileOutputStream("E:/22/"+new SimpleDateFormat("yyyy-mm-dd").format(new Date())+".xls");
-           FileOutputStream fout = new FileOutputStream("/home/htdocs/doc/"+new SimpleDateFormat("yyyy-MM-dd").format(new Date())+".xls");  
+           FileOutputStream fout = new FileOutputStream("/home/htdocs/doc/Excel" + date + ".xls");
             wb.write(fout);
             fout.close();  
         }  
